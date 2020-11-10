@@ -48,7 +48,7 @@ public class BeanUtil {
      * @param isIgnoreError 是否忽略注入错误
      * @return Bean
      */
-    public static <T> T mapToBean(Map<String, ?> map, Class<T> beanClass, boolean isIgnoreError){
+    public static <T> T mapToBean(Map<?, ?> map, Class<T> beanClass, boolean isIgnoreError){
 
         T t = ReflectUtil.newInstance(beanClass);
         if(t == null){
@@ -60,7 +60,7 @@ public class BeanUtil {
         map.forEach((k,v)->{
 
             try {
-                ReflectUtil.setDeclaredFieldValue(t, k, v);
+                ReflectUtil.setDeclaredFieldValue(t, k.toString(), v);
             }catch (Exception e){
                 if(isIgnoreError){ return; }
                 e.printStackTrace();
