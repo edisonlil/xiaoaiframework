@@ -1,16 +1,229 @@
-plugins {
-    id 'java'
+import java.text.DateFormat
+
+/**
+ * gradle插件
+ */
+buildscript {
+
+    /**
+     * 定义maven仓库
+     */
+    repositories {
+        //定义仓库位置
+        mavenLocal()
+        //本地Nexus私服
+        maven { url "${nexusSnapshotsUrl}"}
+        //Maven 仓库
+        maven { url "${aliyunNexusUrl}" }
+        maven { url "https://repo.spring.io/libs-release" }
+        //JFrog公司提供的性能更好的maven仓库
+        jcenter()
+        // 中央库
+        mavenCentral()
+    }
+
+    /**
+     * Gradle插件依赖
+     */
+    dependencies {
+        //springboot 插件
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:+"
+        //sonar 代码分析插件
+        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:+")
+    }
+
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+/**
+ * 全局配置，对所有工程有效
+ */
+allprojects {
 
-sourceCompatibility = 1.8
+    //配置插件
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
 
-repositories {
-    mavenCentral()
+    /**
+     * 配置多个maven源
+     */
+    repositories {
+
+        // 定义仓库位置
+        mavenLocal()
+        maven { url "${aliyunNexusUrl}" }  //Maven 仓库
+        maven { url "${nexusReleasesUrl}"}
+        maven { url "${nexusSnapshotsUrl}"} //本地Nexus私服
+        maven { url "https://repo.spring.io/libs-release" }
+        maven { url 'https://repo.spring.io/milestone' }
+        jcenter() //JFrog公司提供的性能更好的maven仓库
+        mavenCentral() // 中央库
+
+    }
+
+    //全局配置
+    configurations.all {
+        exclude(module: "log4j")
+        exclude(module: "slf4j-log4j12")
+        exclude(module: "tomcat-jdbc")
+        exclude(group: "ch.qos.logback")
+        exclude(module: "spring-boot-starter-logging")
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+        resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+    }
+
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+def defaultText1 = '''dependencies {
+    
+}'''
+
+def defaultText2 = '''subprojects {
+    
+}'''
+
+/**
+ * 应用到所有子项目,此处workspace相当于根项目
+ */
+subprojects {
+    //配置group信息
+    group = "${projectGroupId}"
+    //配置version信息
+    version = "${projectVersion}"
+    //配置注释信息
+    description = "${projectDescription}"
+
+    /**
+     * 编译设置
+     */
+    tasks.withType(JavaCompile) {
+        // 设置 JDK 版本
+        sourceCompatibility = "${javaCompileVersion}"
+        targetCompatibility = "${javaCompileVersion}"
+        // 设置编译编码
+        options.encoding = "${optionsEncoding}"
+    }
+
+    //给所有子项目设置上java的插件
+    plugins.apply "java"
+    plugins.apply 'maven'
+    plugins.apply("io.spring.dependency-management")
+
+    // 全局属性设置
+    ext {
+        // java文件编码方式设置为utf-8
+        compileJava.options.encoding = "UTF-8"
+        compileTestJava.options.encoding = "UTF-8"
+        javadoc.options.encoding = "UTF-8"
+    }
+
+    //增加代码分析插件
+    if (System.getProperty("java.version", "${javaCompileVersion}") >= "1.8" && !project.plugins.findPlugin("org.sonarqube")) {
+        //Gradle中配置使用sonar进行代码分析
+        plugins.apply("org.sonarqube")
+    }
+
+    dependencyManagement {
+        imports {
+            //springboot版本策略
+            mavenBom "org.springframework.boot:spring-boot-starter-parent:${springbootVersion}"
+            //springcloud版本策略
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springcloudVersion}"
+        }
+    }
+
+    //构建java项目默认目录
+    task createJavaProject {
+        sourceSets*.java.srcDirs*.each { if (!it.exists()) it.mkdirs() }
+        sourceSets*.resources.srcDirs*.each { if (!it.exists()) it.mkdirs() }
+        if (!getBuildFile().exists()) {
+            getBuildFile().createNewFile()
+            getBuildFile().setText(defaultText1)
+        }
+    }
+
+
+    //打包源代码
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        archiveClassifier = 'sources'
+        from sourceSets.main.allSource
+    }
+    //添加构建消息
+    jar {
+        manifest {
+            attributes(
+                    "Manifest-Version": "1.0",
+                    "Implementation-Title": project.name,
+                    "Implementation-Version": project.version,
+                    "Specification-Vendor": "edisonsonlil@163.com",
+                    "Specification-Title": project.name,
+                    "Implementation-Vendor": "edisonsonlil@163.com",
+                    "Specification-Version": project.version,
+                    "Implementation-Vendor-Id": project.group,
+                    "Built-By": InetAddress.getLocalHost().getHostName() + "(" + InetAddress.getLocalHost().getHostAddress() + ")",
+                    "Created-By": "Gradle ${gradle.gradleVersion}",
+                    "Build-Jdk": "JDK " + System.getProperty("java.version"),
+                    "Implementation-URL": "https://edisonlil.com",
+                    "Implementation-Date": DateFormat.getDateTimeInstance().format(new Date())
+            )
+        }
+    }
+
+    //构建Jar信息
+    artifacts {
+        archives sourcesJar
+    }
+
+    //通过gradle install，安装到.m2本地仓库
+    install {
+        dependsOn build
+        repositories.mavenInstaller {
+            pom.version = "$project.version"
+            pom.artifactId = "$project.name"
+            pom.groupId = "$project.group"
+        }
+    }
+
+    //上传到公司搭建的maven私服 nexus
+    uploadArchives {
+        dependsOn install
+        repositories {
+            mavenDeployer {
+                //上传至maven私服
+                repository(url: "$nexusSnapshotsUrl") {
+                    authentication(userName: "$nexusUsername", password: "$nexusPassword")
+                }
+                pom.version = "$project.version"
+                pom.artifactId = "$project.name"
+                pom.groupId = "$project.group"
+            }
+        }
+    }
+    // 公共依赖配置
+    dependencies {
+        //从maven仓库导入依赖
+        //compile: 该依赖对于编译发行是必须的。
+        //runtime: 该依赖对于运行时是必须的，默认包含编译时依赖。
+        //testCompile: 该依赖对于编译测试是必须的，默认包含编译产品依赖和编译时依赖。
+        //testRuntime: 该依赖对于测试是必须的，默认包含编译、运行时、测试编译依赖。
+        //archives：配置项中包含项目生成的文件（如Jar文件）。
+        //default：配置项中包含运行时必须的依赖。
+        //compileOnly: 编译时需要
+        //runtimeOnly: 运行时需要
+        //依赖配置说明：group属性指定依赖的分组（在Maven中，就是groupId）。name属性指定依赖的名称（在Maven中，就是artifactId）。version属性指定外部依赖的版本（在Maven中，就是version）。
+
+        //lombok
+        //compile("org.projectlombok:lombok:+")
+
+        //导入本地的依赖包
+        compile fileTree(dir: "libs", include: ["*.jar"])
+//            implementation "org.projectlombok:lombok:${lombokVersion}"
+//            annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+//
+//            testImplementation('org.springframework.boot:spring-boot-starter-test') {
+//                exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+//            }
+    }
+
 }
+
+println "I'm now compiling with gradle " + project.gradle.gradleVersion + "!  Copyright @ " + Calendar.getInstance().get(Calendar.YEAR) + "XIAOAI.COM";
