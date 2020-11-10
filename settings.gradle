@@ -1,8 +1,13 @@
 rootProject.name = 'xiaoaiframework'
 
-include(":xiaoai-core")
-include(":xiaoai-util")
-include(":xiaoai-log4j")
+include(":freamwork-base")
+include(":freamwork-spring")
 
+include(":freamwork-base:xiaoai-core")
+include(":freamwork-base:xiaoai-util")
+include(":freamwork-base:xiaoai-common")
 
-include(":xiaoai-data-redis")
+include(":freamwork-spring:xiaoai-spring-log4j")
+include(":freamwork-spring:xiaoai-spring-redis")
+include(":freamwork-spring:xiaoai-spring-mongo")
+include(":freamwork-spring:xiaoai-spring-mybatis-puls")

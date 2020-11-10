@@ -1,0 +1,6 @@
+dependencies {
+    //caffeine是一个性能很好的本地缓存工具
+    compile "com.github.ben-manes.caffeine:caffeine:${caffeineCacheVersion}"
+    //fastjson 是一个性能很好的 Java 语言实现的 JSON 解析器和生成器
+    compile "com.alibaba:fastjson:${fastjsonVersion}"
+}
