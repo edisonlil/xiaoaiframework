@@ -1,2 +1,8 @@
-rootProject.name = 'framework'
+rootProject.name = 'xiaoaiframework'
 
+include(":xiaoai-core")
+include(":xiaoai-util")
+include(":xiaoai-log4j")
+
+
+include(":xiaoai-data-redis")
