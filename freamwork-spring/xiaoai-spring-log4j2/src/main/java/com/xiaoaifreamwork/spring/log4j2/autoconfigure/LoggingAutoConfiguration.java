@@ -1,7 +1,7 @@
-package com.xiaoaifreamwork.spring.log4j.autoconfigure;
+package com.xiaoaifreamwork.spring.log4j2.autoconfigure;
 
 
-import com.xiaoaifreamwork.spring.log4j.LogInterceptor;
+import com.xiaoaifreamwork.spring.log4j2.LogInterceptor;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

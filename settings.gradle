@@ -7,7 +7,7 @@ include(":freamwork-base:xiaoai-core")
 include(":freamwork-base:xiaoai-util")
 include(":freamwork-base:xiaoai-common")
 
-include(":freamwork-spring:xiaoai-spring-log4j")
+include(":freamwork-spring:xiaoai-spring-log4j2")
 include(":freamwork-spring:xiaoai-spring-redis")
 include(":freamwork-spring:xiaoai-spring-mongo")
 include(":freamwork-spring:xiaoai-spring-mybatis-puls")

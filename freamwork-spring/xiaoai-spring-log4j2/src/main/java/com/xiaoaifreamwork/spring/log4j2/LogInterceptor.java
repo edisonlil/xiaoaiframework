@@ -1,4 +1,4 @@
-package com.xiaoaifreamwork.spring.log4j;
+package com.xiaoaifreamwork.spring.log4j2;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

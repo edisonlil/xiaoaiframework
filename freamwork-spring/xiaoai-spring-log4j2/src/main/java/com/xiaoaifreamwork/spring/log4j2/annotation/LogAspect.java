@@ -1,4 +1,4 @@
-package com.xiaoaifreamwork.spring.log4j.annotation;
+package com.xiaoaifreamwork.spring.log4j2.annotation;
 
 import java.lang.annotation.*;
 
