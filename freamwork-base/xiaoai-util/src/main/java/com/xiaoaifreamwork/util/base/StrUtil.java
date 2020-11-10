@@ -33,5 +33,16 @@ public class StrUtil {
         return String.valueOf(cs);
     }
 
+    /**
+     * 是否为空字符串
+     * @param str
+     * @return
+     */
+    public static boolean isEmpty(String str){
 
+        if(str == null){
+            return true;
+        }
+        return str.trim().isEmpty();
+    }
 }
