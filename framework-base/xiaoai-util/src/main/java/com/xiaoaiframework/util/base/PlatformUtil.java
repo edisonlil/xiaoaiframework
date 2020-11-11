@@ -28,7 +28,5 @@ public class PlatformUtil {
         return OS_NAME.startsWith("windows");
     }
 
-
-
 }
 

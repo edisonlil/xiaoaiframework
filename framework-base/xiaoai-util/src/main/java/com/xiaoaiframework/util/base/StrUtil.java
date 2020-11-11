@@ -1,5 +1,6 @@
 package com.xiaoaiframework.util.base;
 
+
 /**
  * 字符串工具类
  * @author edison
@@ -113,5 +114,59 @@ public class StrUtil {
      */
     public static String toUnderlineCase(CharSequence str) {
         return toSymbolCase(str, CharUtil.UNDERLINE);
+    }
+
+    /**
+     * 去掉字符串的前缀
+     * @param str 字符串名称
+     * @param prefix 前缀数组
+     * @return
+     */
+    public static String removePrefix(String str,String[] prefix){
+
+        if (StrUtil.isEmpty(str)){
+            return null;
+        }else {
+            if (prefix != null ){
+                String[] prefixArray = prefix;
+                for (int i = 0;i <prefix.length;++i){
+                    String pf = prefixArray[i];
+                    if (str.toLowerCase().matches("^" + pf.toLowerCase() + ".*")){
+                        return str.substring(pf.length());
+                    }
+                }
+            }
+        }
+        return str;
+    }
+
+    /**
+     * 去掉文件扩展名
+     * @param filename
+     * @return
+     */
+    public static String removeSuffix(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            int dot = filename.lastIndexOf('.');
+            if ((dot >-1) && (dot < (filename.length()))) {
+                return filename.substring(0, dot);
+            }
+        }
+        return filename;
+    }
+
+    /**
+     * 获取文件扩展名
+     * @param filename 文件名称
+     * @return
+     */
+    public static String getExtensionName(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            int dot = filename.lastIndexOf('.');
+            if ((dot >-1) && (dot < (filename.length() - 1))) {
+                return filename.substring(dot + 1);
+            }
+        }
+        return filename;
     }
 }
