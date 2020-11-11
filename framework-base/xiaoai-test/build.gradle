@@ -1,0 +1,4 @@
+dependencies {
+    //单元测试支持
+    compile "junit:junit:${junitVersion}"
+}
