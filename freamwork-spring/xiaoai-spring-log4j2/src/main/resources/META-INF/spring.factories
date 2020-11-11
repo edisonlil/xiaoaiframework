@@ -1,3 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.xiaoaifreamwork.spring.log4j2.autoconfigure.LoggingAutoConfiguration
