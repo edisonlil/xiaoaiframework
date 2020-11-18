@@ -1,13 +1,15 @@
 rootProject.name = 'xiaoaiframework'
 
-include(":freamwork-base")
-include(":freamwork-spring")
 
-include(":freamwork-base:xiaoai-core")
-include(":freamwork-base:xiaoai-util")
-include(":freamwork-base:xiaoai-common")
+include(":framework-base")
+include(":framework-spring")
 
-include(":freamwork-spring:xiaoai-spring-log4j2")
-include(":freamwork-spring:xiaoai-spring-redis")
-include(":freamwork-spring:xiaoai-spring-mongo")
-include(":freamwork-spring:xiaoai-spring-mybatis-puls")
+include(":framework-base:xiaoai-core")
+include(":framework-base:xiaoai-util")
+include(":framework-base:xiaoai-common")
+include(":framework-base:xiaoai-test")
+
+include(":framework-spring:xiaoai-spring-log4j2")
+include(":framework-spring:xiaoai-spring-redis")
+include(":framework-spring:xiaoai-spring-mongo")
+include(":framework-spring:xiaoai-spring-mybatis-puls")

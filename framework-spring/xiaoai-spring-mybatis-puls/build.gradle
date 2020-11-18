@@ -1,0 +1,12 @@
+dependencies {
+    compile project(":framework-base:xiaoai-core")
+    compile project(":framework-spring:xiaoai-spring-log4j2")
+    //集成mybatis-plus
+    compile "com.baomidou:mybatis-plus:${mybatisplusVersion}"
+    compile "com.baomidou:mybatis-plus-boot-starter:${mybatisplusVersion}"
+    //mysql驱动
+    compile "mysql:mysql-connector-java:${mysqlConnectorVersion}"
+    //pagehelper
+    compile "com.github.pagehelper:pagehelper-spring-boot-starter:${pagehelperVersion}"
+
+}
