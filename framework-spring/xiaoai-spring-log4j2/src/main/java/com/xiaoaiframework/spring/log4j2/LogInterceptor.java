@@ -24,7 +24,7 @@ public class LogInterceptor {
     /**
      * 定义拦截规则：拦截controller/service包下面的所有类中，有@LogAspect注解的方法。
      */
-    @Pointcut("(@annotation(com.xiaoaifreamwork.log4j.annotation.LogAspect))")
+    @Pointcut("(@annotation(com.xiaoaiframework.spring.log4j2.annotation.LogAspect))")
     public void methodPointcut() {
     }
 
