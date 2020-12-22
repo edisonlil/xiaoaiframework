@@ -15,10 +15,14 @@ public class ReflectUtil {
         return obj.getClass().getDeclaredFields();
     }
 
-    public static Object getDeclaredFieldValue(Object obj,String fieldName,boolean ignoreNoSuchField){
+    public static Field[] getFields(Object obj){
+        return obj.getClass().getFields();
+    }
+
+    public static Object getFieldValue(Object obj,String fieldName,boolean ignoreNoSuchField){
 
         try {
-            getDeclaredFieldValue(obj, obj.getClass().getDeclaredField(fieldName));
+            getFieldValue(obj, obj.getClass().getDeclaredField(fieldName));
         } catch (NoSuchFieldException e) {
             if(ignoreNoSuchField){return null;}
             e.printStackTrace();
@@ -28,7 +32,7 @@ public class ReflectUtil {
         return null;
     }
 
-    public static Object getDeclaredFieldValue(Object obj,Field field){
+    public static Object getFieldValue(Object obj,Field field){
 
         try {
             field.setAccessible(true);
@@ -49,14 +53,13 @@ public class ReflectUtil {
         return null;
     }
 
-    public static void setDeclaredFieldValue(Object obj,String fieldName,Object value){
-        setDeclaredFieldValue(obj, getDeclaredField(obj, fieldName), value);
-        
+    public static void setFieldValue(Object obj,String fieldName,Object value){
+        setFieldValue(obj, getDeclaredField(obj, fieldName), value);
     }
 
 
 
-    public static void setDeclaredFieldValue(Object obj,Field field,Object value){
+    public static void setFieldValue(Object obj,Field field,Object value){
 
         try {
             field.setAccessible(true);
@@ -92,9 +95,16 @@ public class ReflectUtil {
         return t;
     }
 
+    /**
+     * 創建對象
+     * @param c
+     * @param <T>
+     * @return
+     */
     public static<T> T newInstance(Class<T> c){
 
         return newInstance(c,true);
     }
+
 
 }
