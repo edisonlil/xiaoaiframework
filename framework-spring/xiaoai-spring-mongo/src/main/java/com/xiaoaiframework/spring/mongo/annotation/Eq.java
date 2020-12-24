@@ -1,6 +1,7 @@
 package com.xiaoaiframework.spring.mongo.annotation;
 
 import com.xiaoaiframework.spring.mongo.constant.ActionType;
+import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.lang.annotation.*;
 
@@ -9,7 +10,7 @@ import static com.xiaoaiframework.spring.mongo.constant.ActionType.AND;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.PARAMETER, ElementType.FIELD })
-public @interface Eq {
+public @interface Eq{
 
     /**
      * 是否忽略空值判斷
@@ -27,5 +28,8 @@ public @interface Eq {
      * @return
      */
     ActionType action() default AND;
+
+
+
 
 }

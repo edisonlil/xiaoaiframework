@@ -27,7 +27,7 @@ public class BeanUtil {
         Map<String, Object> map = new HashMap<>(fields.length);
         for (Field field : fields) {
 
-            Object obj = ReflectUtil.getDeclaredFieldValue(bean, field);
+            Object obj = ReflectUtil.getFieldValue(bean, field);
             if (ignoreNullValue && obj == null) {
                 continue;
             }
@@ -57,7 +57,7 @@ public class BeanUtil {
         map.forEach((k, v) -> {
 
             try {
-                ReflectUtil.setDeclaredFieldValue(t, k.toString(), v);
+                ReflectUtil.setFieldValue(t, k.toString(), v);
             } catch (Exception e) {
                 if (isIgnoreError) {
                     return;

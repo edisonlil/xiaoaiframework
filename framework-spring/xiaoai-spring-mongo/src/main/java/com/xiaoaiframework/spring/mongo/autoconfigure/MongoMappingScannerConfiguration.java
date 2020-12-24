@@ -16,6 +16,13 @@ public class MongoMappingScannerConfiguration implements BeanDefinitionRegistryP
 
     ApplicationContext context;
 
+    public String getBasePackage() {
+        return basePackage;
+    }
+
+    public void setBasePackage(String basePackage) {
+        this.basePackage = basePackage;
+    }
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
