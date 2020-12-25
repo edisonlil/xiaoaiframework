@@ -1,4 +1,4 @@
-package com.xiaoaiframework.spring.mongo.parsing;
+package com.xiaoaiframework.spring.mongo.parsing.criteria;
 
 import org.springframework.data.mongodb.core.query.Criteria;
 

@@ -169,4 +169,12 @@ public class StrUtil {
         }
         return filename;
     }
+
+    public static boolean isStr(Object obj){
+
+        if(obj instanceof String){
+            return true;
+        }
+        return false;
+    }
 }

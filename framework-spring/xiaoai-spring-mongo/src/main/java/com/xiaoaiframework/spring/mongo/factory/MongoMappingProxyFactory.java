@@ -2,7 +2,6 @@ package com.xiaoaiframework.spring.mongo.factory;
 
 import com.xiaoaiframework.spring.mongo.annotation.Mapping;
 import com.xiaoaiframework.spring.mongo.executor.Executor;
-import com.xiaoaiframework.spring.mongo.parsing.CriteriaParsingStrategy;
 import com.xiaoaiframework.spring.mongo.proxy.MongoProxy;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -35,8 +34,7 @@ public class MongoMappingProxyFactory implements FactoryBean, BeanFactoryAware {
         proxy.setKeyType(mapping.keyType());
         proxy.setEntityType(mapping.entityType());
         proxy.setExecutor(factory.getBean(Executor.class));
-        proxy.setCriteriaParsingStrategy(factory.getBean(CriteriaParsingStrategy.class));
-        
+       
         return Proxy.newProxyInstance(this.mongoInterface.getClassLoader()
         ,new Class[]{this.mongoInterface},proxy);
     }

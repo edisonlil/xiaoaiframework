@@ -1,7 +1,7 @@
 package com.xiaoaifreamwork.util.bean;
 
 import com.xiaoaiframework.util.bean.BeanUtil;
-import com.xiaoaiframework.util.bean.ReflectUtil;
+import com.xiaoaiframework.util.base.ReflectUtil;
 import org.junit.Test;
 
 /**

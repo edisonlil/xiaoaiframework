@@ -1,8 +1,7 @@
-package com.xiaoaiframework.spring.mongo.parsing;
+package com.xiaoaiframework.spring.mongo.parsing.criteria;
 
 import com.xiaoaiframework.spring.mongo.annotation.Eq;
 import com.xiaoaiframework.spring.mongo.constant.ActionType;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 

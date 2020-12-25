@@ -1,9 +1,11 @@
-package com.xiaoaiframework.util.bean;
+package com.xiaoaiframework.util.base;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * 反射工具类
  * @author edison
@@ -105,6 +107,8 @@ public class ReflectUtil {
 
         return newInstance(c,true);
     }
+
+
 
 
 }

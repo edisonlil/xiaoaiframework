@@ -1,5 +1,6 @@
 package com.xiaoaiframework.util.bean;
 
+import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.base.StrUtil;
 import java.lang.reflect.Field;
 import java.util.HashMap;
