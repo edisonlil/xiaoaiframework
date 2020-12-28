@@ -1,15 +1,16 @@
 package com.xiaoaiframework.spring.mongo.proxy;
 
 import com.alibaba.fastjson.JSON;
-import com.xiaoaiframework.spring.mongo.annotation.Delete;
-import com.xiaoaiframework.spring.mongo.annotation.Save;
-import com.xiaoaiframework.spring.mongo.annotation.Select;
-import com.xiaoaiframework.spring.mongo.annotation.Update;
-import com.xiaoaiframework.spring.mongo.executor.Executor;
+import com.xiaoaiframework.spring.mongo.annotation.*;
+import com.xiaoaiframework.spring.mongo.annotation.Set;
+import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
+import com.xiaoaiframework.util.bean.BeanUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -22,32 +23,62 @@ public class MongoProxy implements InvocationHandler {
 
     Class<?> entityType;
 
-    Executor executor;
+    ConditionParsing parsing;
 
+    MongoTemplate template;
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-        
-        Annotation annotation = AnnotationUtils.findAnnotation(method,Select.class);
-        if(annotation instanceof Select){
-            select((Select) annotation,method,objects);
-        }else if(annotation instanceof Save){
-            
-            assert objects.length == 1;
 
+
+
+        Select select = AnnotationUtils.getAnnotation(method,Select.class);
+        if(select != null){
+           return select(select,method,objects);
+        }
+
+        Save save = AnnotationUtils.getAnnotation(method,Save.class);
+        if(save != null){
+            assert objects.length == 1;
             Object val = objects[0];
-            if (entityType != val.getClass()) {
-                Object entity = ReflectUtil.newInstance(entityType);
-                ObjectUtil.copyProperties(val, entity);
-            }
-            return executor.save(val);
-        }else if(annotation instanceof Update){
+            return save(save,method,val);
+        }
+
+        Update update = AnnotationUtils.getAnnotation(method,Update.class);
+        if(update != null){
             throw new RuntimeException("Not implemented update");
-        }else if(annotation instanceof Delete){
-            throw new RuntimeException("Not implemented del");
+        }
+
+
+        Delete delete = AnnotationUtils.getAnnotation(method,Delete.class);
+        if(delete != null){
+            return delete(delete,method,objects);
         }
         throw new RuntimeException("The method prefix definition cannot be found");
 
+    }
+
+    
+    private Object save(Save save,Method method,Object val){
+
+        if (!CollUtil.isColl(val)){
+            return template.save(val);
+        }
+
+        List list = new ArrayList();
+        list.addAll((Collection) val);
+
+        if(list.isEmpty()){ return true; }
+
+        if(list.size() == 1){
+            return template.save(val);
+        }
+
+        list.forEach(item->{
+            template.save(item);
+        });
+
+        return true;
     }
 
 
@@ -55,12 +86,11 @@ public class MongoProxy implements InvocationHandler {
 
         List<?> list = null;
         if(objects == null || objects.length == 0){
-            list = executor.findAll(entityType);
+            list = template.findAll(entityType);
         }else if(CollUtil.isColl(method.getReturnType())){
-            list = executor.find(method,objects,entityType);
+            list = template.find(parsing.getQuery(method, objects),entityType);
         }
 
-        
         if(list == null || list.isEmpty()) {
             return null;
         }
@@ -77,6 +107,10 @@ public class MongoProxy implements InvocationHandler {
             return list.toArray();
         }
 
+        if(CollUtil.isMap(rawClass) && CollUtil.isMap(rawClass)){
+            return BeanUtil.beanToMap(list.get(0));
+        }
+
         if(method.getReturnType().isArray()){
             return JSON.parseArray(JSON.toJSONString(list),rawClass).toArray();
         }else if(CollUtil.isColl(method.getReturnType())){
@@ -90,29 +124,58 @@ public class MongoProxy implements InvocationHandler {
     }
 
 
+    public Object delete(Delete delete,Method method, Object[] objects){
 
-    public Class<?> getKeyType() {
-        return keyType;
+        if(objects == null){
+            return false;
+        }
+        return template.remove(parsing.getQuery(method, objects),entityType).wasAcknowledged();
+
     }
+
+
+    public Object update(Method method, Object[] objects){
+
+        if(objects == null){
+            return false;
+        }
+        Annotation[][] annotations = method.getParameterAnnotations();
+
+
+        Object update = null;
+        for (int i = 0; i < objects.length; i++) {
+            Annotation annotation = annotations[i][0];
+            if(annotation instanceof Set){
+                update = objects[i];
+                break;
+            }
+        }
+
+        if(update == null){
+            return true;
+        }
+
+        return template.updateFirst(parsing.getQuery(method,objects)
+                ,parsing.convertUpdate(update),entityType).wasAcknowledged();
+    }
+  
+
+
 
     public void setKeyType(Class<?> keyType) {
         this.keyType = keyType;
-    }
-
-    public Class<?> getEntityType() {
-        return entityType;
     }
 
     public void setEntityType(Class<?> entityType) {
         this.entityType = entityType;
     }
 
-    public Executor getExecutor() {
-        return executor;
+
+    public void setTemplate(MongoTemplate template) {
+        this.template = template;
     }
 
-    public void setExecutor(Executor executor) {
-        this.executor = executor;
+    public void setParsing(ConditionParsing parsing) {
+        this.parsing = parsing;
     }
-
 }

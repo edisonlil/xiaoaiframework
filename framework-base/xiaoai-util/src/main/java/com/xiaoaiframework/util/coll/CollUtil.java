@@ -2,6 +2,7 @@ package com.xiaoaiframework.util.coll;
 
 import java.awt.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -49,9 +50,12 @@ public class CollUtil {
     }
 
 
-    public static void copyList(List list,Class targetType){
+    public static <E>HashSet<E> newHashSet(E... es){
 
+        HashSet<E> set = new HashSet(es.length);
+        for (E e : es) { set.add(e); }
 
+        return set;
 
     }
 }

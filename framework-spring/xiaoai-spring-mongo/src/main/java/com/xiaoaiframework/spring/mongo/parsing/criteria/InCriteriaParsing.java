@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.Annotation;
 
 @Component
-public class EqCriteriaParsing extends AbstractCriteriaParsing {
+public class InCriteriaParsing extends AbstractCriteriaParsing {
     @Override
     public boolean match(Annotation annotation) {
 
@@ -19,7 +19,7 @@ public class EqCriteriaParsing extends AbstractCriteriaParsing {
 
     @Override
     public Criteria operand(Annotation annotation,String key, Object val) {
-        return Criteria.where(key).is(val);
+        return Criteria.where(key).in(val);
     }
 
 }

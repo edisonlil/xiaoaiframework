@@ -1,6 +1,6 @@
 package com.xiaoaiframework.util.base;
 
-import java.util.*;
+
 import java.lang.reflect.Field;
 
 /**
@@ -25,7 +25,7 @@ public class ObjectUtil {
     }
     
     public static boolean isPrimitive(Object obj){
-
+        
         if(obj.getClass().isPrimitive()){
             return true;
         }
@@ -56,6 +56,10 @@ public class ObjectUtil {
             return true;
         }
         return false;
+    }
+
+    public static boolean isNull(Object obj){
+        return obj == null;
     }
     
 }
