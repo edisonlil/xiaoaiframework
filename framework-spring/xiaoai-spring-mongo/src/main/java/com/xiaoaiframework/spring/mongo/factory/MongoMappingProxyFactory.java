@@ -1,7 +1,6 @@
 package com.xiaoaiframework.spring.mongo.factory;
 
 import com.xiaoaiframework.spring.mongo.annotation.Mapping;
-import com.xiaoaiframework.spring.mongo.executor.Executor;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.proxy.MongoProxy;
 import org.springframework.beans.BeansException;

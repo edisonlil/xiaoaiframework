@@ -48,17 +48,65 @@ public class ConditionParsing {
     }
 
     private Query queryParsing(Query query, Annotation[] annotations, Object val) {
-        
-        for (Annotation annotation : annotations) {
-            //If it is not the basic type
-            if(annotation instanceof Condition && !ObjectUtil.isPrimitive(val)){
 
-                Field[] fields = ReflectUtil.getFields(val);
+
+        Criteria criteria = new Criteria();
+        criteriaParsing(criteria,annotations,val);
+        query.addCriteria(criteria);
+        orderParsing(query, annotations, val);
+
+        return query;
+    }
+
+
+    public Query orderParsing(Query query, Annotation[] annotations, Object val){
+
+        for (Annotation annotation : annotations) {
+
+            if (annotation instanceof Condition && !ObjectUtil.isPrimitive(val)) {
+
+                Field[] fields = ReflectUtil.getDeclaredFields(val);
                 for (Field field : fields) {
                     field.setAccessible(true);
-                    if(field.getAnnotations() != null){
+                    if (field.getAnnotations() != null) {
                         try {
-                            queryParsing(query,field.getAnnotations(), field.get(val));
+                            orderParsing(query, field.getAnnotations(), field.get(val));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+
+            //排序
+            if(annotation instanceof Order && CollUtil.isMap(val)){
+
+                Map order = (Map) val;
+                if(order != null && !order.isEmpty()){
+                    query.with(convertSort(order));
+                }
+                return query;
+            }
+        }
+
+        return query;
+
+    }
+
+    public Criteria criteriaParsing(Criteria criteria, Annotation[] annotations, Object val) {
+
+
+        for (Annotation annotation : annotations) {
+            //If it is not the basic type
+            if (annotation instanceof Condition && !ObjectUtil.isPrimitive(val)) {
+
+                Field[] fields = ReflectUtil.getDeclaredFields(val);
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    if (field.getAnnotations() != null) {
+                        try {
+                            criteriaParsing(criteria, field.getAnnotations(), field.get(val));
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -67,26 +115,16 @@ public class ConditionParsing {
             }
 
 
-            //排序
-            if(annotation instanceof Order && CollUtil.isMap(val)){
-                query.with(convertSort((Map<String, Boolean>) val));
-                return query;
-            }
-
-            //条件解析
-            Criteria criteria = new Criteria();
             List<CriteriaParsing> parsings = factory.getObject();
             for (CriteriaParsing parsing : parsings) {
-                criteria = parsing.parsing(criteria,annotation,val);
+                criteria = parsing.parsing(criteria, annotation, val);
                 continue;
             }
-            query.addCriteria(criteria);
 
         }
-        
-        return query;
-    }
 
+        return criteria;
+    }
     public Sort convertSort(Map<String,Boolean> orderMap){
         List<Sort.Order> orders = convertOrders(orderMap);
         return Sort.by(orders);
@@ -134,7 +172,7 @@ public class ConditionParsing {
         }
 
         Update update = new Update();
-        Field[] fields = ReflectUtil.getFields(object);
+        Field[] fields = ReflectUtil.getDeclaredFields(object);
         try {
             for (Field field : fields) {
 

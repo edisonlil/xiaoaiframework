@@ -20,7 +20,6 @@ public class ReflectUtil {
     public static Field[] getFields(Object obj){
         return obj.getClass().getFields();
     }
-
     public static Object getFieldValue(Object obj,String fieldName,boolean ignoreNoSuchField){
 
         try {

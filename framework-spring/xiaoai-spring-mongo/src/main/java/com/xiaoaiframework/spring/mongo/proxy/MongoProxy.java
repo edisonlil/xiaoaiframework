@@ -62,7 +62,8 @@ public class MongoProxy implements InvocationHandler {
     private Object save(Save save,Method method,Object val){
 
         if (!CollUtil.isColl(val)){
-            return template.save(val);
+            template.save(val);
+            return true;
         }
 
         List list = new ArrayList();
@@ -71,7 +72,8 @@ public class MongoProxy implements InvocationHandler {
         if(list.isEmpty()){ return true; }
 
         if(list.size() == 1){
-            return template.save(val);
+          template.save(val);
+          return true;
         }
 
         list.forEach(item->{
