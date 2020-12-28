@@ -101,7 +101,7 @@ public class MongoProxy implements InvocationHandler {
             return list.get(0);
         }
 
-        Class rawClass = select.rawType() != null? select.rawType() : entityType;
+        Class rawClass = select.rawType() != Void.class? select.rawType() : entityType;
 
         if(CollUtil.isColl(method.getReturnType()) && rawClass == entityType){
             return list;

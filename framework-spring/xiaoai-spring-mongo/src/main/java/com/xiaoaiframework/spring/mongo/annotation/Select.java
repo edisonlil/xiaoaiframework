@@ -11,7 +11,7 @@ public @interface Select {
      * 返回的实际类型
      * @return
      */
-    Class rawType();
+    Class rawType() default Void.class;
 
 
 }
