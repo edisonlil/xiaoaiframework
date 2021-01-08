@@ -1,3 +1,4 @@
 dependencies {
     compile project(":framework-base:xiaoai-test")
+    compile project(":framework-base:xiaoai-log4j2")
 }
