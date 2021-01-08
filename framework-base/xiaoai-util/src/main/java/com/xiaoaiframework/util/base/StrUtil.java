@@ -1,6 +1,8 @@
 package com.xiaoaiframework.util.base;
 
 
+import java.util.UUID;
+
 /**
  * 字符串工具类
  * @author edison
@@ -176,5 +178,19 @@ public class StrUtil {
             return true;
         }
         return false;
+    }
+
+
+    /**
+     * 获取uuid字符串
+     * @param simple 简单则不加-
+     * @return
+     */
+    public static String uuid(boolean simple){
+
+        if(simple){
+            return UUID.randomUUID().toString().replace("-", "");
+        }
+        return UUID.randomUUID().toString();
     }
 }

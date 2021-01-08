@@ -1,0 +1,5 @@
+dependencies {
+    compile project(":framework-base:xiaoai-core")
+    compile project(":framework-base:xiaoai-log4j2")
+    compile project(":framework-base:xiaoai-util")
+}

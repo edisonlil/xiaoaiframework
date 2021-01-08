@@ -19,7 +19,7 @@ public class BeanUtilTest {
         Object car = new Object(){
            public String id;
         };
-        ReflectUtil.setDeclaredFieldValue(car,"id","abc");
+        ReflectUtil.setFieldValue(car,"id","abc");
         System.out.println(BeanUtil.beanToMap(car));
 
     }
