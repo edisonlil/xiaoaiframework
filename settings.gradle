@@ -4,6 +4,7 @@ rootProject.name = 'xiaoaiframework'
 include(":framework-base")
 include(":framework-spring")
 
+include(":framework-base:xiaoai-log4j2")
 include(":framework-base:xiaoai-core")
 include(":framework-base:xiaoai-util")
 include(":framework-base:xiaoai-common")
