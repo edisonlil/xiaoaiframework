@@ -1,4 +1,5 @@
 dependencies {
+    compile project(":framework-base:xiaoai-core")
     compile project(":framework-base:xiaoai-util")
     compile project(":framework-base:xiaoai-common")
     compile project(":framework-spring:xiaoai-spring-log4j2")

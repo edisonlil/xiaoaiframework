@@ -23,25 +23,27 @@ public class PageSelectProcessor implements SelectProcessor {
     @Override
     public void frontProcessor(Query query, Class entity) {
 
-        PageRequest page = MongoPageHelper.get();
-        if(page != null){
-            query.with(page);
+        Page page = MongoPageHelper.get();
+        if(page != null && !page.getPageSizeZero()){
+            query.with(PageRequest.of(page.getPageNum(),page.getPageSize()));
         }
 
     }
 
 
     @Override
-    public void postProcessor(Query query, Class entity, Object result,Class rawType){
+    public void postProcessor(Object result,Class rawType){
 
-
-        Page page = new Page();
+        Page page = MongoPageHelper.get();
         if(CollUtil.isColl(result)){
             page.addAll((Collection) result);
         }else {
             page.add(result);
         }
-        page.setTotalCount(template.count(query,entity));
+        
+        if(page.getCount()){
+            page.setTotal(template.count(page.getQuery(),page.getEntityType()));
+        }
         result = page;
         
         MongoPageHelper.clear();

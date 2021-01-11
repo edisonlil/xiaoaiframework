@@ -12,13 +12,10 @@ public interface SelectProcessor{
 
     /**
      *
-     * @param query
-     * @param entity
      * @param result  If the result is a collection
      *                then the primitive type is the element type in the collection,
      *                otherwise it should be the same as the result type
      * @param rawType
      */
-    void postProcessor(Query query, Class entity,
-                       Object result, Class rawType);
+    void postProcessor(Object result, Class rawType);
 }

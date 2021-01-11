@@ -107,46 +107,43 @@ public class MongoProxy implements InvocationHandler {
 
     private Object select(Select select, Method method, Object[] objects) {
 
+        Object data = null;
         List<?> list = null;
         Query query = parsing.getQuery(method, objects);
         selectFrontProcessors(query,entityType);
         if (CollUtil.isColl(method.getReturnType())) {
             list = template.find(query, entityType);
         }else if(ObjectUtil.isNumber(method.getReturnType())){
-            return template.count(query,entityType);
+            data = template.count(query,entityType);
         }
 
         if (list == null || list.isEmpty()) {
             return null;
         }
 
-        if (method.getReturnType() == entityType) {
-            return list.get(0);
-        }
-
         Class rawClass = select.rawType() != Void.class ? select.rawType() : entityType;
+        if (method.getReturnType() == entityType) {
+            data = list.get(0);
+        }else{
 
-        if (CollUtil.isColl(method.getReturnType()) && rawClass == entityType) {
-            return list;
-        } else if (method.getReturnType().isArray() && rawClass == entityType) {
-            return list.toArray();
+            if (CollUtil.isColl(method.getReturnType()) && rawClass == entityType) {
+                data = list;
+            } else if (method.getReturnType().isArray() && rawClass == entityType) {
+                data = list.toArray();
+            }else if (CollUtil.isMap(rawClass) && CollUtil.isMap(rawClass)) {
+                data = BeanUtil.beanToMap(list.get(0));
+            }else if (method.getReturnType().isArray()) {
+                data = JSON.parseArray(JSON.toJSONString(list), rawClass).toArray();
+            } else if (CollUtil.isColl(method.getReturnType())) {
+                data = JSON.parseArray(JSON.toJSONString(list), rawClass);
+            } else {
+                data = ReflectUtil.newInstance(rawClass);
+                ObjectUtil.copyProperties(list.get(0), data);
+            }
+
         }
 
-        if (CollUtil.isMap(rawClass) && CollUtil.isMap(rawClass)) {
-            return BeanUtil.beanToMap(list.get(0));
-        }
-
-        Object data = null;
-        if (method.getReturnType().isArray()) {
-            data = JSON.parseArray(JSON.toJSONString(list), rawClass).toArray();
-        } else if (CollUtil.isColl(method.getReturnType())) {
-            data = JSON.parseArray(JSON.toJSONString(list), rawClass);
-        } else {
-            data = ReflectUtil.newInstance(rawClass);
-            ObjectUtil.copyProperties(list.get(0), data);
-        }
-
-        selectPostProcessors(query,entityType,data,rawClass);
+        selectPostProcessors(data,rawClass);
         return data;
     }
 
@@ -258,7 +255,7 @@ public class MongoProxy implements InvocationHandler {
     }
 
 
-    void selectPostProcessors(Query query,Class entityType,Object result,Class rawType) {
+    void selectPostProcessors(Object result,Class rawType) {
         List<SelectProcessor> processors = selectFrontProcessor.getObject();
 
         if (processors == null || processors.isEmpty()) {
@@ -266,7 +263,7 @@ public class MongoProxy implements InvocationHandler {
         }
 
         for (SelectProcessor processor : processors) {
-            processor.postProcessor(query, entityType,result,rawType);
+            processor.postProcessor(result,rawType);
         }
     }
 
