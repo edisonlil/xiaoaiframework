@@ -4,9 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.xiaoaiframework.spring.mongo.annotation.*;
 import com.xiaoaiframework.spring.mongo.annotation.Set;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
-import com.xiaoaiframework.spring.mongo.processor.ExecuteFrontProcessor;
-import com.xiaoaiframework.spring.mongo.processor.SaveFrontProcessor;
-import com.xiaoaiframework.spring.mongo.processor.UpdateFrontProcessor;
+import com.xiaoaiframework.spring.mongo.processor.*;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.bean.BeanUtil;
@@ -32,14 +30,18 @@ public class MongoProxy implements InvocationHandler {
 
     MongoTemplate template;
 
-    @Autowired
-    ObjectFactory<List<ExecuteFrontProcessor>> executeFrontProcessors;
 
     @Autowired
-    ObjectFactory<List<UpdateFrontProcessor>> updateFrontProcessors;
+    ObjectFactory<List<ExecuteProcessor>> executeFrontProcessors;
 
     @Autowired
-    ObjectFactory<List<SaveFrontProcessor>> saveFrontProcessor;
+    ObjectFactory<List<UpdateProcessor>> updateFrontProcessors;
+
+    @Autowired
+    ObjectFactory<List<SaveProcessor>> saveFrontProcessor;
+
+    @Autowired
+    ObjectFactory<List<SelectProcessor>> selectFrontProcessor;
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
@@ -105,14 +107,13 @@ public class MongoProxy implements InvocationHandler {
 
     private Object select(Select select, Method method, Object[] objects) {
 
-
         List<?> list = null;
-        if (objects == null || objects.length == 0) {
-            list = template.findAll(entityType);
-        } else if (CollUtil.isColl(method.getReturnType())) {
-            list = template.find(parsing.getQuery(method, objects), entityType);
+        Query query = parsing.getQuery(method, objects);
+        selectFrontProcessors(query,entityType);
+        if (CollUtil.isColl(method.getReturnType())) {
+            list = template.find(query, entityType);
         }else if(ObjectUtil.isNumber(method.getReturnType())){
-            return template.count(parsing.getQuery(method, objects),entityType);
+            return template.count(query,entityType);
         }
 
         if (list == null || list.isEmpty()) {
@@ -135,16 +136,18 @@ public class MongoProxy implements InvocationHandler {
             return BeanUtil.beanToMap(list.get(0));
         }
 
+        Object data = null;
         if (method.getReturnType().isArray()) {
-            return JSON.parseArray(JSON.toJSONString(list), rawClass).toArray();
+            data = JSON.parseArray(JSON.toJSONString(list), rawClass).toArray();
         } else if (CollUtil.isColl(method.getReturnType())) {
-            return JSON.parseArray(JSON.toJSONString(list), rawClass);
+            data = JSON.parseArray(JSON.toJSONString(list), rawClass);
         } else {
-            Object data = ReflectUtil.newInstance(rawClass);
+            data = ReflectUtil.newInstance(rawClass);
             ObjectUtil.copyProperties(list.get(0), data);
-            return data;
         }
 
+        selectPostProcessors(query,entityType,data,rawClass);
+        return data;
     }
 
 
@@ -207,38 +210,63 @@ public class MongoProxy implements InvocationHandler {
 
 
     void executeFrontProcessors(Object o, Method method, Object[] objects) {
-        List<ExecuteFrontProcessor> processors = executeFrontProcessors.getObject();
+        List<ExecuteProcessor> processors = executeFrontProcessors.getObject();
 
         if (processors == null || processors.isEmpty()) {
             return;
         }
 
-        for (ExecuteFrontProcessor processor : processors) {
+        for (ExecuteProcessor processor : processors) {
             processor.frontProcessor(o, method, objects);
         }
     }
 
     void updateFrontProcessors(org.springframework.data.mongodb.core.query.Update update, Query query,Class entity) {
-        List<UpdateFrontProcessor> processors = updateFrontProcessors.getObject();
+        List<UpdateProcessor> processors = updateFrontProcessors.getObject();
 
         if (processors == null || processors.isEmpty()) {
             return;
         }
 
-        for (UpdateFrontProcessor processor : processors) {
+        for (UpdateProcessor processor : processors) {
             processor.frontProcessor(update, query, entity);
         }
     }
 
     void saveFrontProcessors(Object[] data) {
-        List<SaveFrontProcessor> processors = saveFrontProcessor.getObject();
+        List<SaveProcessor> processors = saveFrontProcessor.getObject();
 
         if (processors == null || processors.isEmpty()) {
             return;
         }
 
-        for (SaveFrontProcessor processor : processors) {
+        for (SaveProcessor processor : processors) {
             processor.frontProcessor(data);
+        }
+    }
+
+    void selectFrontProcessors(Query query,Class entityType) {
+        List<SelectProcessor> processors = selectFrontProcessor.getObject();
+
+        if (processors == null || processors.isEmpty()) {
+            return;
+        }
+
+        for (SelectProcessor processor : processors) {
+            processor.frontProcessor(query, entityType);
+        }
+    }
+
+
+    void selectPostProcessors(Query query,Class entityType,Object result,Class rawType) {
+        List<SelectProcessor> processors = selectFrontProcessor.getObject();
+
+        if (processors == null || processors.isEmpty()) {
+            return;
+        }
+
+        for (SelectProcessor processor : processors) {
+            processor.postProcessor(query, entityType,result,rawType);
         }
     }
 

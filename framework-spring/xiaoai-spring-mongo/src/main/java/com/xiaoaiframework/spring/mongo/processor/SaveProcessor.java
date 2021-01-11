@@ -2,7 +2,7 @@ package com.xiaoaiframework.spring.mongo.processor;
 
 
 
-public interface SaveFrontProcessor {
+public interface SaveProcessor {
 
 
     void frontProcessor(Object[] val);
