@@ -18,7 +18,6 @@ public class MongoPageHelper {
     public static PageRequest get(){
         return LOCAL_PAGE.get();
     }
-
     
     public static void clear(){
         LOCAL_PAGE.remove();
