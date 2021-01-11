@@ -55,7 +55,7 @@ public abstract class UploadTemplate {
 
             client.upload(getBucketName(),fileUrl,file);
             
-            logger.info("上传消耗的时间{}", System.currentTimeMillis() - start);
+            logger.info("上传消耗的时间:{}", System.currentTimeMillis() - start);
             return ResultBean.success().setData(new UploaderInfo(
                     file.length(),
                     fileUrl,
