@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
@@ -15,6 +16,7 @@ import java.util.Collection;
  * 分页查询前置处理器
  * @author edison
  */
+@Component
 public class PageSelectProcessor implements SelectProcessor {
 
     @Autowired
