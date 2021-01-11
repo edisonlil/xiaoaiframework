@@ -3,6 +3,9 @@ rootProject.name = 'xiaoaiframework'
 
 include(":framework-base")
 include(":framework-spring")
+include(":framework-api")
+include(":framework-impl")
+
 
 include(":framework-base:xiaoai-log4j2")
 include(":framework-base:xiaoai-core")
@@ -14,3 +17,8 @@ include(":framework-spring:xiaoai-spring-log4j2")
 include(":framework-spring:xiaoai-spring-redis")
 include(":framework-spring:xiaoai-spring-mongo")
 include(":framework-spring:xiaoai-spring-mybatis-puls")
+
+include(":framework-api:xiaoai-upload")
+include(":framework-impl:xiaoai-upload-ftp")
+include(":framework-impl:xiaoai-upload-oss")
+include(":framework-impl:xiaoai-upload-cos")
