@@ -34,7 +34,6 @@ import java.time.format.DateTimeFormatter;
  * @version 1.0.0
  * @create 2020/04/09
  */
-@Configuration
 @EnableCaching
 public class RedisConfiguration extends CachingConfigurerSupport {
 
