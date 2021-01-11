@@ -13,6 +13,7 @@ include(":framework-base:xiaoai-util")
 include(":framework-base:xiaoai-common")
 include(":framework-base:xiaoai-test")
 
+include(":framework-spring:xiaoai-spring-web")
 include(":framework-spring:xiaoai-spring-log4j2")
 include(":framework-spring:xiaoai-spring-redis")
 include(":framework-spring:xiaoai-spring-mongo")
