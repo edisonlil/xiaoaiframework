@@ -105,11 +105,14 @@ public class MongoProxy implements InvocationHandler {
 
     private Object select(Select select, Method method, Object[] objects) {
 
+
         List<?> list = null;
         if (objects == null || objects.length == 0) {
             list = template.findAll(entityType);
         } else if (CollUtil.isColl(method.getReturnType())) {
             list = template.find(parsing.getQuery(method, objects), entityType);
+        }else if(ObjectUtil.isNumber(method.getReturnType())){
+            return template.count(parsing.getQuery(method, objects),entityType);
         }
 
         if (list == null || list.isEmpty()) {
