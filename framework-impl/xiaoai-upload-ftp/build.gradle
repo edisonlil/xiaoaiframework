@@ -1,4 +1,4 @@
 dependencies {
-    compile project(":framework-api:xiaoai-upload")
+    compile project(":framework-api:xiaoai-upload-api")
     compile 'cn.hutool:hutool-all:5.5.6'
 }

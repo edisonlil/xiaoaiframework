@@ -1,17 +1,18 @@
 package com.xiaoaiframework.api.upload.template;
 
+
 import com.xiaoaiframework.api.upload.UploaderInfo;
-import com.xiaoaiframework.api.upload.client.UploadClient;
 import com.xiaoaiframework.core.base.ResultBean;
+import com.xiaoaiframework.util.base.StrUtil;
+import com.xiaoaiframework.util.file.FilenameUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.xiaoaiframework.api.upload.client.UploadClient;
 
 import java.io.File;
 import java.net.URI;
 import java.time.LocalDate;
 
-import com.xiaoaiframework.util.base.StrUtil;
-import com.xiaoaiframework.util.file.FilenameUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 /**
  * 文件上传模板
  * @author edison

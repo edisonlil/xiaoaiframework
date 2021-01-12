@@ -11,7 +11,7 @@ public interface UploadClient<T> {
 
     T connect();
 
-    void upload(String root,String path,File file);
+    void upload(String root, String path, File file);
 
     void close(T connect);
 }
