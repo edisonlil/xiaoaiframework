@@ -136,9 +136,9 @@ subprojects {
             dependencyManagement {
                 imports {
                     //springboot版本策略
-                    mavenBom "org.springframework.boot:spring-boot-starter-parent:${springbootVersion}"
+                    mavenBom "org.springframework.boot:spring-boot-starter-parent:${springBootVersion}"
                     //springcloud版本策略
-                    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springcloudVersion}"
+                    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
                 }
             }
         }
