@@ -31,17 +31,13 @@ public class MongoProxy implements InvocationHandler {
     MongoTemplate template;
 
 
-    @Autowired
-    ObjectFactory<List<ExecuteProcessor>> executeFrontProcessors;
+    List<ExecuteProcessor> executeFrontProcessors;
 
-    @Autowired
-    ObjectFactory<List<UpdateProcessor>> updateFrontProcessors;
+    List<UpdateProcessor> updateFrontProcessors;
 
-    @Autowired
-    ObjectFactory<List<SaveProcessor>> saveFrontProcessor;
+    List<SaveProcessor> saveFrontProcessor;
 
-    @Autowired
-    ObjectFactory<List<SelectProcessor>> selectFrontProcessor;
+    List<SelectProcessor> selectFrontProcessor;
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
@@ -205,9 +201,24 @@ public class MongoProxy implements InvocationHandler {
         this.parsing = parsing;
     }
 
+    public void setExecuteFrontProcessors(List<ExecuteProcessor> executeFrontProcessors) {
+        this.executeFrontProcessors = executeFrontProcessors;
+    }
+
+    public void setSaveFrontProcessor(List<SaveProcessor> saveFrontProcessor) {
+        this.saveFrontProcessor = saveFrontProcessor;
+    }
+
+    public void setSelectFrontProcessor(List<SelectProcessor> selectFrontProcessor) {
+        this.selectFrontProcessor = selectFrontProcessor;
+    }
+
+    public void setUpdateFrontProcessors(List<UpdateProcessor> updateFrontProcessors) {
+        this.updateFrontProcessors = updateFrontProcessors;
+    }
 
     void executeFrontProcessors(Object o, Method method, Object[] objects) {
-        List<ExecuteProcessor> processors = executeFrontProcessors.getObject();
+        List<ExecuteProcessor> processors = executeFrontProcessors;
 
         if (processors == null || processors.isEmpty()) {
             return;
@@ -219,7 +230,7 @@ public class MongoProxy implements InvocationHandler {
     }
 
     void updateFrontProcessors(org.springframework.data.mongodb.core.query.Update update, Query query,Class entity) {
-        List<UpdateProcessor> processors = updateFrontProcessors.getObject();
+        List<UpdateProcessor> processors = updateFrontProcessors;
 
         if (processors == null || processors.isEmpty()) {
             return;
@@ -231,7 +242,7 @@ public class MongoProxy implements InvocationHandler {
     }
 
     void saveFrontProcessors(Object[] data) {
-        List<SaveProcessor> processors = saveFrontProcessor.getObject();
+        List<SaveProcessor> processors = saveFrontProcessor;
 
         if (processors == null || processors.isEmpty()) {
             return;
@@ -243,7 +254,7 @@ public class MongoProxy implements InvocationHandler {
     }
 
     void selectFrontProcessors(Query query,Class entityType) {
-        List<SelectProcessor> processors = selectFrontProcessor.getObject();
+        List<SelectProcessor> processors = selectFrontProcessor;
 
         if (processors == null || processors.isEmpty()) {
             return;
@@ -256,7 +267,7 @@ public class MongoProxy implements InvocationHandler {
 
 
     void selectPostProcessors(Object result,Class rawType) {
-        List<SelectProcessor> processors = selectFrontProcessor.getObject();
+        List<SelectProcessor> processors = selectFrontProcessor;
 
         if (processors == null || processors.isEmpty()) {
             return;
