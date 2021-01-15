@@ -31,6 +31,6 @@ hs_err_pid*
 clear
 git
 
-.gradle
+.gradle/
 
 gradle
