@@ -39,9 +39,11 @@ public class ConditionParsing {
         Annotation[][] annotations = method.getParameterAnnotations();
 
         Query query = new Query();
-        for (int i = 0; i < objects.length; i++) {
-            Annotation[] annotation = annotations[i];
-            query = queryParsing(query,annotation,objects[i]);
+        if(objects != null){
+            for (int i = 0; i < objects.length; i++) {
+                Annotation[] annotation = annotations[i];
+                query = queryParsing(query,annotation,objects[i]);
+            }
         }
 
         return query;
