@@ -62,7 +62,7 @@ public class Page<E> extends ArrayList<E> {
     /**
      * 是否不分页
      */
-    private Boolean pageSizeZero = true;
+    private Boolean pageSizeZero = false;
 
     public Page() {
         super();

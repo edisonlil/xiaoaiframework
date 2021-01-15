@@ -26,17 +26,24 @@ public class PageSelectProcessor implements SelectProcessor {
     public void frontProcessor(Query query, Class entity) {
 
         Page page = MongoPageHelper.get();
+        if(page == null){return;}
+        
         if(page != null && !page.getPageSizeZero()){
             query.with(PageRequest.of(page.getPageNum(),page.getPageSize()));
         }
+        page.setQuery(query);
+        page.setEntityType(entity);
 
     }
 
 
     @Override
-    public void postProcessor(Object result,Class rawType){
+    public Object postProcessor(Object result,Class rawType){
 
         Page page = MongoPageHelper.get();
+
+        if(page == null){return result;}
+
         if(CollUtil.isColl(result)){
             page.addAll((Collection) result);
         }else {
@@ -46,8 +53,10 @@ public class PageSelectProcessor implements SelectProcessor {
         if(page.getCount()){
             page.setTotal(template.count(page.getQuery(),page.getEntityType()));
         }
-        result = page;
-        
+
         MongoPageHelper.clear();
+        
+        return page;
+
     }
 }

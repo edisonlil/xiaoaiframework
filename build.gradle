@@ -13,10 +13,10 @@ buildscript {
         mavenLocal()
         //本地Nexus私服
         maven { url "${nexusSnapshotsUrl}"}
-        //Maven 仓库
-        maven { url "${aliyunNexusUrl}" }
         //JFrog公司提供的性能更好的maven仓库
         jcenter()
+        //Maven 仓库
+        maven { url "${aliyunNexusUrl}" }
         // 中央库
         mavenCentral()
     }

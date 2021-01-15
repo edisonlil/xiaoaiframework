@@ -16,6 +16,7 @@ public interface SelectProcessor{
      *                then the primitive type is the element type in the collection,
      *                otherwise it should be the same as the result type
      * @param rawType
+     * @return result
      */
-    void postProcessor(Object result, Class rawType);
+    Object postProcessor(Object result, Class rawType);
 }

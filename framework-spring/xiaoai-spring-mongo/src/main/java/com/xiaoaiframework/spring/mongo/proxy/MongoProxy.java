@@ -114,7 +114,7 @@ public class MongoProxy implements InvocationHandler {
         }
 
         if (list == null || list.isEmpty()) {
-            return null;
+            return data;
         }
 
         Class rawClass = select.rawType() != Void.class ? select.rawType() : entityType;
@@ -139,8 +139,8 @@ public class MongoProxy implements InvocationHandler {
 
         }
 
-        selectPostProcessors(data,rawClass);
-        return data;
+        return selectPostProcessors(data,rawClass);
+
     }
 
 
@@ -266,16 +266,18 @@ public class MongoProxy implements InvocationHandler {
     }
 
 
-    void selectPostProcessors(Object result,Class rawType) {
+    Object selectPostProcessors(Object result,Class rawType) {
         List<SelectProcessor> processors = selectFrontProcessor;
 
         if (processors == null || processors.isEmpty()) {
-            return;
+            return result;
         }
 
         for (SelectProcessor processor : processors) {
-            processor.postProcessor(result,rawType);
+           result = processor.postProcessor(result,rawType);
         }
+
+        return result;
     }
 
 }
