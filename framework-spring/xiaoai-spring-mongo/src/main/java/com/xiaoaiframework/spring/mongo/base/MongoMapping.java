@@ -6,15 +6,15 @@ public interface MongoMapping<E,ID> {
 
     @Select
     E findById(@Eq(name = "id") ID id);
-
+    
     @Delete
     boolean delete(@Eq(name = "id") ID id);
 
     @Save
-    boolean save(@Eq(name = "id") ID id);
+    boolean save(E e);
 
 
     @Update
-    boolean delete(@Eq(name = "id") ID id,@Set E e);
+    boolean update(@Eq(name = "id") ID id,@Set E e);
 
 }
