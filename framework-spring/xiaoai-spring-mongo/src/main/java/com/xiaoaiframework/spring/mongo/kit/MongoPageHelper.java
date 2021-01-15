@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
  */
 public class MongoPageHelper {
 
-    static ThreadLocal<Page> LOCAL_PAGE;
+    static ThreadLocal<Page> LOCAL_PAGE = new ThreadLocal<>();
 
 
     public static void startPage(int curPage,int pageRecord,boolean count){
