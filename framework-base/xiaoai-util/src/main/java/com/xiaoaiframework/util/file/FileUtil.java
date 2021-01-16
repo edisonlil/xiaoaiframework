@@ -2,7 +2,7 @@ package com.xiaoaiframework.util.file;
 
 import java.io.*;
 
-import static com.xiaoaiframework.util.io.IoUtils.readAndWrite;
+import static com.xiaoaiframework.util.io.IOUtil.readAndWrite;
 
 
 public class FileUtil {
@@ -38,5 +38,15 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static FileInputStream input(File file){
+
+        try {
+            return new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

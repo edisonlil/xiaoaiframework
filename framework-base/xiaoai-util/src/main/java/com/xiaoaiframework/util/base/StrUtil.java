@@ -193,4 +193,41 @@ public class StrUtil {
         }
         return UUID.randomUUID().toString();
     }
+
+
+    public static int match(String source,String str){
+
+        char[] sourceChars = source.toCharArray();
+        char[] strChars = str.toCharArray();
+
+        int differenceCount = 0;
+        if(source.length() != str.length()){
+            if(source.length() > str.length()){
+                differenceCount = source.length()-str.length();
+            }else{
+                differenceCount = str.length() - source.length();
+            }
+        }
+
+        for (int i = 0; i < sourceChars.length; i++) {
+
+            if(sourceChars[i] != strChars[i]){
+
+                differenceCount++;
+            }
+
+
+        }
+
+
+
+        return differenceCount;
+    }
+
+    public static void main(String[] args) {
+
+
+        System.out.println(match("123231","323213"));
+
+    }
 }

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class IoUtils {
+public class IOUtil {
 
     public static final Integer BUF_SIZE = 1024;
 

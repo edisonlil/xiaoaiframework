@@ -1,4 +1,4 @@
-package com.xiaoaiframework.util.algorithm;
+package com.xiaoaiframework.util.coll;
 
 import com.xiaoaiframework.util.math.RandomUtil;
 
