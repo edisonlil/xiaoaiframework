@@ -195,7 +195,7 @@ public class StrUtil {
     }
 
 
-    public static int match(String source,String str){
+    public static int hamming(String source,String str){
 
         char[] sourceChars = source.toCharArray();
         char[] strChars = str.toCharArray();
@@ -227,7 +227,7 @@ public class StrUtil {
     public static void main(String[] args) {
 
 
-        System.out.println(match("123231","323213"));
+        System.out.println(hamming("123231","323213"));
 
     }
 }
