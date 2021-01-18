@@ -195,23 +195,29 @@ public class StrUtil {
     }
 
 
-    public static int hamming(String source,String str){
+    /**
+     * 得出两个字符串的汉明距离(字符串之间的差别数)
+     * @param str1
+     * @param str2
+     * @return
+     */
+    public static int hamming(String str1,String str2){
 
-        char[] sourceChars = source.toCharArray();
-        char[] strChars = str.toCharArray();
+        char[] str1Chars = str1.toCharArray();
+        char[] str2Chars = str2.toCharArray();
 
         int differenceCount = 0;
-        if(source.length() != str.length()){
-            if(source.length() > str.length()){
-                differenceCount = source.length()-str.length();
+        if(str1.length() != str2.length()){
+            if(str1.length() > str2.length()){
+                differenceCount = str1.length()-str2.length();
             }else{
-                differenceCount = str.length() - source.length();
+                differenceCount = str2.length() - str1.length();
             }
         }
 
-        for (int i = 0; i < sourceChars.length; i++) {
+        for (int i = 0; i < str1Chars.length; i++) {
 
-            if(sourceChars[i] != strChars[i]){
+            if(str1Chars[i] != str2Chars[i]){
 
                 differenceCount++;
             }
