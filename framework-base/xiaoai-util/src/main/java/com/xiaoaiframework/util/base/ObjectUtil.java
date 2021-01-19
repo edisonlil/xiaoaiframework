@@ -16,7 +16,7 @@ public class ObjectUtil {
      */
     public static void copyProperties(Object source,Object target){
 
-        Field[] fields = ReflectUtil.getFields(source);
+        Field[] fields = ReflectUtil.getDeclaredFields(source);
 
         for (Field field : fields) {
             ReflectUtil.setFieldValue(target,field.getName(),ReflectUtil.getFieldValue(source,field));
