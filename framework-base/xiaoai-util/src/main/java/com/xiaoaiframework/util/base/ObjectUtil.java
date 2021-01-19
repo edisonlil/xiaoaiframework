@@ -19,7 +19,12 @@ public class ObjectUtil {
         Field[] fields = ReflectUtil.getDeclaredFields(source);
 
         for (Field field : fields) {
-            ReflectUtil.setFieldValue(target,field.getName(),ReflectUtil.getFieldValue(source,field));
+            try {
+                ReflectUtil.setFieldValue(target,field.getName(),ReflectUtil.getFieldValue(source,field));
+            } catch (Exception e) {
+                continue;
+                //ignore...
+            }
         }
 
     }

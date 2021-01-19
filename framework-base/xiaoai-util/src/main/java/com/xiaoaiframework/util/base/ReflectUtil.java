@@ -12,9 +12,14 @@ import java.util.List;
  */
 public class ReflectUtil {
 
-    
+
+    public static Field[] getDeclaredFields(Class c){
+        return c.getDeclaredFields();
+    }
+
+
     public static Field[] getDeclaredFields(Object obj){
-        return obj.getClass().getDeclaredFields();
+        return getDeclaredFields(obj.getClass());
     }
 
     public static Field[] getFields(Object obj){
@@ -54,21 +59,15 @@ public class ReflectUtil {
         return null;
     }
 
-    public static void setFieldValue(Object obj,String fieldName,Object value){
+    public static void setFieldValue(Object obj,String fieldName,Object value) throws IllegalAccessException {
         setFieldValue(obj, getDeclaredField(obj, fieldName), value);
     }
 
 
 
-    public static void setFieldValue(Object obj,Field field,Object value){
-
-        try {
-            field.setAccessible(true);
-            field.set(obj, value);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-      
+    public static void setFieldValue(Object obj,Field field,Object value) throws IllegalAccessException {
+        field.setAccessible(true);
+        field.set(obj, value);
     }
 
     public static<T> T newInstance(Class<T> c,boolean ignoreCreateFail){
