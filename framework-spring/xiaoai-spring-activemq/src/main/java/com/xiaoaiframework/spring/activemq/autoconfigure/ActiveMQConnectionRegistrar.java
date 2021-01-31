@@ -1,7 +1,6 @@
 package com.xiaoaiframework.spring.activemq.autoconfigure;
 
 import com.xiaoaiframework.spring.activemq.DataSource;
-import com.xiaoaiframework.spring.activemq.properties.ActiveMQActivemqProperties;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -9,8 +8,6 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.core.JmsOperations;
@@ -28,6 +25,10 @@ public class ActiveMQConnectionRegistrar implements BeanFactoryAware {
     BeanFactory factory;
 
 
+    public final static String  JMS_TEMPLATE_SUFFIX = "JmsTemplate";
+    public final static String  CONNECTION_FACTORY_SUFFIX = "ActiveMQConnectionFactory";
+    public final static String  CONTAINER_FACTORY_SUFFIX = "JmsListenerContainerFactory";
+
     public void registrar(DataSource source){
         //创建监听容器工厂 如果没有连接工厂则创建.
         createJmsListenerContainerFactory(source);
@@ -44,7 +45,7 @@ public class ActiveMQConnectionRegistrar implements BeanFactoryAware {
     private ActiveMQConnectionFactory createActiveMQConnectionFactory(DataSource source){
         BeanDefinition beanDefinition = buildBeanDefinition(ActiveMQConnectionFactory.class,null,source.getUsername(),source.getPassword(),source.getBrokerURl());
         beanDefinition.setPrimary(source.isPrimary());
-        return beanRegister(source.getId()+"ActiveMQConnectionFactory",beanDefinition);
+        return beanRegister(source.getId()+CONNECTION_FACTORY_SUFFIX,beanDefinition);
     }
 
 
@@ -58,7 +59,7 @@ public class ActiveMQConnectionRegistrar implements BeanFactoryAware {
         map.put("connectionFactory",createActiveMQConnectionFactory(source));
         map.put("pubSubDomain",source.isPubSubDomain());
         BeanDefinition beanDefinition = buildBeanDefinition(DefaultJmsListenerContainerFactory.class,map);
-        return beanRegister(source.getId()+"JmsListenerContainerFactory", beanDefinition);
+        return beanRegister(source.getId()+CONTAINER_FACTORY_SUFFIX, beanDefinition);
     }
 
     /**
@@ -71,7 +72,7 @@ public class ActiveMQConnectionRegistrar implements BeanFactoryAware {
         map.put("connectionFactory",createActiveMQConnectionFactory(source));
         map.put("pubSubDomain",source.isPubSubDomain());
         BeanDefinition beanDefinition = buildBeanDefinition(JmsTemplate.class,map);
-        return beanRegister(source.getId()+"JmsTemplate", beanDefinition);
+        return beanRegister(source.getId()+JMS_TEMPLATE_SUFFIX, beanDefinition);
     }
 
 
