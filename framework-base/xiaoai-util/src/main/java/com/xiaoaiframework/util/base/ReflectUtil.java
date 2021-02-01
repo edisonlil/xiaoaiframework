@@ -1,9 +1,6 @@
 package com.xiaoaiframework.util.base;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -106,6 +103,20 @@ public class ReflectUtil {
         return newInstance(c,true);
     }
 
+
+    public static Class forName(String className){
+
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
     
 
+    public static Method[] getDeclaredMethods(Class c){
+        return c.getDeclaredMethods();
+    }
 }
