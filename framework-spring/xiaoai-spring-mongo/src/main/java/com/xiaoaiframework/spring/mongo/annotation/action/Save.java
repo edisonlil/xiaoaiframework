@@ -1,4 +1,4 @@
-package com.xiaoaiframework.spring.mongo.annotation;
+package com.xiaoaiframework.spring.mongo.annotation.action;
 
 import java.lang.annotation.*;
 

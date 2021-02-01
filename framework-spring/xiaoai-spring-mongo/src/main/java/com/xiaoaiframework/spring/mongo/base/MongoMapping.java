@@ -1,6 +1,10 @@
 package com.xiaoaiframework.spring.mongo.base;
 
 import com.xiaoaiframework.spring.mongo.annotation.*;
+import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
+import com.xiaoaiframework.spring.mongo.annotation.action.Save;
+import com.xiaoaiframework.spring.mongo.annotation.action.Select;
+import com.xiaoaiframework.spring.mongo.annotation.action.Update;
 
 public interface MongoMapping<E,ID> {
 

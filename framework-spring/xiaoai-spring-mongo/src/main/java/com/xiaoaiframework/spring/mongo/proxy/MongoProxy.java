@@ -1,16 +1,17 @@
 package com.xiaoaiframework.spring.mongo.proxy;
 
 import com.alibaba.fastjson.JSON;
-import com.xiaoaiframework.spring.mongo.annotation.*;
 import com.xiaoaiframework.spring.mongo.annotation.Set;
+import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
+import com.xiaoaiframework.spring.mongo.annotation.action.Save;
+import com.xiaoaiframework.spring.mongo.annotation.action.Select;
+import com.xiaoaiframework.spring.mongo.annotation.action.Update;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.*;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.bean.BeanUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
