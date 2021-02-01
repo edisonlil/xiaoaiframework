@@ -1,7 +1,10 @@
 package com.xiaoaiframework.util.base;
 
 
+import com.xiaoaiframework.util.coll.CollUtil;
+
 import java.lang.reflect.Field;
+import java.util.Collection;
 
 /**
  * @author edison
@@ -66,5 +69,17 @@ public class ObjectUtil {
     public static boolean isNull(Object obj){
         return obj == null;
     }
-    
+
+
+    public static boolean isEmpty(Object o){
+
+        if(o == null){
+            return true;
+        }else if(o instanceof String){
+            return o.toString().isEmpty();
+        }else if(o instanceof Collection){
+            return CollUtil.isEmpty((Collection) o);
+        }
+        return false;
+    }
 }

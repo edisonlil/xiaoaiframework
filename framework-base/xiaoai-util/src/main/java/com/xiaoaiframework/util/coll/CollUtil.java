@@ -1,6 +1,7 @@
 package com.xiaoaiframework.util.coll;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -50,6 +51,13 @@ public class CollUtil {
     }
 
 
+    public static <E> ArrayList<E> newArrayList(Collection<E> coll){
+        ArrayList<E> list = new ArrayList(coll.size());
+        list.addAll(coll);
+        return list;
+
+    }
+
     public static <E>HashSet<E> newHashSet(E... es){
 
         HashSet<E> set = new HashSet(es.length);
@@ -57,5 +65,13 @@ public class CollUtil {
 
         return set;
 
+    }
+
+    public static boolean isEmpty(Collection c){
+        if(c == null || c.isEmpty()){
+            return true;
+        }
+
+        return false;
     }
 }

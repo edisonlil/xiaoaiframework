@@ -1,5 +1,6 @@
 package com.xiaoaiframework.spring.mongo.factory;
 
+import com.xiaoaiframework.spring.mongo.MongoExecute;
 import com.xiaoaiframework.spring.mongo.annotation.Mapping;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.ExecuteProcessor;
@@ -70,7 +71,7 @@ public class MongoMappingProxyFactory implements FactoryBean, BeanFactoryAware {
         MongoProxy proxy = new MongoProxy();
         proxy.setKeyType(mapping.keyType());
         proxy.setEntityType(mapping.entityType());
-        proxy.setTemplate(factory.getBean(MongoTemplate.class));
+        proxy.setExecute(factory.getBean(MongoExecute.class));
         proxy.setParsing(factory.getBean(ConditionParsing.class));
 
 

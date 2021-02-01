@@ -1,6 +1,7 @@
 package com.xiaoaiframework.spring.mongo.proxy;
 
 import com.alibaba.fastjson.JSON;
+import com.xiaoaiframework.spring.mongo.MongoExecute;
 import com.xiaoaiframework.spring.mongo.annotation.Set;
 import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
 import com.xiaoaiframework.spring.mongo.annotation.action.Save;
@@ -13,7 +14,6 @@ import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.bean.BeanUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.lang.annotation.Annotation;
@@ -29,7 +29,7 @@ public class MongoProxy implements InvocationHandler {
 
     ConditionParsing parsing;
 
-    MongoTemplate template;
+    MongoExecute execute;
 
 
     List<ExecuteProcessor> executeFrontProcessors;
@@ -77,27 +77,18 @@ public class MongoProxy implements InvocationHandler {
 
         if (!CollUtil.isColl(val)) {
             saveFrontProcessors(new Object[]{val});
-            template.save(val);
+            execute.save(val,entityType);
             return true;
         }
 
-        List list = new ArrayList();
-        list.addAll((Collection) val);
-
+        List list = CollUtil.newArrayList((Collection) val);
         if (list.isEmpty()) {
             return true;
         }
-
         saveFrontProcessors(list.toArray());
-        if (list.size() == 1) {
-            template.save(list.get(0));
-            return true;
-        }
-
         list.forEach(item -> {
-            template.save(item);
+            execute.save(item,entityType);
         });
-
         return true;
     }
 
@@ -105,39 +96,35 @@ public class MongoProxy implements InvocationHandler {
     private Object select(Select select, Method method, Object[] objects) {
 
         Object data = null;
-        List<?> list = null;
+
         Query query = parsing.getQuery(method, objects);
         selectFrontProcessors(query,entityType);
+
         if (CollUtil.isColl(method.getReturnType())) {
-            list = template.find(query, entityType);
+            data = execute.find(query, entityType);
         }else if(ObjectUtil.isNumber(method.getReturnType())){
-            data = template.count(query,entityType);
+            data = execute.count(query,entityType);
         }
 
-        if (list == null || list.isEmpty()) {
+        if (ObjectUtil.isEmpty(data)) {
             return data;
         }
 
+
         Class rawClass = select.rawType() != Void.class ? select.rawType() : entityType;
-        if (method.getReturnType() == entityType) {
-            data = list.get(0);
-        }else{
 
-            if (CollUtil.isColl(method.getReturnType()) && rawClass == entityType) {
-                data = list;
-            } else if (method.getReturnType().isArray() && rawClass == entityType) {
-                data = list.toArray();
-            }else if (CollUtil.isMap(rawClass) && CollUtil.isMap(rawClass)) {
-                data = BeanUtil.beanToMap(list.get(0));
-            }else if (method.getReturnType().isArray()) {
-                data = JSON.parseArray(JSON.toJSONString(list), rawClass).toArray();
-            } else if (CollUtil.isColl(method.getReturnType())) {
-                data = JSON.parseArray(JSON.toJSONString(list), rawClass);
-            } else {
-                data = ReflectUtil.newInstance(rawClass);
-                ObjectUtil.copyProperties(list.get(0), data);
-            }
-
+        if (method.getReturnType().isArray() && rawClass == entityType) {
+            data = ((Collection)data).toArray();
+        }else if (CollUtil.isMap(method.getReturnType()) && CollUtil.isMap(rawClass)) {
+            data = BeanUtil.beanToMap(data);
+        }else if (method.getReturnType().isArray() && rawClass != entityType) {
+            data = JSON.parseArray(JSON.toJSONString(data), rawClass).toArray();
+        } else if (CollUtil.isColl(method.getReturnType())) {
+            data = JSON.parseArray(JSON.toJSONString(data), rawClass);
+        } else {
+            Object raw = ReflectUtil.newInstance(rawClass);
+            ObjectUtil.copyProperties(data, raw);
+            data = raw;
         }
 
         return selectPostProcessors(data,rawClass);
@@ -150,7 +137,7 @@ public class MongoProxy implements InvocationHandler {
         if (objects == null) {
             return false;
         }
-        return template.remove(parsing.getQuery(method, objects), entityType).wasAcknowledged();
+        return execute.remove(parsing.getQuery(method, objects), entityType);
 
     }
 
@@ -161,8 +148,6 @@ public class MongoProxy implements InvocationHandler {
             return false;
         }
         Annotation[][] annotations = method.getParameterAnnotations();
-
-
         Object update = null;
         for (int i = 0; i < objects.length; i++) {
             Annotation annotation = annotations[i][0];
@@ -180,10 +165,14 @@ public class MongoProxy implements InvocationHandler {
         Query query = parsing.getQuery(method, objects);
         updateFrontProcessors(u,query,entityType);
 
-        return template.updateFirst(query
-                ,u, entityType).wasAcknowledged();
+        return execute.updateFirst(query
+                ,u, entityType);
     }
 
+
+    public void setExecute(MongoExecute execute) {
+        this.execute = execute;
+    }
 
     public void setKeyType(Class<?> keyType) {
         this.keyType = keyType;
@@ -193,10 +182,6 @@ public class MongoProxy implements InvocationHandler {
         this.entityType = entityType;
     }
 
-
-    public void setTemplate(MongoTemplate template) {
-        this.template = template;
-    }
 
     public void setParsing(ConditionParsing parsing) {
         this.parsing = parsing;
