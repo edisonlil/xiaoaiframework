@@ -39,6 +39,11 @@ public class FilenameUtil {
         return removeExtension(getName(filename));
     }
 
+    /**
+     * 获取文件名
+     * @param filename
+     * @return
+     */
     public static String getName(String filename) {
         if (filename == null) {
             return null;
@@ -47,6 +52,21 @@ public class FilenameUtil {
             return filename.substring(index + 1);
         }
     }
+
+    /**
+     * 获取文件上一层目录
+     * @param path
+     * @return
+     */
+    public static String getPreviousPath(String path) {
+        if (path == null) {
+            return null;
+        } else {
+            int index = indexOfLastSeparator(path);
+            return path.substring(0,index+1);
+        }
+    }
+
 
     public static String removeExtension(String filename) {
         if (filename == null) {

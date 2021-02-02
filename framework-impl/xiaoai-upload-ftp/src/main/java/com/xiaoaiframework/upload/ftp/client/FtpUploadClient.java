@@ -1,7 +1,10 @@
 package com.xiaoaiframework.upload.ftp.client;
 
+import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.extra.ftp.Ftp;
 import com.xiaoaiframework.api.upload.client.UploadClient;
+import com.xiaoaiframework.util.file.FileUtil;
 import com.xiaoaiframework.util.file.FilenameUtil;
 
 import java.io.File;
@@ -42,7 +45,8 @@ public class FtpUploadClient implements UploadClient<Ftp> {
         if(!ftp.pwd().equals(root)){
             ftp.cd(root);
         }
-        ftp.upload(path, FilenameUtil.getBaseName(path), file);
+
+        ftp.upload(FilenameUtil.getPreviousPath(path), FilenameUtil.getName(path), file);
         close(ftp);
     }
 

@@ -87,7 +87,7 @@ public class UploadTemplate {
 
             String folder = getFolder();
             // 设置文件路径和名称
-            String fileUrl = folder + "/" + LocalDate.now().toString() + "/" + suffix + "/" + uuid + "$" + file.getName();
+            String fileUrl = folder + "/" + LocalDate.now().toString() + "/" + suffix + "/" + uuid + "-" + file.getName();
             LOGGER.info("上传文件的名称为:{}", file.getName());
 
             client.upload(getBucketName(),fileUrl,file);
