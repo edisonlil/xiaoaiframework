@@ -11,18 +11,39 @@ import java.net.URISyntaxException;
 @ConfigurationProperties(prefix = "file.upload")
 public class FileUploadProperties {
 
+    /**
+     * 文件服务器地址
+     */
     String ip;
 
+    /**
+     * 文件服务器端口
+     */
     Integer port;
 
+    /**
+     * 用户名
+     */
     String username;
 
+    /**
+     * 密码
+     */
     String password;
 
+    /**
+     * 文件访问的URI
+     */
     URI uri;
 
+    /**
+     * 文件路径不包含文件名 例如/a/b/c...
+     */
     String folder;
 
+    /**
+     * 根目录
+     */
     String bucketName;
 
 
