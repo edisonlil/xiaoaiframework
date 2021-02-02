@@ -4,6 +4,8 @@ import com.xiaoaiframework.core.base.ResultBean;
 import com.xiaoaiframework.spring.log4j2.annotation.LogAspect;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 /**
  * @author edison
  * @param <M>
@@ -11,7 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class BaseServiceImpl<M extends MongoMapping<E,ID>,ID,E> implements BaseService<ID,E>{
 
     @Autowired
-    M mapping;
+    protected M mapping;
+
+    @LogAspect
+    @Override
+    public List<E> all(){return mapping.findAll();}
 
     @LogAspect
     @Override

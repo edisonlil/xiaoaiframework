@@ -3,6 +3,8 @@ package com.xiaoaiframework.spring.mongo.base;
 import com.xiaoaiframework.core.base.ResultBean;
 import com.xiaoaiframework.spring.log4j2.annotation.LogAspect;
 
+import java.util.List;
+
 /**
  * @author edison
  * @param <ID>
@@ -10,6 +12,8 @@ import com.xiaoaiframework.spring.log4j2.annotation.LogAspect;
  */
 public interface BaseService<ID,E> {
 
+
+    List<E> all();
 
     E getById(ID id);
 
