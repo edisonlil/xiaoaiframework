@@ -6,7 +6,13 @@ import com.xiaoaiframework.spring.mongo.annotation.action.Save;
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.annotation.action.Update;
 
+import java.util.List;
+
 public interface MongoMapping<E,ID> {
+
+
+    @Select
+    List<E> findAll();
 
     @Select
     E findById(@Eq(name = "id") ID id);
