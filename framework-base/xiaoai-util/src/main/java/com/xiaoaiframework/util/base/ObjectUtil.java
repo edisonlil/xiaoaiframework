@@ -54,6 +54,19 @@ public class ObjectUtil {
     }
 
     /**
+     * 是否为数字类型
+     * @param c
+     * @return
+     */
+    public static boolean isNumber(Class c){
+
+        if(c.equals(Number.class)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 是否为字符序列
      * @param obj
      * @return

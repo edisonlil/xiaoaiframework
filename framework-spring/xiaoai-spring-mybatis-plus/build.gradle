@@ -1,4 +1,5 @@
 dependencies {
+    compile project(":framework-spring:xiaoai-spring-log4j2")
     //集成mybatis-plus
     compile "com.baomidou:mybatis-plus:${mybatisplusVersion}"
     compile "com.baomidou:mybatis-plus-boot-starter:${mybatisplusVersion}"

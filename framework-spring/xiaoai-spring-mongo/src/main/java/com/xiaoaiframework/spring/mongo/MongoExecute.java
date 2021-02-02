@@ -22,7 +22,7 @@ public class MongoExecute {
         this.template = template;
     }
 
-    <T>T findOne(Query query, Class<T> type){
+    public <T>T findOne(Query query, Class<T> type){
        return template.findOne(query,type);
     }
 

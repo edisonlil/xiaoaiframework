@@ -1,4 +1,8 @@
 dependencies {
     compile project(":framework-base:xiaoai-test")
+    compile project(":framework-base:xiaoai-common")
     compile project(":framework-base:xiaoai-log4j2")
+
+    //第三方常用工具包
+    compile "cn.hutool:hutool-all:${hutoolVersion}"
 }

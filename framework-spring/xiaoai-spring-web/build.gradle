@@ -1,4 +1,6 @@
 dependencies {
+    compile project(":framework-spring:xiaoai-spring-log4j2")
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-web"
+
 }

@@ -1,7 +1,8 @@
 dependencies {
-
+    compile project(":framework-spring:xiaoai-spring-log4j2")
     compile 'org.springframework.boot:spring-boot-starter-data-redis'
     compile "org.apache.commons:commons-pool2:${commonsPool2Version}"
     compile "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
     compile "org.springframework.boot:spring-boot-starter-json"
+
 }
