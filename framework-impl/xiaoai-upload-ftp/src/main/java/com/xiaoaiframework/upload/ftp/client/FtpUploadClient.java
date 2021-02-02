@@ -9,6 +9,7 @@ import java.io.IOException;
 
 /**
  * Ftp上传客户端
+ * @author edison
  */
 public class FtpUploadClient implements UploadClient<Ftp> {
 
@@ -19,6 +20,15 @@ public class FtpUploadClient implements UploadClient<Ftp> {
     String username;
 
     String password;
+
+
+    public FtpUploadClient(String ip,Integer port,String username,String password){
+        super();
+        this.ip = ip;
+        this.port = port;
+        this.username = username;
+        this.password = password;
+    }
 
     @Override
     public Ftp connect() {
@@ -53,6 +63,11 @@ public class FtpUploadClient implements UploadClient<Ftp> {
                 }
             }
         }
+    }
+
+    @Override
+    public String getTempUrl(String key, Long expireTime) {
+        return null;
     }
 
 }

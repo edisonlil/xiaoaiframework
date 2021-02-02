@@ -17,46 +17,94 @@ import java.time.LocalDate;
  * 文件上传模板
  * @author edison
  */
-public abstract class UploadTemplate {
+public class UploadTemplate {
 
-    Logger logger = LoggerFactory.getLogger(UploadTemplate.class);
+    static final Logger LOGGER = LoggerFactory.getLogger(UploadTemplate.class);
+
+    String ip;
+
+    Integer port;
+
+    String username;
+
+    String password;
+
+    URI uri;
+
+    String folder;
+
+    String bucketName;
+
+    UploadClient client;
+
+    public UploadTemplate(String ip,Integer port,String username,String password){
+        this.ip = ip;
+        this.port = port;
+        this.username = username;
+        this.password = password;
+    }
+
+    /**
+     * 上传的客户端
+     * @return
+     */
+    public void setClient(UploadClient client) {
+        this.client = client;
+    }
 
 
-    public abstract UploadClient client();
+    public URI getUri() {
+        return this.uri;
+    }
 
-    public abstract URI getUri();
 
-    public abstract String getFolder();
+    public String getFolder() {
+        return this.folder;
+    }
 
-    public abstract String getBucketName();
+
+    public String getBucketName() {
+        return this.bucketName;
+    }
+
+
+    public void setUri(URI uri) {
+        this.uri = uri;
+    }
+
+    public void setBucketName(String bucketName) {
+        this.bucketName = bucketName;
+    }
+
+    public void setFolder(String folder) {
+        this.folder = folder;
+    }
 
     /**
      * 上传文件
      * @param file
      * @return
      */
-    ResultBean<UploaderInfo> upload(File file){
+    public ResultBean<UploaderInfo> upload(File file){
 
         Long start = System.currentTimeMillis();
-        logger.info("--------------------文件上传开始----------------------");
-        logger.info("文件名称为:{}",file.getName());
+        LOGGER.info("--------------------文件上传开始----------------------");
+        LOGGER.info("文件名称为:{}",file.getName());
         String uuid = StrUtil.uuid(true);
         //获取文件后缀
         String suffix = FilenameUtil.getExtension(file.getName());
 
-        UploadClient client = null;
+        UploadClient client = this.client;
         try {
-            client = client();
-            //assertHasBucket(client, bucketName);
 
             String folder = getFolder();
             // 设置文件路径和名称
             String fileUrl = folder + "/" + LocalDate.now().toString() + "/" + suffix + "/" + uuid + "-" + file.getName();
-            logger.info("上传文件的名称为:{}", file.getName());
+            LOGGER.info("上传文件的名称为:{}", file.getName());
 
             client.upload(getBucketName(),fileUrl,file);
-            
-            logger.info("上传消耗的时间:{}", System.currentTimeMillis() - start);
+
+            LOGGER.info("上传消耗的时间:{}", System.currentTimeMillis() - start);
             return ResultBean.success().setData(new UploaderInfo(
                     file.length(),
                     fileUrl,
@@ -68,7 +116,7 @@ public abstract class UploadTemplate {
             ));
 
         }catch (Exception e){
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
         }
 
         return ResultBean.fail();
@@ -79,10 +127,12 @@ public abstract class UploadTemplate {
 
     /**
      * 获取临时访问文件路径
-     * @param fileOssKey
+     * @param key
      * @param expireTime
      * @return
      */
-    public abstract String getTempUrl(String fileOssKey, Long expireTime);
+    public String getTempUrl(String key, Long expireTime){
+        return client.getTempUrl(key, expireTime);
+    }
 
 }

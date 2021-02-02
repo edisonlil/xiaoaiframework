@@ -4,7 +4,7 @@ package com.xiaoaiframework.spring.mongo.convert;
  * 类型转换器
  * @author edison
  */
-public interface TypeConvert<I,O> {
+public interface TypeConvert<T> {
 
     /**
      * 类型转换
@@ -12,10 +12,16 @@ public interface TypeConvert<I,O> {
      * @param target
      * @return
      */
-    O convert(I data,Class target);
+    T convert(Object data,Class target);
 
 
-    boolean canConvert(I data,Class target);
+    /**
+     * 是否能够转换
+     * @param data
+     * @param target
+     * @return
+     */
+    boolean canConvert(Object data,Class target);
 
     /*
            数字类型

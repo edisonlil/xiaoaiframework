@@ -10,7 +10,7 @@ import java.util.Map;
 public abstract class AbstractCriteriaParsing implements CriteriaParsing {
 
     
-
+    @Override
     public Criteria parsing(Criteria criteria, Annotation annotation, Object val) {
 
         if(!match(annotation)){
