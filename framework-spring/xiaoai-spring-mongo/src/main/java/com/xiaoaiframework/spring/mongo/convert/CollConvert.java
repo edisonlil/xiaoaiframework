@@ -1,5 +1,6 @@
 package com.xiaoaiframework.spring.mongo.convert;
 
+import cn.hutool.core.convert.Convert;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import org.bson.json.Converter;
 
@@ -28,18 +29,7 @@ public class CollConvert<O> implements TypeConvert<Collection,Collection> {
         if(data.isEmpty()){
             return false;
         }
-
-        if(data instanceof List){
-
-            List list = (List) data;
-
-
-
-            if(ObjectUtil.isNumber(list.get(0)) && ObjectUtil.isNumber(target)){
-
-            }
-        }
-
+        //TODO...
 
         return false;
     }
