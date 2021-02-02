@@ -18,11 +18,17 @@ public class FileUtil {
 
 
     public static File newFile(File filePath,String fileName){
+
+        if(!filePath.isDirectory()){
+            filePath.mkdirs();
+        }
+
         return new File(filePath,fileName);
     }
 
     public static File newFile(String filePath,String fileName){
-        return new File(filePath,fileName);
+        File path = newPath(filePath);
+        return new File(path,fileName);
     }
 
     public static void transferFile(InputStream input,String path, String fileName){
