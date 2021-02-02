@@ -1,0 +1,5 @@
+dependencies {
+    compile project(":framework-api:xiaoai-upload-api")
+    compile project(":framework-impl:xiaoai-upload-ftp")
+    compile "org.springframework.boot:spring-boot-starter"
+}

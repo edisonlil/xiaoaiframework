@@ -21,14 +21,6 @@ public class UploadTemplate {
 
     static final Logger LOGGER = LoggerFactory.getLogger(UploadTemplate.class);
 
-    String ip;
-
-    Integer port;
-
-    String username;
-
-    String password;
-
     URI uri;
 
     String folder;
@@ -37,11 +29,7 @@ public class UploadTemplate {
 
     UploadClient client;
 
-    public UploadTemplate(String ip,Integer port,String username,String password){
-        this.ip = ip;
-        this.port = port;
-        this.username = username;
-        this.password = password;
+    public UploadTemplate(){
     }
 
     /**
