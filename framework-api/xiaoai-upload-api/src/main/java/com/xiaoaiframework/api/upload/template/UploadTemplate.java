@@ -96,7 +96,7 @@ public class UploadTemplate {
             return ResultBean.success().setData(new UploaderInfo(
                     file.length(),
                     fileUrl,
-                    getUri().toString() + "/" + fileUrl,
+                    getUri().toString() + fileUrl,
                     suffix,
                     getBucketName(),
                     file.getName(),
