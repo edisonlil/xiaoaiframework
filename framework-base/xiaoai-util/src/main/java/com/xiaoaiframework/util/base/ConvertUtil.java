@@ -11,6 +11,12 @@ import java.util.Map;
 public class ConvertUtil {
 
 
+    /**
+     * 对象转换
+     * @param obj
+     * @param targetType
+     * @return
+     */
     public static Object convert(Object obj,Class targetType){
 
         if(ObjectUtil.isPrimitive(obj)){

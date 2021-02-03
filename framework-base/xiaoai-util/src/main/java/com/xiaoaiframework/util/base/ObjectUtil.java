@@ -2,6 +2,7 @@ package com.xiaoaiframework.util.base;
 
 
 import com.xiaoaiframework.util.coll.CollUtil;
+import com.xiaoaiframework.util.type.BasicType;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -31,7 +32,23 @@ public class ObjectUtil {
         }
 
     }
-    
+
+
+    public static boolean isArray(Object obj){
+
+        if(obj instanceof Class){
+            return ((Class) obj).isArray();
+        }
+
+        return obj.getClass().isArray();
+
+    }
+
+    /**
+     * 是否为基本类型
+     * @param obj
+     * @return
+     */
     public static boolean isPrimitive(Object obj){
         
         if(obj.getClass().isPrimitive()){
@@ -95,4 +112,24 @@ public class ObjectUtil {
         }
         return false;
     }
+
+
+    /**
+     * 是否为包装类型
+     *
+     * @param obj 类
+     * @return 是否为包装类型
+     */
+    public static boolean isPrimitiveWrapper(Object obj) {
+        if (null == obj) {
+            return false;
+        }
+
+        if(obj instanceof Class){
+            return BasicType.wrapperPrimitiveMap.containsKey(obj);
+        }else {
+            return BasicType.wrapperPrimitiveMap.containsKey(obj.getClass());
+        }
+    }
+
 }
