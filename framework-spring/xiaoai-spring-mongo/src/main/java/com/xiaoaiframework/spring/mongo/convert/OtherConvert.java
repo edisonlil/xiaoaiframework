@@ -1,6 +1,6 @@
 package com.xiaoaiframework.spring.mongo.convert;
 
-import com.xiaoaiframework.spring.mongo.type.JavaType;
+import com.xiaoaiframework.core.type.JavaType;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 

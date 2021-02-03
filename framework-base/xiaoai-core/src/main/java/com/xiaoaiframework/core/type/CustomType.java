@@ -1,4 +1,4 @@
-package com.xiaoaiframework.spring.mongo.type;
+package com.xiaoaiframework.core.type;
 
 /**
  * 我们自己定义的类型

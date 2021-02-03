@@ -1,6 +1,7 @@
 package com.xiaoaiframework.spring.mongo.proxy;
 
 import com.alibaba.fastjson.JSON;
+import com.xiaoaiframework.core.type.*;
 import com.xiaoaiframework.spring.mongo.MongoExecute;
 import com.xiaoaiframework.spring.mongo.annotation.Set;
 import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
@@ -10,7 +11,6 @@ import com.xiaoaiframework.spring.mongo.annotation.action.Update;
 import com.xiaoaiframework.spring.mongo.convert.TypeConvert;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.*;
-import com.xiaoaiframework.spring.mongo.type.*;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.bean.BeanUtil;
@@ -272,7 +272,7 @@ public class MongoProxy implements InvocationHandler {
     }
 
 
-    Object returnTypeConvert(Object data,JavaType javaType){
+    Object returnTypeConvert(Object data, JavaType javaType){
 
         for (TypeConvert typeConvert : returnTypeConvert) {
 

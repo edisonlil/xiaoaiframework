@@ -1,7 +1,6 @@
-package com.xiaoaiframework.spring.mongo.type;
+package com.xiaoaiframework.core.type;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
 
 /**
  * @author edison

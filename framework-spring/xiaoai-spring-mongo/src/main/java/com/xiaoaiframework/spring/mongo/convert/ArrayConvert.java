@@ -1,7 +1,8 @@
 package com.xiaoaiframework.spring.mongo.convert;
 
-import com.xiaoaiframework.spring.mongo.type.ArrayType;
-import com.xiaoaiframework.spring.mongo.type.JavaType;
+
+import com.xiaoaiframework.core.type.ArrayType;
+import com.xiaoaiframework.core.type.JavaType;
 
 /**
  * @author edison
