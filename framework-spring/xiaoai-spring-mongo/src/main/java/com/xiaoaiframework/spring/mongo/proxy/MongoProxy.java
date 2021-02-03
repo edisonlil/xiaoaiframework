@@ -84,16 +84,12 @@ public class MongoProxy implements InvocationHandler {
             saveFrontProcessors(new Object[]{val});
             execute.save(val,entityType);
             return true;
+        }else{
+            List list = CollUtil.newArrayList((Collection) val);
+            saveFrontProcessors(list.toArray());
+            execute.saveBatch(list,entityType);
         }
 
-        List list = CollUtil.newArrayList((Collection) val);
-        if (list.isEmpty()) {
-            return true;
-        }
-        saveFrontProcessors(list.toArray());
-        list.forEach(item -> {
-            execute.save(item,entityType);
-        });
         return true;
     }
 

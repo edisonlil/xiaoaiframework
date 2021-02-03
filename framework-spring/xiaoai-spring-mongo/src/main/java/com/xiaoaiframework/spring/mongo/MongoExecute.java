@@ -3,6 +3,7 @@ package com.xiaoaiframework.spring.mongo;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.bean.BeanUtil;
+import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -50,6 +51,14 @@ public class MongoExecute {
 
         return true;
     }
+
+
+    public boolean saveBatch(List<Object> data,Class type){
+        if(data == null || data.isEmpty()){return true;}
+        template.bulkOps(BulkOperations.BulkMode.ORDERED,type).insert(data);
+        return true;
+    }
+
 
 
     public boolean updateFirst(Query query,Update update,Class type){
