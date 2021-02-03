@@ -2,6 +2,7 @@ package com.xiaoaiframework.spring.mongo.factory;
 
 import com.xiaoaiframework.spring.mongo.MongoExecute;
 import com.xiaoaiframework.spring.mongo.annotation.Mapping;
+import com.xiaoaiframework.spring.mongo.convert.TypeConvert;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.ExecuteProcessor;
 import com.xiaoaiframework.spring.mongo.processor.SaveProcessor;
@@ -79,6 +80,7 @@ public class MongoMappingProxyFactory implements FactoryBean, BeanFactoryAware {
         proxy.setSaveFrontProcessor(factory.getBeansByType(SaveProcessor.class));
         proxy.setSelectFrontProcessor(factory.getBeansByType(SelectProcessor.class));
         proxy.setUpdateFrontProcessors(factory.getBeansByType(UpdateProcessor.class));
+        proxy.setReturnTypeConvert(factory.getBeansByType(TypeConvert.class));
         return Proxy.newProxyInstance(this.mongoInterface.getClassLoader()
         ,new Class[]{this.mongoInterface},proxy);
     }

@@ -7,8 +7,10 @@ import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
 import com.xiaoaiframework.spring.mongo.annotation.action.Save;
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.annotation.action.Update;
+import com.xiaoaiframework.spring.mongo.convert.TypeConvert;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.*;
+import com.xiaoaiframework.spring.mongo.type.*;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.bean.BeanUtil;
@@ -17,6 +19,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -39,6 +42,8 @@ public class MongoProxy implements InvocationHandler {
     List<SaveProcessor> saveFrontProcessor;
 
     List<SelectProcessor> selectFrontProcessor;
+
+    List<TypeConvert> returnTypeConvert;
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
@@ -113,18 +118,14 @@ public class MongoProxy implements InvocationHandler {
 
         Class rawClass = select.rawType() != Void.class ? select.rawType() : entityType;
 
-        if (method.getReturnType().isArray() && rawClass == entityType) {
-            data = ((Collection)data).toArray();
-        }else if (CollUtil.isMap(method.getReturnType()) && CollUtil.isMap(rawClass)) {
-            data = BeanUtil.beanToMap(data);
-        }else if (method.getReturnType().isArray() && rawClass != entityType) {
-            data = JSON.parseArray(JSON.toJSONString(data), rawClass).toArray();
-        } else if (CollUtil.isColl(method.getReturnType())) {
-            data = JSON.parseArray(JSON.toJSONString(data), rawClass);
+        if (method.getReturnType().isArray()) {
+            data = returnTypeConvert(data,new ArrayType((Class<Array>) method.getReturnType()));
+        }else if (CollUtil.isMap(method.getReturnType())) {
+            data = returnTypeConvert(data,new MapType((Class<Map>) method.getReturnType()));
+        }else if (CollUtil.isColl(method.getReturnType())) {
+            data = returnTypeConvert(data,new CollType((Class<Collection>) method.getReturnType(),rawClass));
         } else {
-            Object raw = ReflectUtil.newInstance(rawClass);
-            ObjectUtil.copyProperties(data, raw);
-            data = raw;
+            data = returnTypeConvert(data,new CustomType(method.getReturnType()));
         }
 
         return selectPostProcessors(data,rawClass);
@@ -203,6 +204,10 @@ public class MongoProxy implements InvocationHandler {
         this.updateFrontProcessors = updateFrontProcessors;
     }
 
+    public void setReturnTypeConvert(List<TypeConvert> returnTypeConvert) {
+        this.returnTypeConvert = returnTypeConvert;
+    }
+
     void executeFrontProcessors(Object o, Method method, Object[] objects) {
         List<ExecuteProcessor> processors = executeFrontProcessors;
 
@@ -264,6 +269,18 @@ public class MongoProxy implements InvocationHandler {
         }
 
         return result;
+    }
+
+
+    Object returnTypeConvert(Object data,JavaType javaType){
+
+        for (TypeConvert typeConvert : returnTypeConvert) {
+
+            if(typeConvert.match(javaType)){
+                return typeConvert.convert(data, javaType);
+            }
+        }
+        return data;
     }
 
 }
