@@ -7,32 +7,16 @@ import java.util.Collection;
 /**
  * @author edison
  */
-public class ArrayType extends JavaType{
+public class ArrayType extends GenericJavaType{
 
 
-    /**
-     * 数组元素类型
-     * 默认为Class
-     */
-    Class elementType = Object.class;
 
-
-    public ArrayType(Class<Array> type) {
+    public ArrayType(Class type) {
         super(type);
     }
 
-    public ArrayType(Class<Collection> type, Class elementType){
-        super(type);
-        this.elementType = elementType;
-    }
-
-
-    public void setElementType(Class elementType) {
-        this.elementType = elementType;
-    }
-
-    public Class getElementType() {
-        return elementType;
+    public ArrayType(Class type,Class elementType){
+        super(type,elementType);
     }
 
 

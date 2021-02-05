@@ -268,10 +268,8 @@ public class MongoProxy implements InvocationHandler {
 
         JavaType type = TypeUtil.getJavaType(method.getReturnType());
 
-        if(type instanceof CollType){
-            ((CollType)type).setElementType(rawType);
-        }else if(type instanceof ArrayType){
-            ((ArrayType)type).setElementType(rawType);
+        if(TypeUtil.isAssignableFrom(GenericJavaType.class,type.getClass())){
+            ((GenericJavaType)type).setElementType(rawType);
         }
 
         TypeConvert typeConvert = convertRegistrar.getConvert(type.getClass());
