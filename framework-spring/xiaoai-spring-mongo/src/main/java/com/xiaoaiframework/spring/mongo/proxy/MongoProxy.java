@@ -102,7 +102,9 @@ public class MongoProxy implements InvocationHandler {
         Query query = parsing.getQuery(method, objects);
         selectFrontProcessors(query,entityType);
 
-        if (CollUtil.isColl(method.getReturnType())) {
+        if (CollUtil.isColl(method.getReturnType()) && objects.length == 0){
+            data = execute.findAll(entityType);
+        }else if (CollUtil.isColl(method.getReturnType())) {
             data = execute.find(query, entityType);
         }else if(ObjectUtil.isNumber(method.getReturnType())){
             data = execute.count(query,entityType);

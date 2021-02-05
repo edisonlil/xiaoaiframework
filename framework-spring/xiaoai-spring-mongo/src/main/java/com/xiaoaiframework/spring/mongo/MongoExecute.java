@@ -28,7 +28,7 @@ public class MongoExecute {
        return template.findOne(query,type);
     }
 
-    <T> List<T> findAll(Class<T> type){
+    public <T> List<T> findAll(Class<T> type){
         return template.findAll(type);
     }
 
