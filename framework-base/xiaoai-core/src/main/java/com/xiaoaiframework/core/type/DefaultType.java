@@ -4,9 +4,9 @@ package com.xiaoaiframework.core.type;
  * 我们自己定义的类型
  * @author edison
  */
-public class CustomType extends JavaType {
+public class DefaultType extends JavaType {
 
-    public CustomType(Class type) {
+    public DefaultType(Class type) {
         super(type);
     }
 }

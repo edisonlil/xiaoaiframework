@@ -19,6 +19,7 @@ public class MongoExecute {
 
     MongoTemplate template;
 
+
     public MongoExecute(MongoTemplate template){
         this.template = template;
     }

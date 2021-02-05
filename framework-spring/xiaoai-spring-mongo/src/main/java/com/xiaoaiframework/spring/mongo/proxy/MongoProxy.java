@@ -1,6 +1,5 @@
 package com.xiaoaiframework.spring.mongo.proxy;
 
-import com.alibaba.fastjson.JSON;
 import com.xiaoaiframework.core.type.*;
 import com.xiaoaiframework.spring.mongo.MongoExecute;
 import com.xiaoaiframework.spring.mongo.annotation.Set;
@@ -8,22 +7,24 @@ import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
 import com.xiaoaiframework.spring.mongo.annotation.action.Save;
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.annotation.action.Update;
+import com.xiaoaiframework.spring.mongo.convert.ConvertRegistrar;
 import com.xiaoaiframework.spring.mongo.convert.TypeConvert;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.*;
 import com.xiaoaiframework.util.base.ObjectUtil;
-import com.xiaoaiframework.util.base.ReflectUtil;
-import com.xiaoaiframework.util.bean.BeanUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
+import com.xiaoaiframework.util.type.TypeUtil;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mongodb.core.query.Query;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+/**
+ * @author edison
+ */
 public class MongoProxy implements InvocationHandler {
 
     Class<?> keyType;
@@ -43,7 +44,7 @@ public class MongoProxy implements InvocationHandler {
 
     List<SelectProcessor> selectFrontProcessor;
 
-    List<TypeConvert> returnTypeConvert;
+    ConvertRegistrar convertRegistrar;
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
@@ -96,7 +97,7 @@ public class MongoProxy implements InvocationHandler {
 
     private Object select(Select select, Method method, Object[] objects) {
 
-        Object data = null;
+        Object data;
 
         Query query = parsing.getQuery(method, objects);
         selectFrontProcessors(query,entityType);
@@ -105,6 +106,8 @@ public class MongoProxy implements InvocationHandler {
             data = execute.find(query, entityType);
         }else if(ObjectUtil.isNumber(method.getReturnType())){
             data = execute.count(query,entityType);
+        }else{
+            data = execute.findOne(query,entityType);
         }
 
         if (ObjectUtil.isEmpty(data)) {
@@ -113,16 +116,7 @@ public class MongoProxy implements InvocationHandler {
 
 
         Class rawClass = select.rawType() != Void.class ? select.rawType() : entityType;
-
-        if (method.getReturnType().isArray()) {
-            data = returnTypeConvert(data,new ArrayType((Class<Array>) method.getReturnType()));
-        }else if (CollUtil.isMap(method.getReturnType())) {
-            data = returnTypeConvert(data,new MapType((Class<Map>) method.getReturnType()));
-        }else if (CollUtil.isColl(method.getReturnType())) {
-            data = returnTypeConvert(data,new CollType((Class<Collection>) method.getReturnType(),rawClass));
-        } else {
-            data = returnTypeConvert(data,new CustomType(method.getReturnType()));
-        }
+        data = returnTypeConvert(data,method,rawClass);
 
         return selectPostProcessors(data,rawClass);
 
@@ -158,7 +152,8 @@ public class MongoProxy implements InvocationHandler {
             return true;
         }
 
-        org.springframework.data.mongodb.core.query.Update u = parsing.convertUpdate(update);
+        org.springframework.data.mongodb.core.query.Update u =
+                parsing.convertUpdate(update);
         Query query = parsing.getQuery(method, objects);
         updateFrontProcessors(u,query,entityType);
 
@@ -198,10 +193,6 @@ public class MongoProxy implements InvocationHandler {
 
     public void setUpdateFrontProcessors(List<UpdateProcessor> updateFrontProcessors) {
         this.updateFrontProcessors = updateFrontProcessors;
-    }
-
-    public void setReturnTypeConvert(List<TypeConvert> returnTypeConvert) {
-        this.returnTypeConvert = returnTypeConvert;
     }
 
     void executeFrontProcessors(Object o, Method method, Object[] objects) {
@@ -267,14 +258,23 @@ public class MongoProxy implements InvocationHandler {
         return result;
     }
 
+    public void setConvertRegistrar(ConvertRegistrar convertRegistrar) {
+        this.convertRegistrar = convertRegistrar;
+    }
 
-    Object returnTypeConvert(Object data, JavaType javaType){
+    Object returnTypeConvert(Object data, Method method, Class rawType){
 
-        for (TypeConvert typeConvert : returnTypeConvert) {
+        JavaType type = TypeUtil.getJavaType(method.getReturnType());
 
-            if(typeConvert.match(javaType)){
-                return typeConvert.convert(data, javaType);
-            }
+        if(type instanceof CollType){
+            ((CollType)type).setElementType(rawType);
+        }else if(type instanceof ArrayType){
+            ((ArrayType)type).setElementType(rawType);
+        }
+
+        TypeConvert typeConvert = convertRegistrar.getConvert(type.getClass());
+        if(typeConvert.match(type)){
+            return typeConvert.convert(data, type);
         }
         return data;
     }

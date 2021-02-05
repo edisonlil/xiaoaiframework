@@ -3,6 +3,7 @@ package com.xiaoaiframework.spring.mongo.convert;
 
 import com.xiaoaiframework.core.type.ArrayType;
 import com.xiaoaiframework.core.type.JavaType;
+import com.xiaoaiframework.util.base.ConvertUtil;
 
 /**
  * @author edison
@@ -14,9 +15,7 @@ public class ArrayConvert implements TypeConvert<Object[]> {
     public Object[] convert(Object data, JavaType type) {
 
         ArrayType arrayType = (ArrayType) type;
-        //TODO...
-
-        return null;
+        return ConvertUtil.convertArray(data,arrayType.getElementType());
     }
 
     @Override

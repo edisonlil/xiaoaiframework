@@ -1,8 +1,7 @@
 package com.xiaoaiframework.spring.mongo.convert;
 
 import com.xiaoaiframework.core.type.JavaType;
-import com.xiaoaiframework.util.base.ObjectUtil;
-import com.xiaoaiframework.util.base.ReflectUtil;
+import com.xiaoaiframework.util.base.ConvertUtil;
 
 /**
  * @author edison
@@ -12,10 +11,7 @@ public class OtherConvert implements TypeConvert {
 
     @Override
     public Object convert(Object data, JavaType type) {
-
-        Object o = ReflectUtil.newInstance(type.getType());
-        ObjectUtil.copyProperties(data,o);
-        return o;
+        return ConvertUtil.convert(data,type.getType());
     }
 
 

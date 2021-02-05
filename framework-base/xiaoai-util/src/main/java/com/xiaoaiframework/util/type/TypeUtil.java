@@ -1,12 +1,40 @@
-package com.xiaoaiframework.util.base;
+package com.xiaoaiframework.util.type;
+
+import com.xiaoaiframework.core.type.*;
+import com.xiaoaiframework.util.coll.CollUtil;
 
 import java.lang.reflect.*;
+
 
 /**
  * @author edison
  */
 public class TypeUtil {
 
+
+    /**
+     * 判断指定sub类是否是parent的子类
+     * @param parent
+     * @param sub
+     * @return
+     */
+    public static boolean isAssignableFrom(Class parent,Class sub){
+        return parent.isAssignableFrom(sub);
+    }
+
+
+    public static <T extends JavaType> T getJavaType(Class c){
+
+        if (c.isArray()) {
+            return (T) new ArrayType(c);
+        }else if(CollUtil.isMap(c)){
+            return (T) new MapType(c);
+        }else if(CollUtil.isColl(c)) {
+            return (T) new CollType(c);
+        }else{
+            return (T) new DefaultType(c);
+        }
+    }
 
     /**
      * 获得Type对应的原始类

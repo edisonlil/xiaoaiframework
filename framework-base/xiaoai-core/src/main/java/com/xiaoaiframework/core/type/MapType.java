@@ -17,4 +17,5 @@ public class MapType extends JavaType<Map> {
 
 
 
+
 }

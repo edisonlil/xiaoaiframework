@@ -3,14 +3,13 @@ package com.xiaoaiframework.spring.mongo.convert;
 import com.xiaoaiframework.core.type.JavaType;
 import com.xiaoaiframework.core.type.MapType;
 import com.xiaoaiframework.util.base.ObjectUtil;
-import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.bean.BeanUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
+ * 实体类转MAP
  * @author edison
  */
 public class MapConvert implements TypeConvert<Map>{

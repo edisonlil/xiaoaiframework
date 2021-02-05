@@ -10,18 +10,5 @@ import org.junit.Test;
  */
 public class BeanUtilTest {
 
-    /**
-     * bean转map
-     */
-    @Test
-    public void beanToMap(){
-
-        Object car = new Object(){
-           public String id;
-        };
-        ReflectUtil.setFieldValue(car,"id","abc");
-        System.out.println(BeanUtil.beanToMap(car));
-
-    }
 
 }

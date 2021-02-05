@@ -23,6 +23,9 @@ public class CollType extends JavaType<Collection> {
     }
 
 
+    public void setElementType(Class elementType) {
+        this.elementType = elementType;
+    }
 
     public Class getElementType() {
         return elementType;
