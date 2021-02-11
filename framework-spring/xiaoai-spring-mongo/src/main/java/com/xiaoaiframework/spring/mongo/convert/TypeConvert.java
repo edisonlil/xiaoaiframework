@@ -15,7 +15,14 @@ public interface TypeConvert<T> {
     T convert(Object data, Class<T> type);
 
 
-
+    /**
+     * 是否能够转换
+     * @param data
+     * @return
+     */
+    default boolean canConvert(Object data){
+        return true;
+    }
     /*
            数字类型
            字符串类型

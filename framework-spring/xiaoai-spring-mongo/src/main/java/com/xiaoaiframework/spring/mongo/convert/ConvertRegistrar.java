@@ -15,6 +15,7 @@ public class ConvertRegistrar {
 
     Map<Class,TypeConvert> registry = new HashMap<>();
     {
+        registry.put(String.class,new StringConvert());
         registry.put(Collection.class,new CollConvert());
         registry.put(Map.class,new MapConvert());
         registry.put(Array.class,new ArrayConvert());

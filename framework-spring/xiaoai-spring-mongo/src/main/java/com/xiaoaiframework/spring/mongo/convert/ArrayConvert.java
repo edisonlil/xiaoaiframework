@@ -9,12 +9,10 @@ import com.xiaoaiframework.util.base.ConvertUtil;
 public class ArrayConvert extends GenericTypeConvert<Object[]> {
 
 
-
     @Override
     public Object[] convert(Object data, Class type) {
 
         return ConvertUtil.convertArray(data,genericType);
     }
-
 
 }
