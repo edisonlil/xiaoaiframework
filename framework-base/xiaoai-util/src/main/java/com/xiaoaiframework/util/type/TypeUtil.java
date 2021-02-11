@@ -1,8 +1,5 @@
 package com.xiaoaiframework.util.type;
 
-import com.xiaoaiframework.core.type.*;
-import com.xiaoaiframework.util.coll.CollUtil;
-
 import java.lang.reflect.*;
 
 
@@ -22,19 +19,6 @@ public class TypeUtil {
         return parent.isAssignableFrom(sub);
     }
 
-
-    public static <T extends JavaType> T getJavaType(Class c){
-
-        if (c.isArray()) {
-            return (T) new ArrayType(c);
-        }else if(CollUtil.isMap(c)){
-            return (T) new MapType(c);
-        }else if(CollUtil.isColl(c)) {
-            return (T) new CollType(c);
-        }else{
-            return (T) new DefaultType(c);
-        }
-    }
 
     /**
      * 获得Type对应的原始类

@@ -1,8 +1,5 @@
 package com.xiaoaiframework.spring.mongo.convert;
 
-
-import com.xiaoaiframework.core.type.JavaType;
-
 /**
  * 类型转换器
  * @author edison
@@ -15,15 +12,9 @@ public interface TypeConvert<T> {
      * @param type
      * @return
      */
-    T convert(Object data, JavaType<T> type);
+    T convert(Object data, Class<T> type);
 
 
-    /**
-     * 是否能够转换
-     * @param type
-     * @return
-     */
-    boolean match(JavaType type);
 
     /*
            数字类型

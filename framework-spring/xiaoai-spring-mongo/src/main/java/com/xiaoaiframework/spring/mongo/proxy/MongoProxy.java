@@ -1,6 +1,5 @@
 package com.xiaoaiframework.spring.mongo.proxy;
 
-import com.xiaoaiframework.core.type.*;
 import com.xiaoaiframework.spring.mongo.MongoExecute;
 import com.xiaoaiframework.spring.mongo.annotation.Set;
 import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
@@ -8,6 +7,8 @@ import com.xiaoaiframework.spring.mongo.annotation.action.Save;
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.annotation.action.Update;
 import com.xiaoaiframework.spring.mongo.convert.ConvertRegistrar;
+import com.xiaoaiframework.spring.mongo.convert.GenericTypeConvert;
+import com.xiaoaiframework.spring.mongo.convert.OtherConvert;
 import com.xiaoaiframework.spring.mongo.convert.TypeConvert;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.*;
@@ -266,17 +267,17 @@ public class MongoProxy implements InvocationHandler {
 
     Object returnTypeConvert(Object data, Method method, Class rawType){
 
-        JavaType type = TypeUtil.getJavaType(method.getReturnType());
+        TypeConvert convert = convertRegistrar.getConvert(method.getReturnType());
 
-        if(TypeUtil.isAssignableFrom(GenericJavaType.class,type.getClass())){
-            ((GenericJavaType)type).setElementType(rawType);
-        }
 
-        TypeConvert typeConvert = convertRegistrar.getConvert(type.getClass());
-        if(typeConvert.match(type)){
-            return typeConvert.convert(data, type);
+        if(convert != null){
+
+            if(convert instanceof GenericTypeConvert){
+                ((GenericTypeConvert)convert).setGenericType(rawType);
+            }
+
+            return convert.convert(data, method.getReturnType());
         }
-        return data;
+        return new OtherConvert().convert(data,method.getReturnType());
     }
-
 }
