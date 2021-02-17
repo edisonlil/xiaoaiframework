@@ -1,10 +1,14 @@
 package com.xiaoaiframework.spring.mongo;
 
+import com.mongodb.client.model.Aggregates;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.bean.BeanUtil;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
@@ -60,7 +64,11 @@ public class MongoExecute {
         return true;
     }
 
-
+    public <I,O>AggregationResults<O> aggregate(List<AggregationOperation> operations
+            , Class<I> input, Class<O> output){
+        Aggregation aggregation = Aggregation.newAggregation(operations);
+        return template.aggregate(aggregation,input,output);
+    }
 
     public boolean updateFirst(Query query,Update update,Class type){
         return template.updateFirst(query,update,type).wasAcknowledged();
