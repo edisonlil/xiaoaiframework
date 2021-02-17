@@ -21,6 +21,7 @@ include(":framework-spring:xiaoai-spring-mongo")
 include(":framework-spring:xiaoai-spring-kafka")
 include(":framework-spring:xiaoai-spring-feign")
 include(":framework-spring:xiaoai-spring-activemq")
+include(":framework-spring:xiaoai-spring-xxl-job")
 include(":framework-spring:xiaoai-spring-mybatis-plus")
 include(":framework-spring:xiaoai-spring-cloud-config")
 
