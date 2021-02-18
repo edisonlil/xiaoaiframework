@@ -1,5 +1,7 @@
 package com.xiaoaiframework.spring.feign;
 
+import com.xiaoaiframework.util.base.ReflectUtil;
+
 public class FeignDefinition {
 
    private String name = "FeignClient";
@@ -87,12 +89,24 @@ public class FeignDefinition {
       this.client = client;
    }
 
+   public void setClient(String client) {
+      this.client = ReflectUtil.forName(client);
+   }
+
    public void setFallback(Class<?> fallback) {
       this.fallback = fallback;
    }
 
+   public void setFallback(String fallback) {
+      this.fallback = ReflectUtil.forName(fallback);;
+   }
+
    public void setFallbackFactory(Class<?> fallbackFactory) {
       this.fallbackFactory = fallbackFactory;
+   }
+
+   public void setFallbackFactory(String fallbackFactory) {
+      this.fallbackFactory = ReflectUtil.forName(fallbackFactory);;
    }
 
    public void setPath(String path) {
