@@ -1,9 +1,7 @@
 package com.xiaoaiframework.spring.feign.registrar;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.xiaoaiframework.spring.feign.FeignDefinition;
 import com.xiaoaiframework.util.base.ReflectUtil;
-import feign.Feign;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -50,7 +48,7 @@ public class CustomFeignClientRegistrar implements EnvironmentAware, ResourceLoa
         definition.addPropertyValue("path", getPath(feignDefinition.getPath()));
         definition.addPropertyValue("name", feignDefinition.getName());
         definition.addPropertyValue("contextId", feignDefinition.getName());
-        definition.addPropertyValue("type", feignDefinition.getName());
+        definition.addPropertyValue("type", feignDefinition.getClient());
         definition.addPropertyValue("decode404", feignDefinition.isDecode404());
         definition.addPropertyValue("fallback", feignDefinition.getFallback());
         definition.addPropertyValue("fallbackFactory", feignDefinition.getFallbackFactory());
@@ -61,7 +59,6 @@ public class CustomFeignClientRegistrar implements EnvironmentAware, ResourceLoa
         // has a default, won't be
         boolean primary = feignDefinition.isPrimary();
         beanDefinition.setPrimary(primary);
-
         String qualifier = feignDefinition.getQualifier();
         if (StringUtils.hasText(qualifier)) {
             alias = qualifier;

@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.*;
 
+
 @ConfigurationProperties("feign.custom.client")
 public class CustomFeignClientProperties {
 
@@ -17,4 +18,5 @@ public class CustomFeignClientProperties {
     public void setDefinition(List<FeignDefinition> definition) {
         this.definition = definition;
     }
+
 }
