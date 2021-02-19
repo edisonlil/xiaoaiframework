@@ -76,7 +76,7 @@ public class PageAggregateSelectProcessor implements AggregateSelectProcessor {
         if(page.getCount()){
             page.setTotal(execute.count(page.getQuery(),page.getEntityType()));
         }
-
+                                                              
         MongoPageHelper.clear();
 
         return page;
