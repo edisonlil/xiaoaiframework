@@ -35,15 +35,20 @@ public class ReflectUtil {
         return null;
     }
 
-    public static Object getFieldValue(Object obj,Field field){
+    public static <T>T getFieldValue(Object obj,Field field){
 
         try {
             field.setAccessible(true);
-            return field.get(obj);
+            return (T) field.get(obj);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    public static <T>T getFieldValue(Object obj,String field){
+        return (T) getFieldValue(obj, getDeclaredField(obj,field));
     }
 
     public static Field getDeclaredField(Object obj,String fieldName){

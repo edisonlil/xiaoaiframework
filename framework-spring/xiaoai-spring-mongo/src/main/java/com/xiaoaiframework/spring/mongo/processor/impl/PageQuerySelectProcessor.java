@@ -18,7 +18,7 @@ import java.util.Collection;
  * @author edison
  */
 @Component
-public class PageSelectProcessor implements QuerySelectProcessor {
+public class PageQuerySelectProcessor implements QuerySelectProcessor {
 
     @Autowired
     MongoExecute execute;
