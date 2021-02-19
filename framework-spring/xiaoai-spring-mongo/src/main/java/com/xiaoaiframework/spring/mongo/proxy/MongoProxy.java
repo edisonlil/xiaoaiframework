@@ -1,6 +1,6 @@
 package com.xiaoaiframework.spring.mongo.proxy;
 
-import com.xiaoaiframework.spring.mongo.MongoExecute;
+import com.xiaoaiframework.spring.mongo.execute.MongoExecute;
 import com.xiaoaiframework.spring.mongo.annotation.Set;
 import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
 import com.xiaoaiframework.spring.mongo.annotation.action.Save;
@@ -14,7 +14,6 @@ import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.*;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
-import com.xiaoaiframework.util.type.TypeUtil;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -43,7 +42,7 @@ public class MongoProxy implements InvocationHandler {
 
     List<SaveProcessor> saveFrontProcessor;
 
-    List<SelectProcessor> selectFrontProcessor;
+    List<QuerySelectProcessor> selectFrontProcessor;
 
     ConvertRegistrar convertRegistrar;
 
@@ -190,7 +189,7 @@ public class MongoProxy implements InvocationHandler {
         this.saveFrontProcessor = saveFrontProcessor;
     }
 
-    public void setSelectFrontProcessor(List<SelectProcessor> selectFrontProcessor) {
+    public void setSelectFrontProcessor(List<QuerySelectProcessor> selectFrontProcessor) {
         this.selectFrontProcessor = selectFrontProcessor;
     }
 
@@ -235,26 +234,26 @@ public class MongoProxy implements InvocationHandler {
     }
 
     void selectFrontProcessors(Query query,Class entityType) {
-        List<SelectProcessor> processors = selectFrontProcessor;
+        List<QuerySelectProcessor> processors = selectFrontProcessor;
 
         if (processors == null || processors.isEmpty()) {
             return;
         }
 
-        for (SelectProcessor processor : processors) {
+        for (QuerySelectProcessor processor : processors) {
             processor.frontProcessor(query, entityType);
         }
     }
 
 
     Object selectPostProcessors(Object result,Class rawType) {
-        List<SelectProcessor> processors = selectFrontProcessor;
+        List<QuerySelectProcessor> processors = selectFrontProcessor;
 
         if (processors == null || processors.isEmpty()) {
             return result;
         }
 
-        for (SelectProcessor processor : processors) {
+        for (QuerySelectProcessor processor : processors) {
            result = processor.postProcessor(result,rawType);
         }
 

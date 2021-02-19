@@ -1,4 +1,4 @@
-package com.xiaoaiframework.spring.mongo;
+package com.xiaoaiframework.spring.mongo.execute;
 
 import com.mongodb.client.model.Aggregates;
 import com.xiaoaiframework.util.base.ObjectUtil;
@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class MongoExecute {
 
-    MongoTemplate template;
+    private MongoTemplate template;
 
 
     public MongoExecute(MongoTemplate template){

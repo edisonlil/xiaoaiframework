@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.query.Query;
 /**
  * 查询操作前置处理器
  */
-public interface SelectProcessor{
+public interface QuerySelectProcessor{
 
     void frontProcessor(Query query, Class entity);
 

@@ -1,8 +1,9 @@
 package com.xiaoaiframework.spring.mongo.processor.impl;
 
+import com.xiaoaiframework.spring.mongo.execute.MongoExecute;
 import com.xiaoaiframework.spring.mongo.kit.MongoPageHelper;
 import com.xiaoaiframework.spring.mongo.page.Page;
-import com.xiaoaiframework.spring.mongo.processor.SelectProcessor;
+import com.xiaoaiframework.spring.mongo.processor.QuerySelectProcessor;
 import com.xiaoaiframework.util.coll.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -17,17 +18,17 @@ import java.util.Collection;
  * @author edison
  */
 @Component
-public class PageSelectProcessor implements SelectProcessor {
+public class PageSelectProcessor implements QuerySelectProcessor {
 
     @Autowired
-    MongoTemplate template;
+    MongoExecute execute;
 
     @Override
     public void frontProcessor(Query query, Class entity) {
 
         Page page = MongoPageHelper.get();
         if(page == null){return;}
-        
+
         if(page != null && !page.getPageSizeZero()){
             query.with(PageRequest.of(page.getPageNum(),page.getPageSize()));
         }
@@ -51,7 +52,7 @@ public class PageSelectProcessor implements SelectProcessor {
         }
         
         if(page.getCount()){
-            page.setTotal(template.count(page.getQuery(),page.getEntityType()));
+            page.setTotal(execute.count(page.getQuery(),page.getEntityType()));
         }
 
         MongoPageHelper.clear();
