@@ -68,6 +68,13 @@ public class MultiFeignDefinition {
         this.primary = primary;
     }
 
+    public List<Config> getConfigs() {
+        return configs;
+    }
+
+    public void setConfigs(List<Config> configs) {
+        this.configs = configs;
+    }
 
     public static class Config{
 
