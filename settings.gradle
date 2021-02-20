@@ -24,6 +24,7 @@ include(":framework-spring:xiaoai-spring-activemq")
 include(":framework-spring:xiaoai-spring-xxl-job")
 include(":framework-spring:xiaoai-spring-mybatis-plus")
 include(":framework-spring:xiaoai-spring-cloud-config")
+include(":framework-spring:xiaoai-spring-rabbitmq")
 
 include(":framework-api:xiaoai-upload-api")
 include(":framework-impl:xiaoai-upload-ftp")
