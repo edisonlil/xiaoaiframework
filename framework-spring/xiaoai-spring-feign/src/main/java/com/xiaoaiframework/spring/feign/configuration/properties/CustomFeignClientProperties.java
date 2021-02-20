@@ -10,7 +10,7 @@ import java.util.*;
 @ConfigurationProperties("feign.custom.client")
 public class CustomFeignClientProperties {
 
-    List<MultiFeignDefinition> multiDefinitions;
+    List<MultiFeignDefinition> multiDefinition;
 
     List<FeignDefinition> definition;
 
@@ -23,11 +23,11 @@ public class CustomFeignClientProperties {
     }
 
 
-    public List<MultiFeignDefinition> getMultiDefinitions() {
-        return multiDefinitions;
+    public List<MultiFeignDefinition> getMultiDefinition() {
+        return multiDefinition;
     }
 
-    public void setMultiDefinitions(List<MultiFeignDefinition> multiDefinitions) {
-        this.multiDefinitions = multiDefinitions;
+    public void setMultiDefinition(List<MultiFeignDefinition> multiDefinition) {
+        this.multiDefinition = multiDefinition;
     }
 }

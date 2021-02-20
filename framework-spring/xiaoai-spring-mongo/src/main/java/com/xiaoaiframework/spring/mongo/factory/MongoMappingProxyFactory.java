@@ -5,8 +5,8 @@ import com.xiaoaiframework.spring.mongo.annotation.Mapping;
 import com.xiaoaiframework.spring.mongo.convert.ConvertRegistrar;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.ExecuteProcessor;
+import com.xiaoaiframework.spring.mongo.processor.QuerySelectProcessor;
 import com.xiaoaiframework.spring.mongo.processor.SaveProcessor;
-import com.xiaoaiframework.spring.mongo.processor.SelectProcessor;
 import com.xiaoaiframework.spring.mongo.processor.UpdateProcessor;
 import com.xiaoaiframework.spring.mongo.proxy.MongoProxy;
 import org.springframework.beans.BeansException;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
+import javax.management.Query;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,7 @@ public class MongoMappingProxyFactory implements FactoryBean, BeanFactoryAware {
 
         proxy.setExecuteFrontProcessors(factory.getBeansByType(ExecuteProcessor.class));
         proxy.setSaveFrontProcessor(factory.getBeansByType(SaveProcessor.class));
-        proxy.setSelectFrontProcessor(factory.getBeansByType(SelectProcessor.class));
+        proxy.setSelectFrontProcessor(factory.getBeansByType(QuerySelectProcessor.class));
         proxy.setUpdateFrontProcessors(factory.getBeansByType(UpdateProcessor.class));
         proxy.setConvertRegistrar(factory.getBean(ConvertRegistrar.class));
         return Proxy.newProxyInstance(this.mongoInterface.getClassLoader()

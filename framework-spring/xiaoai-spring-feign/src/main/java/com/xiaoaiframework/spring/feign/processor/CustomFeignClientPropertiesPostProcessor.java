@@ -26,7 +26,7 @@ public class CustomFeignClientPropertiesPostProcessor  implements BeanPostProces
             
             register(properties.getDefinition(),registrar);
 
-            List<MultiFeignDefinition> multiFeignDefinitions = properties.getMultiDefinitions();
+            List<MultiFeignDefinition> multiFeignDefinitions = properties.getMultiDefinition();
             if(multiFeignDefinitions != null && multiFeignDefinitions.size() > 0){
                 for (MultiFeignDefinition multiDefinition : multiFeignDefinitions) {
                     register(multiDefinition.getFeignDefinitions(),registrar);
