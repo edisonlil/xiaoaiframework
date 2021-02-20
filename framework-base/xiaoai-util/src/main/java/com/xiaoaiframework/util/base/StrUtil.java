@@ -16,6 +16,7 @@ public class StrUtil {
 
     /**
      * 首字母大写
+     * TODO bug：如果原本首字母就是大写的话则转换会出现问题
      * @param str
      * @return
      */
@@ -27,6 +28,7 @@ public class StrUtil {
 
     /**
      * 首字母小写
+     * TODO bug：如果原本首字母就是小写的话则转换会出现问题
      * @param str
      * @return
      */
@@ -233,7 +235,7 @@ public class StrUtil {
     public static void main(String[] args) {
 
 
-        System.out.println(hamming("123231","323213"));
+        System.out.println(StrUtil.upperFirst("Test"));
 
     }
 }
