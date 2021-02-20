@@ -140,7 +140,7 @@ public class MultiFeignDefinition {
         List<FeignDefinition> list = new ArrayList<>(configs.size());
         for (Config config : configs) {
             FeignDefinition feignDefinition = new FeignDefinition();
-            feignDefinition.setName(prefix+ StrUtil.upperFirst(config.client.getSimpleName()));
+            feignDefinition.setName(prefix+ config.client.getSimpleName());
             feignDefinition.setQualifier(qualifier);
             feignDefinition.setUrl(url);
             feignDefinition.setDecode404(decode404);
