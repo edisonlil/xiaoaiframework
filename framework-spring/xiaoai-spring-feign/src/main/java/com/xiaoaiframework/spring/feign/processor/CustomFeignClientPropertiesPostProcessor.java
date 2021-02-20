@@ -1,6 +1,7 @@
 package com.xiaoaiframework.spring.feign.processor;
 
 import com.xiaoaiframework.spring.feign.FeignDefinition;
+import com.xiaoaiframework.spring.feign.MultiFeignDefinition;
 import com.xiaoaiframework.spring.feign.configuration.properties.CustomFeignClientProperties;
 import com.xiaoaiframework.spring.feign.registrar.CustomFeignClientRegistrar;
 import org.springframework.beans.BeansException;
@@ -22,16 +23,33 @@ public class CustomFeignClientPropertiesPostProcessor  implements BeanPostProces
             CustomFeignClientProperties properties = (CustomFeignClientProperties) bean;
 
             CustomFeignClientRegistrar registrar = beanFactory.getBean(CustomFeignClientRegistrar.class);
+            
+            register(properties.getDefinition(),registrar);
 
-            List<FeignDefinition> definitions = properties.getDefinition();
-            for (FeignDefinition definition : definitions) {
-                registrar.register(definition);
+            List<MultiFeignDefinition> multiFeignDefinitions = properties.getMultiDefinitions();
+            if(multiFeignDefinitions != null && multiFeignDefinitions.size() > 0){
+                for (MultiFeignDefinition multiDefinition : multiFeignDefinitions) {
+                    register(multiDefinition.getFeignDefinitions(),registrar);
+                }
             }
+
 
         }
 
         return bean;
     }
+
+    private void register(List<FeignDefinition> definitions,CustomFeignClientRegistrar registrar){
+
+        if(definitions == null || definitions.size() == 0){return;}
+
+        for (FeignDefinition definition : definitions) {
+            registrar.register(definition);
+        }
+
+    }
+
+
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {

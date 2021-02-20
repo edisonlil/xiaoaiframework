@@ -6,6 +6,9 @@ public class FeignDefinition {
 
    private String name = "FeignClient";
 
+   /**
+    * 设置别名
+    */
    private String qualifier = "";
 
    private String url = "";
