@@ -4,16 +4,13 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 /**
- * 简单的查询执行器
+ * 单个查询
  * @author edison
  */
 @Component
-public class SimpleSelectExecute extends AbstractQuerySelectExecute {
-
-
+public class SingleSelectExecute extends AbstractQuerySelectExecute {
     @Override
     public Object select(Query query,Class entityType) {
-        return execute.find(query,entityType);
+        return execute.findOne(query,entityType);
     }
-
 }

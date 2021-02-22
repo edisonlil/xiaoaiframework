@@ -3,6 +3,8 @@ package com.xiaoaiframework.spring.mongo.execute;
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.processor.AggregateSelectProcessor;
 import com.xiaoaiframework.spring.mongo.processor.QuerySelectProcessor;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -13,14 +15,16 @@ import java.util.List;
 public abstract class AbstractAggregateSelectExecute extends AbstractSelectExecute {
 
 
-    List<AggregateSelectProcessor> selectProcessors;
+    @Autowired
+    ObjectFactory<List<AggregateSelectProcessor>> selectProcessorsObjectFactory;
 
 
     @Override
-    public Object select(Select select, Method method, Object[] objects) {
+    public Object select(Select select, Method method, Object[] objects,Class entityType) {
 
-
+        //TODO 算子解析器暂时没有完成
         List<AggregationOperation> operations = new ArrayList<>();
+
         //预先处理
         selectFrontProcessors(operations,entityType,select.rawType());
 
@@ -38,6 +42,8 @@ public abstract class AbstractAggregateSelectExecute extends AbstractSelectExecu
 
     Object selectPostProcessors(Object result,Class input,Class output) {
 
+        List<AggregateSelectProcessor> selectProcessors = selectProcessorsObjectFactory.getObject();
+
         if (selectProcessors == null || selectProcessors.isEmpty()) {
             return result;
         }
@@ -50,6 +56,8 @@ public abstract class AbstractAggregateSelectExecute extends AbstractSelectExecu
     }
 
     void selectFrontProcessors(List<AggregationOperation> operations,Class input,Class output) {
+
+        List<AggregateSelectProcessor> selectProcessors = selectProcessorsObjectFactory.getObject();
 
         if (selectProcessors == null || selectProcessors.isEmpty()) {
             return;

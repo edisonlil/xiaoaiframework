@@ -1,5 +1,6 @@
-package com.xiaoaiframework.spring.mongo.convert;
+package com.xiaoaiframework.spring.mongo.service;
 
+import com.xiaoaiframework.spring.mongo.convert.*;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Array;
@@ -10,10 +11,9 @@ import java.util.Map;
 /**
  * @author edison
  */
-@Component
-public class ConvertRegistrar {
+public class ConvertService {
 
-    Map<Class,TypeConvert> registry = new HashMap<>();
+    Map<Class, TypeConvert> registry = new HashMap<>();
     {
         registry.put(String.class,new StringConvert());
         registry.put(Collection.class,new CollConvert());

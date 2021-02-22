@@ -1,21 +1,23 @@
 package com.xiaoaiframework.spring.mongo.factory;
 
+import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.execute.MongoExecute;
 import com.xiaoaiframework.spring.mongo.annotation.Mapping;
-import com.xiaoaiframework.spring.mongo.convert.ConvertRegistrar;
+import com.xiaoaiframework.spring.mongo.service.ConvertService;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.ExecuteProcessor;
 import com.xiaoaiframework.spring.mongo.processor.QuerySelectProcessor;
 import com.xiaoaiframework.spring.mongo.processor.SaveProcessor;
 import com.xiaoaiframework.spring.mongo.processor.UpdateProcessor;
 import com.xiaoaiframework.spring.mongo.proxy.MongoProxy;
+import com.xiaoaiframework.spring.mongo.service.SelectService;
+import com.xiaoaiframework.spring.mongo.util.BeanFactoryHolder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
-import javax.management.Query;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,28 +39,7 @@ public class MongoMappingProxyFactory implements FactoryBean, BeanFactoryAware {
     }
 
 
-    static class BeanFactoryHolder {
 
-        BeanFactory factory;
-
-        public BeanFactoryHolder(BeanFactory factory) {
-            this.factory = factory;
-        }
-
-        public <T>List<T> getBeansByType(Class<T> c){
-
-            Map<String,T> beans = ((DefaultListableBeanFactory) factory).getBeansOfType(c);
-            List<T> list = new ArrayList<>(beans.size());
-            list.addAll(beans.values());
-            return list;
-        }
-        
-        public <T> T getBean(Class<T> c){
-
-            return factory.getBean(c);
-        }
-
-    }
 
 
 
@@ -76,9 +57,8 @@ public class MongoMappingProxyFactory implements FactoryBean, BeanFactoryAware {
 
         proxy.setExecuteFrontProcessors(factory.getBeansByType(ExecuteProcessor.class));
         proxy.setSaveFrontProcessor(factory.getBeansByType(SaveProcessor.class));
-        proxy.setSelectFrontProcessor(factory.getBeansByType(QuerySelectProcessor.class));
+        proxy.setSelectService(factory.getBean(SelectService.class));
         proxy.setUpdateFrontProcessors(factory.getBeansByType(UpdateProcessor.class));
-        proxy.setConvertRegistrar(factory.getBean(ConvertRegistrar.class));
         return Proxy.newProxyInstance(this.mongoInterface.getClassLoader()
         ,new Class[]{this.mongoInterface},proxy);
     }

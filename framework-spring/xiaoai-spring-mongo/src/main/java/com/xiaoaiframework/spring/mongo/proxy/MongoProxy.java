@@ -6,12 +6,14 @@ import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
 import com.xiaoaiframework.spring.mongo.annotation.action.Save;
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.annotation.action.Update;
-import com.xiaoaiframework.spring.mongo.convert.ConvertRegistrar;
+import com.xiaoaiframework.spring.mongo.service.ConvertService;
 import com.xiaoaiframework.spring.mongo.convert.GenericTypeConvert;
 import com.xiaoaiframework.spring.mongo.convert.OtherConvert;
 import com.xiaoaiframework.spring.mongo.convert.TypeConvert;
+import com.xiaoaiframework.spring.mongo.execute.SelectExecute;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.*;
+import com.xiaoaiframework.spring.mongo.service.SelectService;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -35,16 +37,15 @@ public class MongoProxy implements InvocationHandler {
 
     MongoExecute execute;
 
-
     List<ExecuteProcessor> executeFrontProcessors;
 
     List<UpdateProcessor> updateFrontProcessors;
 
     List<SaveProcessor> saveFrontProcessor;
 
-    List<QuerySelectProcessor> selectFrontProcessor;
+    SelectService selectService;
 
-    ConvertRegistrar convertRegistrar;
+
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
@@ -96,32 +97,7 @@ public class MongoProxy implements InvocationHandler {
 
 
     private Object select(Select select, Method method, Object[] objects) {
-
-        Object data;
-
-        Query query = parsing.getQuery(method, objects);
-        selectFrontProcessors(query,entityType);
-
-        if (CollUtil.isColl(method.getReturnType()) && objects.length == 0){
-            data = execute.findAll(entityType);
-        }else if (CollUtil.isColl(method.getReturnType())) {
-            data = execute.find(query, entityType);
-        }else if(ObjectUtil.isNumber(method.getReturnType())){
-            data = execute.count(query,entityType);
-        }else{
-            data = execute.findOne(query,entityType);
-        }
-
-        if (ObjectUtil.isEmpty(data)) {
-            return data;
-        }
-
-
-        Class rawClass = select.rawType() != Void.class ? select.rawType() : entityType;
-        data = returnTypeConvert(data,method,rawClass);
-
-        return selectPostProcessors(data,rawClass);
-
+        return selectService.doSelect(select,method,objects,entityType);
     }
 
 
@@ -176,6 +152,9 @@ public class MongoProxy implements InvocationHandler {
         this.entityType = entityType;
     }
 
+    public void setSelectService(SelectService selectService) {
+        this.selectService = selectService;
+    }
 
     public void setParsing(ConditionParsing parsing) {
         this.parsing = parsing;
@@ -189,9 +168,7 @@ public class MongoProxy implements InvocationHandler {
         this.saveFrontProcessor = saveFrontProcessor;
     }
 
-    public void setSelectFrontProcessor(List<QuerySelectProcessor> selectFrontProcessor) {
-        this.selectFrontProcessor = selectFrontProcessor;
-    }
+
 
     public void setUpdateFrontProcessors(List<UpdateProcessor> updateFrontProcessors) {
         this.updateFrontProcessors = updateFrontProcessors;
@@ -233,50 +210,6 @@ public class MongoProxy implements InvocationHandler {
         }
     }
 
-    void selectFrontProcessors(Query query,Class entityType) {
-        List<QuerySelectProcessor> processors = selectFrontProcessor;
-
-        if (processors == null || processors.isEmpty()) {
-            return;
-        }
-
-        for (QuerySelectProcessor processor : processors) {
-            processor.frontProcessor(query, entityType);
-        }
-    }
 
 
-    Object selectPostProcessors(Object result,Class rawType) {
-        List<QuerySelectProcessor> processors = selectFrontProcessor;
-
-        if (processors == null || processors.isEmpty()) {
-            return result;
-        }
-
-        for (QuerySelectProcessor processor : processors) {
-           result = processor.postProcessor(result,rawType);
-        }
-
-        return result;
-    }
-
-    public void setConvertRegistrar(ConvertRegistrar convertRegistrar) {
-        this.convertRegistrar = convertRegistrar;
-    }
-
-    Object returnTypeConvert(Object data, Method method, Class rawType){
-
-        TypeConvert convert = convertRegistrar.getConvert(method.getReturnType());
-
-
-        if(convert != null){
-
-            if(convert instanceof GenericTypeConvert){
-                ((GenericTypeConvert)convert).setGenericType(rawType);
-            }
-
-            return convert.convert(data, method.getReturnType());
-        }
-        return new OtherConvert().convert(data,method.getReturnType());
-    }
 }

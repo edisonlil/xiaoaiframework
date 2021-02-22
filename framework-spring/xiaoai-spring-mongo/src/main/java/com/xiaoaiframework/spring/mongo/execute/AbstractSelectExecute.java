@@ -1,29 +1,30 @@
 package com.xiaoaiframework.spring.mongo.execute;
 
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
-import com.xiaoaiframework.spring.mongo.convert.ConvertRegistrar;
+import com.xiaoaiframework.spring.mongo.service.ConvertService;
 import com.xiaoaiframework.spring.mongo.convert.GenericTypeConvert;
 import com.xiaoaiframework.spring.mongo.convert.OtherConvert;
 import com.xiaoaiframework.spring.mongo.convert.TypeConvert;
 import com.xiaoaiframework.util.base.ObjectUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Method;
 
 public abstract class AbstractSelectExecute implements SelectExecute {
 
 
+    @Autowired
     protected MongoExecute execute;
 
-    private ConvertRegistrar convertRegistrar;
-
-    protected Class entityType;
+    @Autowired
+    private ConvertService convertService;
 
 
     @Override
-    public Object doSelect(Select select, Method method, Object[] objects) {
+    public Object doSelect(Select select, Method method, Object[] objects,Class entityType) {
 
 
-        Object data = select(select,method,objects);
+        Object data = select(select,method,objects,entityType);
         if (ObjectUtil.isEmpty(data)) {
             return data;
         }
@@ -37,7 +38,7 @@ public abstract class AbstractSelectExecute implements SelectExecute {
 
     Object returnTypeConvert(Object data, Method method, Class rawType){
 
-        TypeConvert convert = convertRegistrar.getConvert(method.getReturnType());
+        TypeConvert convert = convertService.getConvert(method.getReturnType());
 
         if(convert != null){
 
@@ -55,7 +56,7 @@ public abstract class AbstractSelectExecute implements SelectExecute {
     }
 
 
-    public abstract Object select(Select select, Method method, Object[] objects);
+    public abstract Object select(Select select, Method method, Object[] objects,Class entityType);
 
 
 
@@ -63,11 +64,8 @@ public abstract class AbstractSelectExecute implements SelectExecute {
         this.execute = execute;
     }
 
-    public void setConvertRegistrar(ConvertRegistrar convertRegistrar) {
-        this.convertRegistrar = convertRegistrar;
+    public void setConvertService(ConvertService convertService) {
+        this.convertService = convertService;
     }
 
-    public void setEntityType(Class entityType) {
-        this.entityType = entityType;
-    }
 }

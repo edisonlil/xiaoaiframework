@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 public interface SelectExecute {
 
 
-    Object doSelect(Select select, Method method, Object[] objects);
+    Object doSelect(Select select, Method method, Object[] objects,Class entityType);
 
 
 
