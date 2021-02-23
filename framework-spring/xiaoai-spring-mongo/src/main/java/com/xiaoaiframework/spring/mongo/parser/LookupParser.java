@@ -1,4 +1,4 @@
-package com.xiaoaiframework.spring.mongo.chain;
+package com.xiaoaiframework.spring.mongo.parser;
 
 import com.xiaoaiframework.spring.mongo.annotation.Join;
 import com.xiaoaiframework.spring.mongo.context.AggregateSelectContext;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class LookupParser extends ConditionParser  {
+public class LookupParser  implements OperationParser  {
 
     @Override
     public void parsing(MongoContext context) {

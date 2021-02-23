@@ -1,4 +1,4 @@
-package com.xiaoaiframework.spring.mongo.chain;
+package com.xiaoaiframework.spring.mongo.parser;
 
 import com.xiaoaiframework.spring.mongo.annotation.Condition;
 import com.xiaoaiframework.spring.mongo.annotation.Order;
@@ -9,15 +9,11 @@ import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

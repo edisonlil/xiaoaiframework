@@ -1,25 +1,18 @@
 package com.xiaoaiframework.spring.mongo.proxy;
 
+import com.xiaoaiframework.spring.mongo.chain.ConditionParserChain;
+import com.xiaoaiframework.spring.mongo.context.QuerySelectContext;
+import com.xiaoaiframework.spring.mongo.context.UpdateContext;
 import com.xiaoaiframework.spring.mongo.execute.MongoExecute;
-import com.xiaoaiframework.spring.mongo.annotation.Set;
 import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
 import com.xiaoaiframework.spring.mongo.annotation.action.Save;
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.annotation.action.Update;
-import com.xiaoaiframework.spring.mongo.service.ConvertService;
-import com.xiaoaiframework.spring.mongo.convert.GenericTypeConvert;
-import com.xiaoaiframework.spring.mongo.convert.OtherConvert;
-import com.xiaoaiframework.spring.mongo.convert.TypeConvert;
-import com.xiaoaiframework.spring.mongo.execute.SelectExecute;
-import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.*;
 import com.xiaoaiframework.spring.mongo.service.SelectService;
-import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mongodb.core.query.Query;
-
-import java.lang.annotation.Annotation;
 import java.util.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -33,8 +26,6 @@ public class MongoProxy implements InvocationHandler {
 
     Class<?> entityType;
 
-    ConditionParsing parsing;
-
     MongoExecute execute;
 
     List<ExecuteProcessor> executeFrontProcessors;
@@ -45,6 +36,7 @@ public class MongoProxy implements InvocationHandler {
 
     SelectService selectService;
 
+    ConditionParserChain chain;
 
 
     @Override
@@ -106,7 +98,13 @@ public class MongoProxy implements InvocationHandler {
         if (objects == null) {
             return false;
         }
-        return execute.remove(parsing.getQuery(method, objects), entityType);
+
+        QuerySelectContext context = new QuerySelectContext();
+        context.setMethod(method);
+        context.setObjects(objects);
+        chain.doParsing(context);
+
+        return execute.remove(context.getQuery(), entityType);
 
     }
 
@@ -116,29 +114,30 @@ public class MongoProxy implements InvocationHandler {
         if (objects == null) {
             return false;
         }
-        Annotation[][] annotations = method.getParameterAnnotations();
-        Object update = null;
-        for (int i = 0; i < objects.length; i++) {
-            Annotation annotation = annotations[i][0];
-            if (annotation instanceof Set) {
-                update = objects[i];
-                break;
-            }
-        }
 
-        if (update == null) {
-            return true;
+        UpdateContext context = new UpdateContext();
+        context.setMethod(method);
+        context.setObjects(objects);
+        chain.doParsing(context);
+
+        if(context.getUpdate() == null){
+            return false;
         }
 
         org.springframework.data.mongodb.core.query.Update u =
-                parsing.convertUpdate(update);
-        Query query = parsing.getQuery(method, objects);
+                context.getUpdate();
+
+        Query query = context.getQuery();
         updateFrontProcessors(u,query,entityType);
 
         return execute.updateFirst(query
                 ,u, entityType);
     }
 
+
+    public void setChain(ConditionParserChain chain) {
+        this.chain = chain;
+    }
 
     public void setExecute(MongoExecute execute) {
         this.execute = execute;
@@ -156,9 +155,7 @@ public class MongoProxy implements InvocationHandler {
         this.selectService = selectService;
     }
 
-    public void setParsing(ConditionParsing parsing) {
-        this.parsing = parsing;
-    }
+
 
     public void setExecuteFrontProcessors(List<ExecuteProcessor> executeFrontProcessors) {
         this.executeFrontProcessors = executeFrontProcessors;

@@ -1,4 +1,4 @@
-package com.xiaoaiframework.spring.mongo.parsing.criteria;
+package com.xiaoaiframework.spring.mongo.parser.criteria;
 
 import com.xiaoaiframework.spring.mongo.constant.ActionType;
 import org.springframework.core.annotation.AnnotationUtils;

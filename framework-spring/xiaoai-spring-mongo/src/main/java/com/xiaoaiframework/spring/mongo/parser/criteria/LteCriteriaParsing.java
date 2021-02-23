@@ -1,18 +1,17 @@
-package com.xiaoaiframework.spring.mongo.parsing.criteria;
+package com.xiaoaiframework.spring.mongo.parser.criteria;
 
-import com.xiaoaiframework.spring.mongo.annotation.Eq;
-import com.xiaoaiframework.spring.mongo.annotation.In;
+import com.xiaoaiframework.spring.mongo.annotation.Lte;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 
 @Component
-public class InCriteriaParsing extends AbstractCriteriaParsing {
+public class LteCriteriaParsing extends AbstractCriteriaParsing {
     @Override
     public boolean match(Annotation annotation) {
 
-        if(annotation instanceof In){
+        if(annotation instanceof Lte){
             return true;
         }
         return false;
@@ -20,7 +19,7 @@ public class InCriteriaParsing extends AbstractCriteriaParsing {
 
     @Override
     public Criteria operand(Annotation annotation,String key, Object val) {
-        return Criteria.where(key).in(val);
+        return Criteria.where(key).lte(val);
     }
 
 }

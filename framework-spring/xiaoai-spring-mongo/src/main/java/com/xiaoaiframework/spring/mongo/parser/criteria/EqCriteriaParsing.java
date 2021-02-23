@@ -1,18 +1,17 @@
-package com.xiaoaiframework.spring.mongo.parsing.criteria;
+package com.xiaoaiframework.spring.mongo.parser.criteria;
 
-import com.xiaoaiframework.spring.mongo.annotation.Gt;
-import com.xiaoaiframework.spring.mongo.annotation.Gte;
+import com.xiaoaiframework.spring.mongo.annotation.Eq;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 
 @Component
-public class GteCriteriaParsing extends AbstractCriteriaParsing {
+public class EqCriteriaParsing extends AbstractCriteriaParsing {
     @Override
     public boolean match(Annotation annotation) {
 
-        if(annotation instanceof Gte){
+        if(annotation instanceof Eq){
             return true;
         }
         return false;
@@ -20,7 +19,7 @@ public class GteCriteriaParsing extends AbstractCriteriaParsing {
 
     @Override
     public Criteria operand(Annotation annotation,String key, Object val) {
-        return Criteria.where(key).gte(val);
+        return Criteria.where(key).is(val);
     }
 
 }
