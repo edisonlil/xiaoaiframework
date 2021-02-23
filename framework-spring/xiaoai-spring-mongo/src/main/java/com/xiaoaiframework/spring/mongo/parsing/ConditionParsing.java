@@ -49,6 +49,26 @@ public class ConditionParsing {
         return query;
     }
 
+
+    public Criteria getCriteria(Method method, Object[] objects){
+
+        Annotation[][] annotations = method.getParameterAnnotations();
+
+        Criteria criteria = new Criteria();
+        if(objects != null){
+            for (int i = 0; i < objects.length; i++) {
+                Annotation[] annotation = annotations[i];
+                criteria = criteriaParsing(criteria,annotation,objects);
+            }
+        }
+        return criteria;
+    }
+
+
+
+
+
+
     private Query queryParsing(Query query, Annotation[] annotations, Object val) {
 
 
