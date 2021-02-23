@@ -1,12 +1,9 @@
 package com.xiaoaiframework.spring.mongo.factory;
 
-import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.execute.MongoExecute;
 import com.xiaoaiframework.spring.mongo.annotation.Mapping;
-import com.xiaoaiframework.spring.mongo.service.ConvertService;
 import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
 import com.xiaoaiframework.spring.mongo.processor.ExecuteProcessor;
-import com.xiaoaiframework.spring.mongo.processor.QuerySelectProcessor;
 import com.xiaoaiframework.spring.mongo.processor.SaveProcessor;
 import com.xiaoaiframework.spring.mongo.processor.UpdateProcessor;
 import com.xiaoaiframework.spring.mongo.proxy.MongoProxy;
@@ -16,12 +13,9 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+
 
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class MongoMappingProxyFactory implements FactoryBean, BeanFactoryAware {
 

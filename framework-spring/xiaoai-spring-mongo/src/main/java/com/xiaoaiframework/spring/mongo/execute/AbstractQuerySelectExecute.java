@@ -1,11 +1,9 @@
 package com.xiaoaiframework.spring.mongo.execute;
 
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
-import com.xiaoaiframework.spring.mongo.parsing.ConditionParsing;
+import com.xiaoaiframework.spring.mongo.chain.ConditionParserChain;
+import com.xiaoaiframework.spring.mongo.context.QuerySelectContext;
 import com.xiaoaiframework.spring.mongo.processor.QuerySelectProcessor;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Query;
@@ -21,12 +19,20 @@ public abstract class AbstractQuerySelectExecute extends AbstractSelectExecute{
     ObjectFactory<List<QuerySelectProcessor>> selectProcessorsObjectFactory;
 
     @Autowired
-    ConditionParsing parsing;
+    ConditionParserChain chain;
 
     @Override
     public Object select(Select select, Method method, Object[] objects,Class entityType) {
 
-        Query query = parsing.getQuery(method, objects);
+
+        QuerySelectContext context = new QuerySelectContext();
+        context.setMethod(method);
+        context.setObjects(objects);
+        context.setEntityType(entityType);
+        chain.doParsing(context);
+        Query query = context.getQuery();
+
+
         selectFrontProcessors(query,entityType);
 
         Object data = select(query,entityType);
