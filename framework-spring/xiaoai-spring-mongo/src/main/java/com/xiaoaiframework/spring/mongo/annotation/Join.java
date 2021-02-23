@@ -17,9 +17,20 @@ public @interface Join {
     Class slave();
 
 
-    //where {id = id,};
-    String where();
+    /**
+     * 主表关键字段
+     * @return
+     */
+    String localField();
 
+    /**
+     * 从表关键字段
+     * @return
+     */
+    String foreignField();
+
+
+    String as();
 
 
 
