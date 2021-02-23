@@ -1,7 +1,7 @@
 package com.xiaoaiframework.spring.mongo.proxy;
 
 import com.xiaoaiframework.spring.mongo.chain.ConditionParserChain;
-import com.xiaoaiframework.spring.mongo.context.QuerySelectContext;
+import com.xiaoaiframework.spring.mongo.context.QueryContext;
 import com.xiaoaiframework.spring.mongo.context.UpdateContext;
 import com.xiaoaiframework.spring.mongo.execute.MongoExecute;
 import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
@@ -99,7 +99,7 @@ public class MongoProxy implements InvocationHandler {
             return false;
         }
 
-        QuerySelectContext context = new QuerySelectContext();
+        QueryContext context = new QueryContext();
         context.setMethod(method);
         context.setObjects(objects);
         chain.doParsing(context);

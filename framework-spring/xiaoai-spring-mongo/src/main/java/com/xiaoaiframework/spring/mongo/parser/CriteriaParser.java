@@ -1,9 +1,9 @@
 package com.xiaoaiframework.spring.mongo.parser;
 
 import com.xiaoaiframework.spring.mongo.annotation.Condition;
-import com.xiaoaiframework.spring.mongo.context.AggregateSelectContext;
+import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
-import com.xiaoaiframework.spring.mongo.context.QuerySelectContext;
+import com.xiaoaiframework.spring.mongo.context.QueryContext;
 import com.xiaoaiframework.spring.mongo.parser.criteria.CriteriaParsing;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
@@ -37,10 +37,10 @@ public class CriteriaParser implements OperationParser {
             }
         }
 
-        if(context instanceof QuerySelectContext){
-            ((QuerySelectContext)context).getQuery().addCriteria(criteria);
-        }else if(context instanceof AggregateSelectContext){
-            ((AggregateSelectContext)context).addOperation(new MatchOperation(criteria));
+        if(context instanceof QueryContext){
+            ((QueryContext)context).getQuery().addCriteria(criteria);
+        }else if(context instanceof AggregateContext){
+            ((AggregateContext)context).addOperation(new MatchOperation(criteria));
         }
 
 

@@ -1,7 +1,7 @@
 package com.xiaoaiframework.spring.mongo.parser;
 
 import com.xiaoaiframework.spring.mongo.annotation.Join;
-import com.xiaoaiframework.spring.mongo.context.AggregateSelectContext;
+import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.stereotype.Component;
@@ -14,9 +14,9 @@ public class LookupParser  implements OperationParser  {
     public void parsing(MongoContext context) {
 
 
-        if(context instanceof AggregateSelectContext){
+        if(context instanceof AggregateContext){
 
-            AggregateSelectContext aggregateSelectContext = (AggregateSelectContext) context;
+            AggregateContext aggregateContext = (AggregateContext) context;
 
             Join join = context.getMethod().getAnnotation(Join.class);
 
@@ -25,7 +25,7 @@ public class LookupParser  implements OperationParser  {
                     .localField(join.localField())
                     .foreignField(join.foreignField())
                     .as(join.as());
-            aggregateSelectContext.addOperation(lookupOperation);
+            aggregateContext.addOperation(lookupOperation);
         }
 
 

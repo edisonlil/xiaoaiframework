@@ -2,7 +2,7 @@ package com.xiaoaiframework.spring.mongo.execute;
 
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.chain.ConditionParserChain;
-import com.xiaoaiframework.spring.mongo.context.AggregateSelectContext;
+import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.processor.AggregateSelectProcessor;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public abstract class AbstractAggregateSelectExecute extends AbstractSelectExecu
     public Object select(Select select, Method method, Object[] objects,Class entityType) {
 
 
-        AggregateSelectContext context = new AggregateSelectContext();
+        AggregateContext context = new AggregateContext();
         context.setMethod(method);
         context.setObjects(objects);
         context.setEntityType(entityType);

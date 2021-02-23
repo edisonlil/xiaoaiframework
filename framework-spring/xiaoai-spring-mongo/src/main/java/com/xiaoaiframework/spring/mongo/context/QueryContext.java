@@ -2,7 +2,7 @@ package com.xiaoaiframework.spring.mongo.context;
 
 import org.springframework.data.mongodb.core.query.Query;
 
-public class QuerySelectContext extends MongoContext {
+public class QueryContext extends MongoContext {
 
     Query query = new Query();
 

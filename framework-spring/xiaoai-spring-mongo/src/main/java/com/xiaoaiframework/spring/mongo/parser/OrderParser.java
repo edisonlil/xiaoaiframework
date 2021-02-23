@@ -2,9 +2,9 @@ package com.xiaoaiframework.spring.mongo.parser;
 
 import com.xiaoaiframework.spring.mongo.annotation.Condition;
 import com.xiaoaiframework.spring.mongo.annotation.Order;
-import com.xiaoaiframework.spring.mongo.context.AggregateSelectContext;
+import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
-import com.xiaoaiframework.spring.mongo.context.QuerySelectContext;
+import com.xiaoaiframework.spring.mongo.context.QueryContext;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
@@ -41,10 +41,10 @@ public class OrderParser implements OperationParser{
             }
         }
 
-        if(context instanceof QuerySelectContext){
-            ((QuerySelectContext)context).getQuery().with(sort);
-        } else if(context instanceof AggregateSelectContext){
-            ((AggregateSelectContext)context).addOperation(new SortOperation(sort));
+        if(context instanceof QueryContext){
+            ((QueryContext)context).getQuery().with(sort);
+        } else if(context instanceof AggregateContext){
+            ((AggregateContext)context).addOperation(new SortOperation(sort));
         }
     }
 

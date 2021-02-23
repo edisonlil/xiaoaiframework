@@ -2,7 +2,7 @@ package com.xiaoaiframework.spring.mongo.execute;
 
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.chain.ConditionParserChain;
-import com.xiaoaiframework.spring.mongo.context.QuerySelectContext;
+import com.xiaoaiframework.spring.mongo.context.QueryContext;
 import com.xiaoaiframework.spring.mongo.processor.QuerySelectProcessor;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public abstract class AbstractQuerySelectExecute extends AbstractSelectExecute{
     public Object select(Select select, Method method, Object[] objects,Class entityType) {
 
 
-        QuerySelectContext context = new QuerySelectContext();
+        QueryContext context = new QueryContext();
         context.setMethod(method);
         context.setObjects(objects);
         context.setEntityType(entityType);

@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.aggregation.AggregationOperation;
 
 import java.util.*;
 
-public class AggregateSelectContext extends MongoContext {
+public class AggregateContext extends MongoContext {
 
     List<AggregationOperation> operations = new ArrayList<>();
 
