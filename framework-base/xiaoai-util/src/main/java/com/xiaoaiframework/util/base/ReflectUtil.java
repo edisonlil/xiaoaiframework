@@ -61,15 +61,24 @@ public class ReflectUtil {
         return null;
     }
 
-    public static void setFieldValue(Object obj,String fieldName,Object value) throws IllegalAccessException {
+    public static void setFieldValue(Object obj,String fieldName,Object value) {
         setFieldValue(obj, getDeclaredField(obj, fieldName), value);
     }
 
 
 
-    public static void setFieldValue(Object obj,Field field,Object value) throws IllegalAccessException {
+    public static void setFieldValue(Object obj,Field field,Object value) {
+
+        if(field == null){
+            return;
+        }
+
         field.setAccessible(true);
-        field.set(obj, value);
+        try {
+            field.set(obj, value);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public static<T> T newInstance(Class<T> c,boolean ignoreCreateFail){
