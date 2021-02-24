@@ -73,14 +73,12 @@ public class MongoProxy implements InvocationHandler {
 
 
     private Object save(Object val) {
-
+        saveFrontProcessors(val);
         if (!CollUtil.isColl(val)) {
-            saveFrontProcessors(new Object[]{val});
             execute.save(val,entityType);
             return true;
         }else{
             List list = CollUtil.newArrayList((Collection) val);
-            saveFrontProcessors(list.toArray());
             execute.saveBatch(list,entityType);
         }
 
@@ -195,7 +193,7 @@ public class MongoProxy implements InvocationHandler {
         }
     }
 
-    void saveFrontProcessors(Object[] data) {
+    void saveFrontProcessors(Object data) {
         List<SaveProcessor> processors = saveFrontProcessor;
 
         if (processors == null || processors.isEmpty()) {
