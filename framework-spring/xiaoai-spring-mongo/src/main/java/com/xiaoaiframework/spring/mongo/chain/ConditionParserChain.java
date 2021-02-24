@@ -4,12 +4,14 @@ import com.xiaoaiframework.spring.mongo.context.MongoContext;
 import com.xiaoaiframework.spring.mongo.parser.OperationParser;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
 /**
  * @author edison
  */
+@Component
 public class ConditionParserChain implements OperationParserChain {
 
     List<OperationParser> parsers;
@@ -27,4 +29,6 @@ public class ConditionParserChain implements OperationParserChain {
             parser.parsing(context);
         }
     }
+
+
 }

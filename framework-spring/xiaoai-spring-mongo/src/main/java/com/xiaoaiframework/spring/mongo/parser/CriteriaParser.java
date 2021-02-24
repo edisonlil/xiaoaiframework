@@ -30,10 +30,13 @@ public class CriteriaParser implements OperationParser {
         Annotation[][] annotations = context.getMethod().getParameterAnnotations();
 
         Criteria criteria = new Criteria();
+
+        Object[] objects = context.getObjects();
+
         if(context.getObjects() != null){
-            for (int i = 0; i < context.getObjects().length; i++) {
+            for (int i = 0; i < objects.length; i++) {
                 Annotation[] annotation = annotations[i];
-                criteria = criteriaParsing(criteria,annotation,context.getObjects());
+                criteria = criteriaParsing(criteria,annotation,null,objects[i]);
             }
         }
 
@@ -47,7 +50,15 @@ public class CriteriaParser implements OperationParser {
     }
 
 
-    public Criteria criteriaParsing(Criteria criteria, Annotation[] annotations, Object val) {
+    /**
+     *
+     * @param criteria
+     * @param annotations
+     * @param key  字段名
+     * @param val 值
+     * @return
+     */
+    public Criteria criteriaParsing(Criteria criteria, Annotation[] annotations, String key, Object val) {
 
 
         for (Annotation annotation : annotations) {
@@ -59,7 +70,7 @@ public class CriteriaParser implements OperationParser {
                     field.setAccessible(true);
                     if (field.getAnnotations() != null) {
                         try {
-                            criteriaParsing(criteria, field.getAnnotations(), field.get(val));
+                            criteriaParsing(criteria, field.getAnnotations(), field.getName(),field.get(val));
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -68,7 +79,7 @@ public class CriteriaParser implements OperationParser {
             }
 
             for (CriteriaParsing parsing : parsings) {
-                criteria = parsing.parsing(criteria, annotation, val);
+                criteria = parsing.parsing(criteria, annotation, key,val);
                 continue;
             }
 

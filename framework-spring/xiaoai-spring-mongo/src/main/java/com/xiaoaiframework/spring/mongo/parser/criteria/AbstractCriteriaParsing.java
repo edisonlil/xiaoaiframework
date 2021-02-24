@@ -11,7 +11,7 @@ public abstract class AbstractCriteriaParsing implements CriteriaParsing {
 
     
     @Override
-    public Criteria parsing(Criteria criteria, Annotation annotation, Object val) {
+    public Criteria parsing(Criteria criteria, Annotation annotation,String key,Object val) {
 
         if(!match(annotation)){
             return criteria;
@@ -26,7 +26,8 @@ public abstract class AbstractCriteriaParsing implements CriteriaParsing {
 
         ActionType action = (ActionType) attributes.get("action");
 
-        String key = attributes.get("name").toString();
+        key = key == null ? attributes.get("name").toString():key;
+        
         if(action == ActionType.AND){
             criteria.andOperator(operand(annotation,key,val));
         }else if(action == ActionType.OR){

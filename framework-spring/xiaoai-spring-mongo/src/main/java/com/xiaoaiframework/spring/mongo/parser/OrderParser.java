@@ -41,6 +41,8 @@ public class OrderParser implements OperationParser{
             }
         }
 
+        if(sort == null){return;}
+
         if(context instanceof QueryContext){
             ((QueryContext)context).getQuery().with(sort);
         } else if(context instanceof AggregateContext){

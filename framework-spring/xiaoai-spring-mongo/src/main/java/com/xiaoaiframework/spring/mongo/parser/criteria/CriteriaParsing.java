@@ -12,7 +12,7 @@ import java.lang.annotation.Annotation;
 public interface CriteriaParsing {
 
 
-    Criteria parsing(Criteria criteria, Annotation annotation, Object val);
+    Criteria parsing(Criteria criteria, Annotation annotation, String key,Object val);
 
     boolean match(Annotation annotation);
 
