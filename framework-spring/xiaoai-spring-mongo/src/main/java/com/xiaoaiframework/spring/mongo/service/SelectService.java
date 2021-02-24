@@ -1,5 +1,6 @@
 package com.xiaoaiframework.spring.mongo.service;
 
+import com.xiaoaiframework.spring.mongo.annotation.Join;
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.execute.*;
 import com.xiaoaiframework.util.base.ObjectUtil;
@@ -29,6 +30,8 @@ public class SelectService implements SelectExecute, BeanFactoryAware {
             execute = factory.getBean(SimpleSelectExecute.class);
         }else if(ObjectUtil.isNumber(method.getReturnType())){
             execute = factory.getBean(CountSelectExecute.class);
+        }else if(method.getAnnotation(Join.class) != null){
+            execute = factory.getBean(AggregateSelectExecute.class);
         }else{
             execute = factory.getBean(SingleSelectExecute.class);
         }
