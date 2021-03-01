@@ -1,10 +1,55 @@
 package com.xiaoaiframework.util.file;
 
+import com.xiaoaiframework.util.base.StrUtil;
+
+import java.io.File;
+
 /**
  * 文件名操作
  * @author edison
  */
 public class FilenameUtil {
+
+
+
+    /**
+     * The extension separator character.
+     * @since 1.4
+     */
+    public static final char EXTENSION_SEPARATOR = '.';
+
+    /**
+     * The extension separator String.
+     * @since 1.4
+     */
+    public static final String EXTENSION_SEPARATOR_STR = Character.toString(EXTENSION_SEPARATOR);
+
+    /**
+     * The Unix separator character.
+     */
+    private static final char UNIX_SEPARATOR = '/';
+
+    /**
+     * The Windows separator character.
+     */
+    private static final char WINDOWS_SEPARATOR = '\\';
+
+    /**
+     * The system separator character.
+     */
+    private static final char SYSTEM_SEPARATOR = File.separatorChar;
+
+
+    public static String getSuffix(String fileName){
+
+        String ext =getExtension(fileName);
+        if (StrUtil.isEmpty(ext)) {
+            return null;
+        }
+        return EXTENSION_SEPARATOR+ext;
+
+    }
+
 
     public static String getExtension(String filename) {
         if (filename == null) {
