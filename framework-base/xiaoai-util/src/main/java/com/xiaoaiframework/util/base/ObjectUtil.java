@@ -57,6 +57,9 @@ public class ObjectUtil {
         return false;
     }
 
+
+    public static boolean isNotPrimitive(Object obj){return !isPrimitive(obj);}
+
     /**
      * 是否为数字类型
      * @param obj
@@ -100,6 +103,10 @@ public class ObjectUtil {
         return obj == null;
     }
 
+
+    public static boolean isNotNull(Object obj){
+        return !isNull(obj);
+    }
 
     public static boolean isEmpty(Object o){
 

@@ -4,6 +4,7 @@ import com.xiaoaiframework.spring.mongo.execute.MongoExecute;
 import com.xiaoaiframework.spring.mongo.kit.MongoPageHelper;
 import com.xiaoaiframework.spring.mongo.page.Page;
 import com.xiaoaiframework.spring.mongo.processor.AggregateSelectProcessor;
+import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class PageAggregateSelectProcessor implements AggregateSelectProcessor {
 
         Page page = MongoPageHelper.get();
 
-        if(page == null){return result;}
+        if(ObjectUtil.isNull(page) || ObjectUtil.isNull(result)){return result;}
 
         if(CollUtil.isColl(result)){
             page.addAll((Collection) result);

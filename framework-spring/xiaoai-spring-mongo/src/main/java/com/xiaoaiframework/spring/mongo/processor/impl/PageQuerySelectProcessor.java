@@ -4,6 +4,7 @@ import com.xiaoaiframework.spring.mongo.execute.MongoExecute;
 import com.xiaoaiframework.spring.mongo.kit.MongoPageHelper;
 import com.xiaoaiframework.spring.mongo.page.Page;
 import com.xiaoaiframework.spring.mongo.processor.QuerySelectProcessor;
+import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +31,7 @@ public class PageQuerySelectProcessor implements QuerySelectProcessor {
         if(page == null){return;}
 
         if(page != null && !page.getPageSizeZero()){
-            query.with(PageRequest.of(page.getPageNum(),page.getPageSize()));
+            query.with(PageRequest.of((page.getPageNum()-1),page.getPageSize()));
         }
         page.setQuery(query);
         page.setEntityType(entity);
@@ -43,7 +44,7 @@ public class PageQuerySelectProcessor implements QuerySelectProcessor {
 
         Page page = MongoPageHelper.get();
 
-        if(page == null){return result;}
+        if(ObjectUtil.isNull(page) || ObjectUtil.isNull(result)){return result;}
 
         if(CollUtil.isColl(result)){
             page.addAll((Collection) result);

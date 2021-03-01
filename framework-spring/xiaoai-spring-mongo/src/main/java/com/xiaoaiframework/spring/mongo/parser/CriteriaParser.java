@@ -40,6 +40,9 @@ public class CriteriaParser implements OperationParser {
             }
         }
 
+        if(criteria.getCriteriaObject().size() == 0){
+           return;
+        }
         if(context instanceof QueryContext){
             ((QueryContext)context).getQuery().addCriteria(criteria);
         }else if(context instanceof AggregateContext){
@@ -63,7 +66,8 @@ public class CriteriaParser implements OperationParser {
 
         for (Annotation annotation : annotations) {
             //If it is not the basic type
-            if (annotation instanceof Condition && !ObjectUtil.isPrimitive(val)) {
+
+            if (annotation instanceof Condition && ObjectUtil.isNotNull(val) && ObjectUtil.isNotPrimitive(val)) {
 
                 Field[] fields = ReflectUtil.getDeclaredFields(val);
                 for (Field field : fields) {
@@ -77,7 +81,7 @@ public class CriteriaParser implements OperationParser {
                     }
                 }
             }
-
+            if(key  == null){ continue; }
             for (CriteriaParsing parsing : parsings) {
                 criteria = parsing.parsing(criteria, annotation, key,val);
                 continue;

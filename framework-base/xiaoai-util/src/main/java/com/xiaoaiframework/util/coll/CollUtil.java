@@ -21,7 +21,7 @@ public class CollUtil {
     public static boolean isColl(Object obj){
 
         if(obj instanceof Class){
-            return Collection.class.isAssignableFrom(obj.getClass());
+            return Collection.class.isAssignableFrom((Class<?>) obj);
         }
 
         //是否为集合类型
@@ -40,7 +40,7 @@ public class CollUtil {
     public static boolean isMap(Object obj){
 
         if(obj instanceof Class){
-            return Map.class.isAssignableFrom(obj.getClass());
+            return Map.class.isAssignableFrom((Class<?>) obj);
         }
 
         if(obj instanceof Map){
