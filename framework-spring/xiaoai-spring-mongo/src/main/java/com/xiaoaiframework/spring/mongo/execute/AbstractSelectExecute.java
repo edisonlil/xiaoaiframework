@@ -46,7 +46,7 @@ public abstract class AbstractSelectExecute implements SelectExecute {
                 ((GenericTypeConvert)convert).setGenericType(rawType);
             }
 
-            if(convert.canConvert(data)){
+            if(!convert.canConvert(data)){
                 throw new ClassCastException("不支持的类型转换");
             }
 

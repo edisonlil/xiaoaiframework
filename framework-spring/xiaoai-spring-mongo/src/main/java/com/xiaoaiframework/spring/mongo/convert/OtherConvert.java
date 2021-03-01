@@ -12,6 +12,11 @@ public class OtherConvert implements TypeConvert {
 
     @Override
     public Object convert(Object data, Class type) {
+
+        if(data.getClass().equals(type)){
+            return data;
+        }
+
         return ConvertUtil.convert(data,type);
     }
 
