@@ -4,7 +4,7 @@ package com.xiaoaiframework.core;
  * 备忘录接口
  * @author edc
  */
-public interface Memorandum<T> {
+public interface Memorandum {
 
     /**
      * 提供一个备份接口
