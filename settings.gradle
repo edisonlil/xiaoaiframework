@@ -25,6 +25,7 @@ include(":framework-spring:xiaoai-spring-log4j2")
 include(":framework-spring:xiaoai-spring-xxl-job")
 include(":framework-spring:xiaoai-spring-activemq")
 include(":framework-spring:xiaoai-spring-rabbitmq")
+include(":framework-spring:xiaoai-spring-security")
 include(":framework-spring:xiaoai-spring-mybatis-plus")
 include(":framework-spring:xiaoai-spring-cloud-config")
 
