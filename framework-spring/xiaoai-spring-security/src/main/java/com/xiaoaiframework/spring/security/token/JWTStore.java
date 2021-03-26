@@ -1,8 +1,12 @@
 package com.xiaoaiframework.spring.security.token;
 
 import io.jsonwebtoken.*;
+import org.springframework.util.Base64Utils;
 
+import java.sql.Time;
+import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -66,10 +70,6 @@ public class JWTStore {
         return claims;
     }
 
-
-    public static void main(String[] args) {
-
-    }
 
 
 
