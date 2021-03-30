@@ -59,7 +59,7 @@ public class MongoProxy implements InvocationHandler {
 
         Update update = AnnotationUtils.getAnnotation(method, Update.class);
         if (update != null) {
-           update(method, objects);
+          return update(method, objects);
         }
 
 
