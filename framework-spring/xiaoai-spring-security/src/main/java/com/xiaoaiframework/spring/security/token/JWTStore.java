@@ -63,9 +63,9 @@ public class JWTStore {
      */
     public static Claims parse(String token,String secretKey){
 
-        Claims claims = Jwts.parser()  //得到DefaultJwtParser
-                .setSigningKey(secretKey)                 //设置签名的秘钥
-                .parseClaimsJws(token).getBody();     //设置需要解析的jwt
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token).getBody();
 
         return claims;
     }
