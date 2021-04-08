@@ -2,6 +2,8 @@ package com.xiaoaiframework.util.file;
 
 import com.alibaba.fastjson.util.IOUtils;
 import com.xiaoaiframework.util.base.StrUtil;
+import com.xiaoaiframework.util.io.IOUtil;
+import com.xiaoaiframework.util.net.DownloadUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.net.URLConnection;
 
 /**
  * 文件下载工具类
+ * @author edison
  */
 public class FileDownloadUtil {
 
@@ -26,7 +29,6 @@ public class FileDownloadUtil {
 
 
     public static FileDownloadUtil create(){
-
         return new FileDownloadUtil();
     }
 
@@ -36,7 +38,6 @@ public class FileDownloadUtil {
     }
 
     public FileDownloadUtil location(String location){
-
         if(location.indexOf("/") != 0){
             location = "/"+location;
         }
@@ -48,22 +49,15 @@ public class FileDownloadUtil {
 
     public File downloadFile(String url,String fileName){
 
-        try {
-
-            URLConnection connection = new URL(url).openConnection();
-            connection.connect();
-            fileName = fileName == null ? getFileName(url) : fileName;
-            File file = FileUtil.newFile(this.path, fileName);
-            InputStream input = connection.getInputStream();
-            FileUtil.transferFile(input,file);
-            IOUtils.close(input);
-            return file;
-        } catch (IOException e) {
-            e.printStackTrace();
+        fileName = fileName == null ? getFileName(url) : fileName;
+        File file = FileUtil.newFile(this.path, fileName);
+        InputStream input = DownloadUtil.download(url);
+        if(input == null){
+            throw new NullPointerException("input is null");
         }
-
-        return null;
-
+        FileUtil.transferFile(input,file);
+        IOUtil.close(input);
+        return file;
     }
 
 
