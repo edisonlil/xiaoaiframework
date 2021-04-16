@@ -34,10 +34,12 @@ public class OrderParser implements OperationParser{
         Annotation[][] annotations = context.getMethod().getParameterAnnotations();
 
         Sort sort = null;
-        if(context.getObjects() != null){
+        Object[] objects = context.getObjects();
+        if(objects != null){
             for (int i = 0; i < context.getObjects().length; i++) {
                 Annotation[] annotation = annotations[i];
-                sort = orderParsing(annotation,context.getObjects());
+                if(objects[i] == null) continue;
+                sort = orderParsing(annotation,objects[i]);
             }
         }
 

@@ -50,7 +50,7 @@ public class ObjectUtil {
      * @return
      */
     public static boolean isPrimitive(Object obj){
-        
+
         if(obj.getClass().isPrimitive()){
             return true;
         }
