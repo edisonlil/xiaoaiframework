@@ -87,7 +87,7 @@ public class ReflectUtil {
         try {
             Constructor constructor = c.getConstructor(new Class[]{});
             constructor.setAccessible(true);
-            t = (T) constructor.newInstance(new Object(){});
+            t = (T) constructor.newInstance();
         } catch (NoSuchMethodException e) {
             if(ignoreCreateFail){return null;}
             e.printStackTrace();
