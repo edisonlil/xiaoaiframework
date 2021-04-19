@@ -5,6 +5,7 @@ import com.xiaoaiframework.spring.mongo.kit.MongoPageHelper;
 import com.xiaoaiframework.spring.mongo.page.Page;
 import com.xiaoaiframework.spring.mongo.processor.QuerySelectProcessor;
 import com.xiaoaiframework.util.base.ObjectUtil;
+import com.xiaoaiframework.util.base.ReflectUtil;
 import com.xiaoaiframework.util.coll.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -53,7 +54,9 @@ public class PageQuerySelectProcessor implements QuerySelectProcessor {
         }
         
         if(page.getCount()){
-            page.setTotal(execute.count(page.getQuery(),page.getEntityType()));
+            Query query = new Query();
+            ReflectUtil.setFieldValue(query,"criteria",ReflectUtil.getFieldValue(page.getQuery(),"criteria"));
+            page.setTotal(execute.count(query,page.getEntityType()));
         }
 
         MongoPageHelper.clear();
