@@ -32,9 +32,12 @@ public class CriteriaParser implements OperationParser {
 
         Annotation[][] annotations = context.getMethod().getParameterAnnotations();
 
-        Criteria criteria = new Criteria();
+        CriteriaWrapper criteria = new CriteriaWrapper();
+
 
         Object[] objects = context.getObjects();
+
+
 
         if(context.getObjects() != null){
             for (int i = 0; i < objects.length; i++) {
@@ -43,13 +46,14 @@ public class CriteriaParser implements OperationParser {
             }
         }
 
-        if(criteria.getCriteriaObject().size() == 0){
+        Criteria raw = criteria.build();
+        if(raw.getCriteriaObject().size() == 0){
            return;
         }
         if(context instanceof QueryContext){
-            ((QueryContext)context).getQuery().addCriteria(criteria);
+            ((QueryContext)context).getQuery().addCriteria(raw);
         }else if(context instanceof AggregateContext){
-            ((AggregateContext)context).addOperation(new MatchOperation(criteria));
+            ((AggregateContext)context).addOperation(new MatchOperation(raw));
         }
 
 
@@ -64,7 +68,7 @@ public class CriteriaParser implements OperationParser {
      * @param val 值
      * @return
      */
-    public Criteria criteriaParsing(Criteria criteria, Annotation[] annotations, String key, Object val) {
+    public CriteriaWrapper criteriaParsing(CriteriaWrapper criteria, Annotation[] annotations, String key, Object val) {
 
 
         for (Annotation annotation : annotations) {
@@ -86,29 +90,20 @@ public class CriteriaParser implements OperationParser {
             }
             if(key  == null){ key = AnnotationUtils.getValue(annotation,"name").toString(); }
 
-            Criteria and = new Criteria();
-            Criteria or = new Criteria();
             ActionType action = (ActionType) AnnotationUtils.getValue(annotation,"action");
             for (CriteriaParsing parsing : parsings) {
 
                 switch (action){
 
                     case OR:
-                        and = parsing.parsing(and, annotation, key,val);
+                        criteria.and = parsing.parsing(criteria.and(), annotation, key,val);
                         break;
                     case AND:
-                        or = parsing.parsing(or, annotation, key,val);
+                        criteria.or = parsing.parsing(criteria.or(), annotation, key,val);
                         break;
 
                 }
 
-                if(and.getCriteriaObject().size() >= 1){
-                    criteria.andOperator(and);
-                }
-
-                if(or.getCriteriaObject().size() >= 1){
-                    criteria.orOperator(or);
-                }
                 continue;
             }
 
@@ -121,6 +116,43 @@ public class CriteriaParser implements OperationParser {
     public void setParsers(ObjectFactory<List<CriteriaParsing>> factory) {
         this.parsings = factory.getObject();
     }
+
+
+
+   static class CriteriaWrapper{
+
+        Criteria criteria = new Criteria();
+
+        Criteria and = new Criteria();
+        Criteria or = new Criteria();
+
+
+       public void setCriteria(Criteria criteria) {
+           this.criteria = criteria;
+       }
+
+       public Criteria and() {
+           return and;
+       }
+
+       public Criteria or() {
+           return or;
+       }
+
+       public Criteria build(){
+
+
+           if(and.getCriteriaObject().size() >= 1){
+               criteria.andOperator(and);
+           }
+
+           if(or.getCriteriaObject().size() >= 1){
+               criteria.orOperator(or);
+           }
+
+           return criteria;
+       }
+   }
 
 
 }
