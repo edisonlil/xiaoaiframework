@@ -1,5 +1,6 @@
 package com.xiaoaiframework.spring.mongo.parser;
 
+import cn.hutool.core.annotation.AnnotationUtil;
 import com.xiaoaiframework.spring.mongo.annotation.Condition;
 import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
@@ -9,6 +10,7 @@ import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
@@ -81,7 +83,7 @@ public class CriteriaParser implements OperationParser {
                     }
                 }
             }
-            if(key  == null){ continue; }
+            if(key  == null){ key = AnnotationUtils.getValue(annotation,"name").toString(); }
             for (CriteriaParsing parsing : parsings) {
                 criteria = parsing.parsing(criteria, annotation, key,val);
                 continue;
