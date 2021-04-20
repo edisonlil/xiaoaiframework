@@ -79,4 +79,26 @@ public class AnnotationUtil {
         }
         return list;
     }
+
+
+    /**
+     * 注解数组里面是否有指定注解
+     * @param annotations
+     * @param annotation
+     * @return
+     */
+    public static boolean match(Annotation[] annotations,Class<? extends Annotation> annotation){
+
+        for (Annotation item : annotations) {
+
+            if(item.annotationType().equals(annotation)){
+                return true;
+            }
+
+        }
+
+        return false;
+
+
+    }
 }

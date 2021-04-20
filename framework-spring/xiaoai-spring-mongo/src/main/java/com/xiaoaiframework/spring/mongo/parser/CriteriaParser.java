@@ -1,12 +1,12 @@
 package com.xiaoaiframework.spring.mongo.parser;
 
-import cn.hutool.core.annotation.AnnotationUtil;
 import com.xiaoaiframework.spring.mongo.annotation.Condition;
 import com.xiaoaiframework.spring.mongo.constant.ActionType;
 import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
 import com.xiaoaiframework.spring.mongo.context.QueryContext;
 import com.xiaoaiframework.spring.mongo.parser.criteria.CriteriaParsing;
+import com.xiaoaiframework.util.base.AnnotationUtil;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
 import org.springframework.beans.factory.ObjectFactory;
@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -71,8 +72,13 @@ public class CriteriaParser implements OperationParser {
     public CriteriaWrapper criteriaParsing(CriteriaWrapper criteria, Annotation[] annotations, String key, Object val) {
 
 
+        if(AnnotationUtil.match(annotations,Deprecated.class)){
+            return criteria;
+        }
+
         for (Annotation annotation : annotations) {
             //If it is not the basic type
+
 
             if (annotation instanceof Condition && ObjectUtil.isNotNull(val) && ObjectUtil.isNotPrimitive(val)) {
 
@@ -81,25 +87,27 @@ public class CriteriaParser implements OperationParser {
                     field.setAccessible(true);
                     if (field.getAnnotations() != null) {
                         try {
-                            criteriaParsing(criteria, field.getAnnotations(), field.getName(),field.get(val));
+                           criteriaParsing(criteria, field.getAnnotations(), field.getName(),field.get(val));
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
                     }
                 }
             }
-            if(key  == null){ key = AnnotationUtils.getValue(annotation,"name").toString(); }
 
             ActionType action = (ActionType) AnnotationUtils.getValue(annotation,"action");
+            //TODO 解决因为遇到其他非条件注解没有action的时候报错
+            if(action == null){ return criteria; }
+
             for (CriteriaParsing parsing : parsings) {
 
                 switch (action){
 
                     case OR:
-                        criteria.and = parsing.parsing(criteria.and(), annotation, key,val);
+                        criteria.or = parsing.parsing(criteria.or, annotation, key,val);
                         break;
                     case AND:
-                        criteria.or = parsing.parsing(criteria.or(), annotation, key,val);
+                        criteria.and = parsing.parsing(criteria.and, annotation, key,val);
                         break;
 
                 }
