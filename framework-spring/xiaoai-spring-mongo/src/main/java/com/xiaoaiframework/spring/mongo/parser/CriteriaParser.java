@@ -85,8 +85,30 @@ public class CriteriaParser implements OperationParser {
                 }
             }
             if(key  == null){ key = AnnotationUtils.getValue(annotation,"name").toString(); }
+
+            Criteria and = new Criteria();
+            Criteria or = new Criteria();
+            ActionType action = (ActionType) AnnotationUtils.getValue(annotation,"action");
             for (CriteriaParsing parsing : parsings) {
-                criteria = parsing.parsing(criteria, annotation, key,val);
+
+                switch (action){
+
+                    case OR:
+                        and = parsing.parsing(and, annotation, key,val);
+                        break;
+                    case AND:
+                        or = parsing.parsing(or, annotation, key,val);
+                        break;
+
+                }
+
+                if(and.getCriteriaObject().size() >= 1){
+                    criteria.andOperator(and);
+                }
+
+                if(or.getCriteriaObject().size() >= 1){
+                    criteria.orOperator(or);
+                }
                 continue;
             }
 

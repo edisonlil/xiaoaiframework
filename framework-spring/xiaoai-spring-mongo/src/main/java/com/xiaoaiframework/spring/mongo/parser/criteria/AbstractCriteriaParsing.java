@@ -23,20 +23,12 @@ public abstract class AbstractCriteriaParsing implements CriteriaParsing {
         if(ignoreNull && val == null){
             return criteria;
         }
-
-        ActionType action = (ActionType) attributes.get("action");
-
         key = key == null ? attributes.get("name").toString():key;
-
-        if(action == ActionType.AND){
-            criteria.andOperator(operand(annotation,key,val));
-        }else if(action == ActionType.OR){
-            criteria.orOperator(operand(annotation,key,val));
-        }
-
-        return criteria;
+        return operand(criteria,annotation,key,val);
     }
 
+
+    abstract Criteria operand(Criteria criteria,Annotation annotation,String key,Object val);
     
     
 }

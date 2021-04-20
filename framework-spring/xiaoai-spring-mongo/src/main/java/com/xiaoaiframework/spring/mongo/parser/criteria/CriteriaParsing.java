@@ -16,7 +16,7 @@ public interface CriteriaParsing {
 
     boolean match(Annotation annotation);
 
-    Criteria operand(Annotation annotation,String key,Object val);
+
 
 
 }

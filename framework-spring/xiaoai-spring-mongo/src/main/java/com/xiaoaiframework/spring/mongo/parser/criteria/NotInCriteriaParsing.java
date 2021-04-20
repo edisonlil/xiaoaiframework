@@ -18,8 +18,8 @@ public class NotInCriteriaParsing extends AbstractCriteriaParsing {
     }
 
     @Override
-    public Criteria operand(Annotation annotation,String key, Object val) {
-        return Criteria.where(key).nin(val);
+    public Criteria operand(Criteria criteria,Annotation annotation,String key, Object val) {
+        return criteria.and(key).nin(val);
     }
 
 }

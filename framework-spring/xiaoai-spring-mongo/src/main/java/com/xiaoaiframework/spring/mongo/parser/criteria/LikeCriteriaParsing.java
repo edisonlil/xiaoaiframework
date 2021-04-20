@@ -19,8 +19,8 @@ public class LikeCriteriaParsing extends AbstractCriteriaParsing {
     }
 
     @Override
-    public Criteria operand(Annotation annotation,String key, Object val) {
-        return Criteria.where(key).regex(Pattern.compile("^.*" + val + ".*$", Pattern.CASE_INSENSITIVE));
+    public Criteria operand(Criteria criteria,Annotation annotation,String key, Object val) {
+        return criteria.and(key).regex(Pattern.compile("^.*" + val + ".*$", Pattern.CASE_INSENSITIVE));
     }
 
 }
