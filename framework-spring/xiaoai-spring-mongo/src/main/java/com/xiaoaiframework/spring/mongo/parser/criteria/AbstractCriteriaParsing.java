@@ -20,14 +20,14 @@ public abstract class AbstractCriteriaParsing implements CriteriaParsing {
         Map<String,Object> attributes = AnnotationUtils.getAnnotationAttributes(annotation);
 
         Boolean ignoreNull = (Boolean) attributes.get("ignoreNull");
-        if(!ignoreNull && val == null){
+        if(ignoreNull && val == null){
             return criteria;
         }
 
         ActionType action = (ActionType) attributes.get("action");
 
         key = key == null ? attributes.get("name").toString():key;
-        
+
         if(action == ActionType.AND){
             criteria.andOperator(operand(annotation,key,val));
         }else if(action == ActionType.OR){

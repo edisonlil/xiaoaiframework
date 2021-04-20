@@ -2,6 +2,7 @@ package com.xiaoaiframework.spring.mongo.parser;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import com.xiaoaiframework.spring.mongo.annotation.Condition;
+import com.xiaoaiframework.spring.mongo.constant.ActionType;
 import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
 import com.xiaoaiframework.spring.mongo.context.QueryContext;
