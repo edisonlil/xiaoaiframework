@@ -27,6 +27,7 @@ include(":framework-spring:xiaoai-spring-activemq")
 include(":framework-spring:xiaoai-spring-rabbitmq")
 include(":framework-spring:xiaoai-spring-security")
 include(":framework-spring:xiaoai-spring-mybatis-plus")
+include(":framework-spring:xiaoai-spring-mybatis-generator")
 include(":framework-spring:xiaoai-spring-cloud-config")
 include(":framework-spring:xiaoai-spring-seata")
 

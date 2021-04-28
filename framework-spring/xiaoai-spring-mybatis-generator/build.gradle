@@ -1,0 +1,5 @@
+dependencies {
+    //基础套件
+    compile "com.baomidou:mybatis-plus-generator:${mybatisplusVersion}"
+    compile ("mysql:mysql-connector-java:${mysqlConnectorVersion}")
+}
