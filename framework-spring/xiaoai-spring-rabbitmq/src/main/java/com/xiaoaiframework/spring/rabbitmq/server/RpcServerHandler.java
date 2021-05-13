@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 
+import com.xiaoaiframework.core.base.PageResultBean;
+import com.xiaoaiframework.core.base.ResultBean;
 import com.xiaoaiframework.spring.rabbitmq.annotation.RpcServerMethod;
 import com.xiaoaiframework.spring.rabbitmq.constant.RpcType;
 import org.slf4j.Logger;
@@ -211,9 +213,9 @@ public class RpcServerHandler implements ChannelAwareMessageListener, Initializi
                 throw new RuntimeException("Class: " + rpcServerClass.getName() + ", Method: " + method.getName() + " Invoke Exception");
             }
 //TODO 支持其他类型的返回值参数
-//            if (fastMethod.getReturnType() != ResultBean.class && fastMethod.getReturnType() != PageResultBean.class && fastMethod.getReturnType() != void.class) {
-//                throw new RuntimeException("返回类型只能为 ResultBean, PageResultBean 或者 void, Class: " + rpcServerClass.getName() + ", Method: " + fastMethod.getName() + ", ReturnType: " + fastMethod.getReturnType());
-//            }
+            if (fastMethod.getReturnType() != ResultBean.class && fastMethod.getReturnType() != PageResultBean.class && fastMethod.getReturnType() != void.class) {
+                throw new RuntimeException("返回类型只能为 ResultBean, PageResultBean 或者 void, Class: " + rpcServerClass.getName() + ", Method: " + fastMethod.getName() + ", ReturnType: " + fastMethod.getReturnType());
+            }
 
             FAST_METHOD_CACHE.put(key, fastMethod);
             LOGGER.debug(this.rpcType.getName() + "-RpcServer-" + this.rpcName + ", Method: " + methodName + " 已启动");

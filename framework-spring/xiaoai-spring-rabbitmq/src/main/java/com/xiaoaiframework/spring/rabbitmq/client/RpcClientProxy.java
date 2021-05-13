@@ -143,7 +143,7 @@ public class RpcClientProxy implements InvocationHandler {
         // 获取调用结果的状态
         //TODO 目前只支持ResultBean和PageResultBean,考虑后续扩展
         JSONObject resultJson = JSONObject.parseObject(resultJsonStr.toString());
-        return ParamsConverter.convertReturnType(method,resultJson);
+        return ParamsConverter.convertReturnType(method,resultJson.getJSONObject("_data"));
     }
 
     private void directSend(String message){
