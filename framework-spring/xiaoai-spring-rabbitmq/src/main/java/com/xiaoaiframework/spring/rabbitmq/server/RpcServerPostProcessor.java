@@ -101,6 +101,8 @@ public class RpcServerPostProcessor implements BeanPostProcessor {
     }
 
     private void defaultMessageListenerContainer(String rpcName,Object rpcServerBean,RpcServer rpcServer,RpcType rpcType){
+        Map<String, Object> params = new HashMap<>(1);
+        params.put("x-queue-type", "classic");
         Queue queue = queue(rpcName, rpcType, null);
         binding(rpcName, rpcType, queue);
         RpcServerHandler directServerHandler = rpcServerHandler(rpcName, rpcType, rpcServerBean);

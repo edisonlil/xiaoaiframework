@@ -29,7 +29,7 @@ public @interface RpcServer {
      * 支持的Rpc类型
      * @return
      */
-    RpcType[] types() default {RpcType.REPLY, RpcType.DIRECT,RpcType.FANOUT};
+    RpcType[] types() default {RpcType.DELAY,RpcType.REPLY, RpcType.DIRECT};
 
 
 }

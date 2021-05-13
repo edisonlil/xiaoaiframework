@@ -24,6 +24,7 @@ public enum RpcType {
     /**
      * 广播模式
      */
+    @Deprecated
     FANOUT(3,"FANOUT"),
 
     /**
