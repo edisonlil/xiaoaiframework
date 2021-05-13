@@ -92,8 +92,9 @@ public class RpcServerPostProcessor implements BeanPostProcessor {
     private void replyMessageListenerContainer(String rpcName,Object rpcServerBean,RpcServer rpcServer){
 
         final RpcType reply = REPLY;
-        Map<String, Object> params = new HashMap<>(1);
+        Map<String, Object> params = new HashMap<>(2);
         params.put("x-message-ttl", rpcServer.xMessageTTL());
+        params.put("x-queue-type", "classic");
         Queue replyQueue = queue(rpcName, reply, params);
         binding(rpcName, reply, replyQueue);
         RpcServerHandler syncServerHandler = rpcServerHandler(rpcName, reply, rpcServerBean);
