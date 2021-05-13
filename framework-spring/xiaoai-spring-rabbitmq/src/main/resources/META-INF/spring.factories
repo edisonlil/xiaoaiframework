@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.framework.infrastructure.rpc.config.SimpleRpcAutoConfiguration
+com.xiaoaiframework.spring.rabbitmq.configuration.RpcAutoConfiguration
