@@ -8,6 +8,7 @@ import com.xiaoaiframework.core.base.ResultBean;
 import com.xiaoaiframework.spring.rabbitmq.annotation.RpcClientMethod;
 import com.xiaoaiframework.spring.rabbitmq.constant.RpcType;
 import com.xiaoaiframework.spring.rabbitmq.decoder.Decoder;
+import com.xiaoaiframework.spring.rabbitmq.decoder.impl.ResultBeanDecoder;
 import com.xiaoaiframework.spring.rabbitmq.decoder.impl.SimpleDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class RpcClientProxy implements InvocationHandler {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(RpcClientProxy.class);
 
-    private final static Decoder DECODER = new SimpleDecoder();
+    private final static Decoder DECODER = new ResultBeanDecoder();
 
     private final String rpcName;
     private final Class<?> rpcClientInterface;
@@ -71,7 +72,7 @@ public class RpcClientProxy implements InvocationHandler {
         if (methodRpcType != REPLY && method.getReturnType() != void.class) {
             throw new RuntimeException("ASYNC-RpcClient 返回类型只能为 void, Class: " + this.rpcClientInterface.getName() + ", Method: " + method.getName());
         }else if (methodRpcType == REPLY && (method.getReturnType() != ResultBean.class && method.getReturnType() != PageResultBean.class)) {
-            throw new RuntimeException("SYNC-RpcClient 返回类型只能为 ResultBean 或者 PageResultBean, Class: " + this.rpcClientInterface.getName() + ", Method: " + method.getName());
+           throw new RuntimeException("SYNC-RpcClient 返回类型只能为 ResultBean 或者 PageResultBean, Class: " + this.rpcClientInterface.getName() + ", Method: " + method.getName());
         }
 
         // 未初始化完成
