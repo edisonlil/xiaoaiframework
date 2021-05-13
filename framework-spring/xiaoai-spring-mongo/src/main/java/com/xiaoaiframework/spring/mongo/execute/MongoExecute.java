@@ -79,4 +79,8 @@ public class MongoExecute {
     }
 
 
+    public void incr(Query query,String fieldName,Integer incrCount,Class type){
+        template.updateFirst(query,new Update().inc(fieldName,incrCount),type).wasAcknowledged();
+    }
+
 }

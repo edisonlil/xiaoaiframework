@@ -1,13 +1,10 @@
 package com.xiaoaiframework.spring.mongo.proxy;
 
+import com.xiaoaiframework.spring.mongo.annotation.action.*;
 import com.xiaoaiframework.spring.mongo.chain.ConditionParserChain;
 import com.xiaoaiframework.spring.mongo.context.QueryContext;
 import com.xiaoaiframework.spring.mongo.context.UpdateContext;
 import com.xiaoaiframework.spring.mongo.execute.MongoExecute;
-import com.xiaoaiframework.spring.mongo.annotation.action.Delete;
-import com.xiaoaiframework.spring.mongo.annotation.action.Save;
-import com.xiaoaiframework.spring.mongo.annotation.action.Select;
-import com.xiaoaiframework.spring.mongo.annotation.action.Update;
 import com.xiaoaiframework.spring.mongo.processor.*;
 import com.xiaoaiframework.spring.mongo.service.SelectService;
 import com.xiaoaiframework.util.coll.CollUtil;
@@ -67,7 +64,30 @@ public class MongoProxy implements InvocationHandler {
         if (delete != null) {
             return delete(method, objects);
         }
+
+        Incr incr = AnnotationUtils.getAnnotation(method,Incr.class);
+
+        if (incr != null) {
+            return incr(method,incr, objects);
+        }
+
         throw new RuntimeException("The method prefix definition cannot be found");
+
+    }
+
+
+    public Object incr(Method method,Incr incr, Object[] objects){
+
+        if (objects == null) {
+            return false;
+        }
+
+        UpdateContext context = new UpdateContext();
+        context.setMethod(method);
+        context.setObjects(objects);
+        chain.doParsing(context);
+        execute.incr(context.getQuery(),incr.name(),incr.incrCount(),entityType);
+        return true;
 
     }
 
