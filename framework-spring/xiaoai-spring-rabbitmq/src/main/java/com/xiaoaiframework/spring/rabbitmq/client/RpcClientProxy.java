@@ -10,6 +10,7 @@ import com.xiaoaiframework.spring.rabbitmq.constant.RpcType;
 import com.xiaoaiframework.spring.rabbitmq.decoder.Decoder;
 import com.xiaoaiframework.spring.rabbitmq.decoder.impl.ResultBeanDecoder;
 import com.xiaoaiframework.spring.rabbitmq.decoder.impl.SimpleDecoder;
+import com.xiaoaiframework.spring.rabbitmq.util.ParamsConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.AmqpException;
@@ -140,10 +141,9 @@ public class RpcClientProxy implements InvocationHandler {
         }
 
         // 获取调用结果的状态
+        //TODO 目前只支持ResultBean和PageResultBean,考虑后续扩展
         JSONObject resultJson = JSONObject.parseObject(resultJsonStr.toString());
-        JSONObject _data = resultJson.getJSONObject("_data");
-
-        return DECODER.decode(_data.toJSONString(),method.getReturnType());
+        return ParamsConverter.convertReturnType(method,resultJson);
     }
 
     private void directSend(String message){
