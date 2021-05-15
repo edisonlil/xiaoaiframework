@@ -29,6 +29,7 @@ include(":framework-spring:xiaoai-spring-security")
 include(":framework-spring:xiaoai-spring-mybatis-plus")
 include(":framework-spring:xiaoai-spring-mybatis-generator")
 include(":framework-spring:xiaoai-spring-cloud-config")
+include(":framework-spring:xiaoai-spring-cloud-zipkin")
 include(":framework-spring:xiaoai-spring-seata")
 
 include(":framework-api:xiaoai-upload-api")
