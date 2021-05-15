@@ -3,7 +3,8 @@ package com.xiaoaiframework.spring.mongo.annotation;
 import java.lang.annotation.*;
 
 /**
- * 待实现...  
+ * 连表
+ * @author edison
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

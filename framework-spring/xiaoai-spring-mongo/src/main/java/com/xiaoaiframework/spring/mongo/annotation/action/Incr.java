@@ -2,6 +2,10 @@ package com.xiaoaiframework.spring.mongo.annotation.action;
 
 import java.lang.annotation.*;
 
+/**
+ * 自增
+ * @author edison
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD})

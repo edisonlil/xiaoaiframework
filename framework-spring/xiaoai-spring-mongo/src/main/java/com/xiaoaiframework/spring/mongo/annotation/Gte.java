@@ -6,6 +6,10 @@ import java.lang.annotation.*;
 
 import static com.xiaoaiframework.spring.mongo.constant.ActionType.AND;
 
+/**
+ * 大于等于
+ * @author edison
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.PARAMETER, ElementType.FIELD })

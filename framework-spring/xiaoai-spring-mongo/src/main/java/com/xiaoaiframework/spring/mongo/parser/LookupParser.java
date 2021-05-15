@@ -7,6 +7,9 @@ import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.stereotype.Component;
 
 
+/**
+ * @author edison
+ */
 @Component
 public class LookupParser  implements OperationParser  {
 

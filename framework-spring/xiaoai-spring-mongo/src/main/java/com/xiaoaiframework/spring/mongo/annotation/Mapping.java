@@ -4,6 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * mongo接口的映射注解
+ * @author edison
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
