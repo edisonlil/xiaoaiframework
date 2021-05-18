@@ -107,7 +107,7 @@ public class RpcClientProxy implements InvocationHandler {
                     directSend(message);
                     break;
                 case DELAY:
-                    delaySend(message,rpcClientMethod);
+                    delaySend(message,method);
                     break;
                 case FANOUT:
                     fanoutSend(message,methodName);
@@ -160,7 +160,11 @@ public class RpcClientProxy implements InvocationHandler {
         //defaultTemplate.convertAndSend(this.rpcName+".topic","",message);
     }
 
-    private void delaySend(String message,RpcClientMethod rpcClientMethod){
+    private void delaySend(String message,Method method){
+
+        RpcClientMethod rpcClientMethod = method.getAnnotation(RpcClientMethod.class);
+
+
         defaultTemplate.convertAndSend("simple.rpc.delay", this.rpcName + ".delay", message, new MessagePostProcessor() {
             @Override
             public Message postProcessMessage(Message message) throws AmqpException {
