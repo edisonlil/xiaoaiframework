@@ -94,7 +94,6 @@ public class RpcServerPostProcessor implements BeanPostProcessor {
         final RpcType reply = REPLY;
         Map<String, Object> params = new HashMap<>(2);
         params.put("x-message-ttl", rpcServer.xMessageTTL());
-        params.put("x-queue-type", "classic");
         Queue replyQueue = queue(rpcName, reply, params);
         binding(rpcName, reply, replyQueue);
         RpcServerHandler syncServerHandler = rpcServerHandler(rpcName, reply, rpcServerBean);
@@ -104,7 +103,7 @@ public class RpcServerPostProcessor implements BeanPostProcessor {
     private void defaultMessageListenerContainer(String rpcName,Object rpcServerBean,RpcServer rpcServer,RpcType rpcType){
         Map<String, Object> params = new HashMap<>(1);
         params.put("x-queue-type", "classic");
-        Queue queue = queue(rpcName, rpcType, null);
+        Queue queue = queue(rpcName, rpcType, params);
         binding(rpcName, rpcType, queue);
         RpcServerHandler directServerHandler = rpcServerHandler(rpcName, rpcType, rpcServerBean);
         messageListenerContainer(rpcName, rpcType, queue, directServerHandler, rpcServer.threadNum());
