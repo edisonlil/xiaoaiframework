@@ -5,11 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 
 import com.xiaoaiframework.core.base.PageResultBean;
 import com.xiaoaiframework.core.base.ResultBean;
+import com.xiaoaiframework.spring.rabbitmq.MessageHeaders;
+import com.xiaoaiframework.spring.rabbitmq.RpcMessage;
 import com.xiaoaiframework.spring.rabbitmq.annotation.RpcClientMethod;
 import com.xiaoaiframework.spring.rabbitmq.constant.RpcType;
 import com.xiaoaiframework.spring.rabbitmq.decoder.Decoder;
 import com.xiaoaiframework.spring.rabbitmq.decoder.impl.ResultBeanDecoder;
-import com.xiaoaiframework.spring.rabbitmq.decoder.impl.SimpleDecoder;
 import com.xiaoaiframework.spring.rabbitmq.util.ParamsConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import org.springframework.util.StringUtils;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.concurrent.TimeUnit;
 
 import static com.xiaoaiframework.spring.rabbitmq.constant.RpcType.REPLY;
 
@@ -107,7 +109,7 @@ public class RpcClientProxy implements InvocationHandler {
                     directSend(message);
                     break;
                 case DELAY:
-                    delaySend(message,method);
+                    delaySend(message,args,rpcClientMethod);
                     break;
                 case FANOUT:
                     fanoutSend(message,methodName);
@@ -160,18 +162,44 @@ public class RpcClientProxy implements InvocationHandler {
         //defaultTemplate.convertAndSend(this.rpcName+".topic","",message);
     }
 
-    private void delaySend(String message,Method method){
+    private void delaySend(String message,Object[] args,RpcClientMethod rpcClientMethod){
 
-        RpcClientMethod rpcClientMethod = method.getAnnotation(RpcClientMethod.class);
+
+        TimeUnit delayTimeUnit = getDelayTimeUnit(rpcClientMethod,args);
+        long  delayTime = getDelayTime(rpcClientMethod,args);
 
 
         defaultTemplate.convertAndSend("simple.rpc.delay", this.rpcName + ".delay", message, new MessagePostProcessor() {
             @Override
             public Message postProcessMessage(Message message) throws AmqpException {
                 message.getMessageProperties().setHeader("x-delay",
-                        rpcClientMethod.delayTimeUnit().toMillis(rpcClientMethod.delayTime()));
+                        delayTimeUnit.toMillis(delayTime));
                 return message;
             }
         });
+    }
+
+    TimeUnit getDelayTimeUnit(RpcClientMethod rpcClientMethod,Object[] args){
+        TimeUnit delayTimeUnit = rpcClientMethod.delayTimeUnit();
+        if(args.length == 1 && args[0] instanceof RpcMessage) {
+            RpcMessage rpcMessage = (RpcMessage) args[0];
+            MessageHeaders headers = rpcMessage.getHeaders();
+            if(headers.getDelayTimeUnit() != null){
+                delayTimeUnit = headers.getDelayTimeUnit();
+            }
+        }
+        return delayTimeUnit;
+    }
+
+    long getDelayTime(RpcClientMethod rpcClientMethod,Object[] args){
+        long delayTime = rpcClientMethod.delayTime();
+        if(args.length == 1 && args[0] instanceof RpcMessage) {
+            RpcMessage rpcMessage = (RpcMessage) args[0];
+            MessageHeaders headers = rpcMessage.getHeaders();
+            if(headers.getDelayTime() != null){
+                delayTime = headers.getDelayTime();
+            }
+        }
+        return delayTime;
     }
 }
