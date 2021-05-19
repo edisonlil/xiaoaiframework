@@ -35,6 +35,6 @@ public class MessageHeaders extends HashMap<String,Object> {
 
 
     public TimeUnit getDelayTimeUnit(){
-        return (TimeUnit) get(DELAY_TIME);
+        return (TimeUnit) get(DELAY_TIME_UNIT);
     }
 }
