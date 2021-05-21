@@ -1,6 +1,7 @@
 package com.xiaoaiframework.upload.ftp.client;
 
 import cn.hutool.extra.ftp.Ftp;
+import cn.hutool.extra.ftp.FtpMode;
 import com.xiaoaiframework.api.upload.client.UploadClient;
 import com.xiaoaiframework.util.file.FilenameUtil;
 import org.apache.commons.net.ftp.FTPClient;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * Ftp上传客户端
@@ -38,7 +40,7 @@ public class FtpUploadClient implements UploadClient<Ftp> {
 
     @Override
     public Ftp connect() {
-        return new Ftp(ip,port,username,password);
+        return new Ftp(ip,port,username,password, Charset.forName("utf-8"),FtpMode.Passive);
     }
 
     @Override
@@ -50,15 +52,13 @@ public class FtpUploadClient implements UploadClient<Ftp> {
         }
 
         FTPClient ftpClient = ftp.getClient();
-        //设置被动模式
-        ftpClient.enterLocalPassiveMode();
-
         boolean ok =  ftp.upload(FilenameUtil.getPreviousPath(path), FilenameUtil.getName(path), file);
-        int replyCode = ftpClient.getReplyCode();
-        if (!FTPReply.isPositiveCompletion(replyCode)){
 
-            logger.warn("连接ftp服务器失败！ftp服务器地址:" + ip
-                    + ", 端口:" + port + ", 初始化工作目录:" + path);
+
+        if (!ok){
+
+            logger.warn("连接ftp服务器失败！ftp服务器地址:" + ftpClient.getPassiveHost()
+                    + ", 端口:" + ftpClient.getPassivePort() + ", 初始化工作目录:" + path);
             try {
                 ftpClient.disconnect();
             } catch (IOException e) {
