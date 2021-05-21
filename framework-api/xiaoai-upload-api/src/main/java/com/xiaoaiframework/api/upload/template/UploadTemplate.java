@@ -90,7 +90,10 @@ public class UploadTemplate {
             String fileUrl = folder + "/" + LocalDate.now().toString() + "/" + suffix + "/" + uuid + "-" + file.getName();
             LOGGER.info("上传文件的名称为:{}", file.getName());
 
-            client.upload(getBucketName(),fileUrl,file);
+            if(!client.upload(getBucketName(),fileUrl,file)){
+                LOGGER.error("上传失败!!!,上传消耗的时间:{}", System.currentTimeMillis() - start);
+                return ResultBean.fail().setMessage("上传失败!!!");
+            }
 
             LOGGER.info("上传消耗的时间:{}", System.currentTimeMillis() - start);
             return ResultBean.success().setData(new UploaderInfo(

@@ -1,11 +1,12 @@
 package com.xiaoaiframework.upload.ftp.client;
 
-import cn.hutool.core.io.file.FileNameUtil;
-import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.extra.ftp.Ftp;
 import com.xiaoaiframework.api.upload.client.UploadClient;
-import com.xiaoaiframework.util.file.FileUtil;
 import com.xiaoaiframework.util.file.FilenameUtil;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.io.IOException;
  */
 public class FtpUploadClient implements UploadClient<Ftp> {
 
+
     String ip;
 
     Integer port;
@@ -24,6 +26,7 @@ public class FtpUploadClient implements UploadClient<Ftp> {
 
     String password;
 
+    Logger logger = LoggerFactory.getLogger(FtpUploadClient.class);
 
     public FtpUploadClient(String ip,Integer port,String username,String password){
         super();
@@ -39,15 +42,33 @@ public class FtpUploadClient implements UploadClient<Ftp> {
     }
 
     @Override
-    public void upload(String root, String path, File file) {
+    public boolean upload(String root, String path, File file) {
         
         Ftp ftp = connect();
         if(!ftp.pwd().equals(root)){
             ftp.cd(root);
         }
 
-        ftp.upload(FilenameUtil.getPreviousPath(path), FilenameUtil.getName(path), file);
+        FTPClient ftpClient = ftp.getClient();
+        //设置被动模式
+        ftpClient.enterLocalPassiveMode();
+
+        boolean ok =  ftp.upload(FilenameUtil.getPreviousPath(path), FilenameUtil.getName(path), file);
+        int replyCode = ftpClient.getReplyCode();
+        if (!FTPReply.isPositiveCompletion(replyCode)){
+
+            logger.warn("连接ftp服务器失败！ftp服务器地址:" + ip
+                    + ", 端口:" + port + ", 初始化工作目录:" + path);
+            try {
+                ftpClient.disconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         close(ftp);
+
+        return ok;
     }
 
     @Override
