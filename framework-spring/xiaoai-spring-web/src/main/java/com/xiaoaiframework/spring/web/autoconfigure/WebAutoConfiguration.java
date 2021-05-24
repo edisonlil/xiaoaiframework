@@ -3,6 +3,7 @@ package com.xiaoaiframework.spring.web.autoconfigure;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.xiaoaiframework.spring.web.configuration.GlobalCorsConfiguration;
@@ -135,14 +136,4 @@ public class WebAutoConfiguration {
     }
 
 
-    /**
-     * 解决前端传递Long类型精度丢失问题
-     * @return
-     */
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
-        return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder
-                .serializerByType(Long.class, ToStringSerializer.instance)
-                .serializerByType(Long.TYPE, ToStringSerializer.instance);
-    }
 }
