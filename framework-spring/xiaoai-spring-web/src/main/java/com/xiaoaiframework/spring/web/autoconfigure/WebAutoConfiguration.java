@@ -7,12 +7,10 @@ import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.xiaoaiframework.spring.web.configuration.GlobalCorsConfiguration;
+import com.xiaoaiframework.spring.web.handler.GlobalExceptionHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.*;
 import org.springframework.core.convert.converter.Converter;
 
 import java.io.IOException;
@@ -22,6 +20,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Configuration
+@ComponentScan(basePackages = "com.xiaoaiframework.spring.web.**.*")
 @Import(GlobalCorsConfiguration.class)
 public class WebAutoConfiguration {
 
