@@ -3,6 +3,7 @@ package com.xiaoaiframework.util.base;
 
 import com.xiaoaiframework.util.coll.CollUtil;
 import com.xiaoaiframework.util.type.BasicType;
+import com.xiaoaiframework.util.type.TypeUtil;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -67,10 +68,11 @@ public class ObjectUtil {
      */
     public static boolean isNumber(Object obj){
 
-        if(obj instanceof Number){
-            return true;
+        if(obj instanceof Class){
+           return isNumber((Class) obj);
         }
-        return false;
+
+        return isNumber(obj.getClass());
     }
 
     /**
@@ -80,7 +82,7 @@ public class ObjectUtil {
      */
     public static boolean isNumber(Class c){
 
-        if(c.equals(Number.class)){
+        if(TypeUtil.isAssignableFrom(Number.class,c)){
             return true;
         }
         return false;
