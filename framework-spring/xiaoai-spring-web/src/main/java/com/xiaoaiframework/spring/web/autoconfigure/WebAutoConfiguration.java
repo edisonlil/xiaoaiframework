@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.xiaoaiframework.spring.web.configuration.GlobalCorsConfiguration;
@@ -12,12 +13,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.*;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Configuration
 @ComponentScan(basePackages = "com.xiaoaiframework.spring.web.**.*")
@@ -27,13 +31,15 @@ public class WebAutoConfiguration {
     @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
     private String pattern;
 
-    /**
-     * 统一处理LocalDatetime时间格式
-     */
+
     @Bean
     @Primary
     public ObjectMapper serializingObjectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
+
+        /**
+         * 统一处理LocalDatetime时间格式
+         */
 
         JavaTimeModule module = new JavaTimeModule();
         module.addSerializer(LocalDate.class,new LocalDateSerialize());
@@ -46,8 +52,23 @@ public class WebAutoConfiguration {
         module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer());
 
         objectMapper.registerModules(module);
+
+
+        /**
+         * 序列换成json时,将所有的long变成string
+         * 因为js中得数字类型不能包含所有的java long值
+         */
+
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
+        simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
+        objectMapper.registerModule(simpleModule);
+
         return objectMapper;
     }
+
+
+
 
 
 
