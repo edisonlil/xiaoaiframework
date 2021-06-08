@@ -70,8 +70,8 @@ public class MongoExecute {
         return template.aggregate(aggregation,input,output);
     }
 
-    public boolean updateFirst(Query query,Update update,Class type){
-        return template.updateFirst(query,update,type).wasAcknowledged();
+    public boolean updateMulti(Query query,Update update,Class type){
+        return template.updateMulti(query,update,type).wasAcknowledged();
     }
 
     public boolean remove(Query query, Class type){
@@ -80,7 +80,7 @@ public class MongoExecute {
 
 
     public void incr(Query query,String fieldName,Integer incrCount,Class type){
-        template.updateFirst(query,new Update().inc(fieldName,incrCount),type).wasAcknowledged();
+        template.updateMulti(query,new Update().inc(fieldName,incrCount),type).wasAcknowledged();
     }
 
 }

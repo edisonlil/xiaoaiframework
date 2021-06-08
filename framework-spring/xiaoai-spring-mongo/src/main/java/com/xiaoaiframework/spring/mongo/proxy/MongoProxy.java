@@ -79,7 +79,8 @@ public class MongoProxy implements InvocationHandler {
     public Object incr(Method method,Incr incr, Object[] objects){
 
         if (objects == null) {
-            return false;
+            execute.incr(new Query(),incr.name(),incr.incrCount(),entityType);
+            return true;
         }
 
         UpdateContext context = new UpdateContext();
@@ -148,7 +149,7 @@ public class MongoProxy implements InvocationHandler {
         Query query = context.getQuery();
         updateFrontProcessors(u,query,entityType);
 
-        return execute.updateFirst(query
+        return execute.updateMulti(query
                 ,u, entityType);
     }
 
