@@ -13,8 +13,6 @@ buildscript {
         mavenLocal()
         //本地Nexus私服
         maven { url "${nexusSnapshotsUrl}"}
-        //JFrog公司提供的性能更好的maven仓库
-        jcenter()
         //Maven 仓库
         maven { url "${aliyunNexusUrl}" }
         // 中央库
@@ -53,7 +51,7 @@ allprojects {
         maven { url "${nexusReleasesUrl}"}
         maven { url "${nexusSnapshotsUrl}"} //本地Nexus私服
         maven { url 'https://repo.spring.io/milestone' }
-        jcenter() //JFrog公司提供的性能更好的maven仓库
+        //jcenter() //JFrog公司提供的性能更好的maven仓库
         mavenCentral() // 中央库
 
     }
