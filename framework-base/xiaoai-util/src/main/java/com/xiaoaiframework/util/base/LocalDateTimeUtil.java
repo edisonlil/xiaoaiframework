@@ -69,10 +69,9 @@ public final class LocalDateTimeUtil {
 
     /**
      * 获取今天结束的时间
-     * @param localDateTime
      * @return
      */
-    public static LocalDateTime nowEndOfDay(LocalDateTime localDateTime){
+    public static LocalDateTime nowEndOfDay(){
         return LocalDateTime.of(LocalDateTime.now().toLocalDate(), LocalTime.MAX);
     }
 
@@ -243,7 +242,7 @@ public final class LocalDateTimeUtil {
      * @return
      */
     public static Long getResidueMillis(){
-        return betweenMillis(LocalDateTime.now(),LocalDateTime.MAX);
+        return betweenMillis(LocalDateTime.now(),nowEndOfDay());
     }
 
     /**
