@@ -38,9 +38,7 @@ public class CriteriaParser implements OperationParser {
 
         Object[] objects = context.getObjects();
 
-
-
-        if(context.getObjects() != null){
+        if(objects != null){
             for (int i = 0; i < objects.length; i++) {
                 Annotation[] annotation = annotations[i];
                 criteria = criteriaParsing(criteria,annotation,null,objects[i]);

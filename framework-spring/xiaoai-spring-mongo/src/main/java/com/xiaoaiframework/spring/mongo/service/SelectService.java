@@ -1,6 +1,6 @@
 package com.xiaoaiframework.spring.mongo.service;
 
-import com.xiaoaiframework.spring.mongo.annotation.Join;
+import com.xiaoaiframework.spring.mongo.annotation.action.Join;
 import com.xiaoaiframework.spring.mongo.annotation.action.Select;
 import com.xiaoaiframework.spring.mongo.execute.*;
 import com.xiaoaiframework.util.base.ObjectUtil;

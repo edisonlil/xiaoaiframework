@@ -78,9 +78,5 @@ public class MongoExecute {
         return template.remove(query,type).wasAcknowledged();
     }
 
-
-    public void incr(Query query,String fieldName,Integer incrCount,Class type){
-        template.updateMulti(query,new Update().inc(fieldName,incrCount),type).wasAcknowledged();
-    }
-
+    
 }

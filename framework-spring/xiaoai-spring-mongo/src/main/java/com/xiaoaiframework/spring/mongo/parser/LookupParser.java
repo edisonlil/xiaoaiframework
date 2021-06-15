@@ -1,6 +1,6 @@
 package com.xiaoaiframework.spring.mongo.parser;
 
-import com.xiaoaiframework.spring.mongo.annotation.Join;
+import com.xiaoaiframework.spring.mongo.annotation.action.Join;
 import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;

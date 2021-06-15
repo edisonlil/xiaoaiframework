@@ -78,16 +78,12 @@ public class MongoProxy implements InvocationHandler {
 
     public Object incr(Method method,Incr incr, Object[] objects){
 
-        if (objects == null) {
-            execute.incr(new Query(),incr.name(),incr.incrCount(),entityType);
-            return true;
-        }
 
         UpdateContext context = new UpdateContext();
         context.setMethod(method);
         context.setObjects(objects);
         chain.doParsing(context);
-        execute.incr(context.getQuery(),incr.name(),incr.incrCount(),entityType);
+        execute.updateMulti(context.getQuery(),context.getUpdate(),entityType);
         return true;
 
     }
