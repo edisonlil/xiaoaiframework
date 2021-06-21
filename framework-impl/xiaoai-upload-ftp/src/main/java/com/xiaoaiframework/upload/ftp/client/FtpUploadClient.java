@@ -1,5 +1,7 @@
 package com.xiaoaiframework.upload.ftp.client;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.crypto.digest.MD5;
 import cn.hutool.extra.ftp.Ftp;
 import cn.hutool.extra.ftp.FtpMode;
 import com.xiaoaiframework.api.upload.client.UploadClient;
@@ -50,9 +52,9 @@ public class FtpUploadClient implements UploadClient<Ftp> {
         if(!ftp.pwd().equals(root)){
             ftp.cd(root);
         }
-
+        String md5 = MD5.create().digestHex16(file);
         FTPClient ftpClient = ftp.getClient();
-        boolean ok =  ftp.upload(FilenameUtil.getPreviousPath(path), FilenameUtil.getName(path), file);
+        boolean ok =  ftp.upload(FilenameUtil.getPreviousPath(path),md5, file);
 
 
         if (!ok){
