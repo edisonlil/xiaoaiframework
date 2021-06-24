@@ -23,7 +23,7 @@ public abstract class AbstractCriteriaParsing implements CriteriaParsing {
         if(ignoreNull && val == null){
             return criteria;
         }
-        key = attributes.get("name") != null ? attributes.get("name").toString():key;
+        key = (attributes.get("name") != null && !"".equals(attributes.get("name"))) ? attributes.get("name").toString():key;
         return operand(criteria,annotation,key,val);
     }
 
