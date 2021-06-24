@@ -52,9 +52,8 @@ public class FtpUploadClient implements UploadClient<Ftp> {
         if(!ftp.pwd().equals(root)){
             ftp.cd(root);
         }
-        String md5 = MD5.create().digestHex16(file);
         FTPClient ftpClient = ftp.getClient();
-        boolean ok =  ftp.upload(FilenameUtil.getPreviousPath(path),md5, file);
+        boolean ok =  ftp.upload(FilenameUtil.getPreviousPath(path),FilenameUtil.getName(path), file);
 
 
         if (!ok){
