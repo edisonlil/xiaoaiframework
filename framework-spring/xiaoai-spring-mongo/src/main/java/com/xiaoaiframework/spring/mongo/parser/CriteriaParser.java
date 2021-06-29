@@ -96,7 +96,7 @@ public class CriteriaParser implements OperationParser {
 
             ActionType action = (ActionType) AnnotationUtils.getValue(annotation,"action");
             //
-            if( AnnotationUtils.getAnnotation(annotation,ICriteria.class) != null){ return criteria; }
+            if(annotation.getClass().getAnnotation(ICriteria.class) == null){ return criteria; }
 
             for (CriteriaParsing parsing : parsings) {
 
