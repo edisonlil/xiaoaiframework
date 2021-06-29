@@ -11,7 +11,6 @@ import static com.xiaoaiframework.spring.mongo.constant.ActionType.AND;
  * @author edison
  */
 @Documented
-@ICriteria
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.PARAMETER, ElementType.FIELD })
 public @interface Lte {

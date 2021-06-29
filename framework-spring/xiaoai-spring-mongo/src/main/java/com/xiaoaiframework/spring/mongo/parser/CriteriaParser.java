@@ -1,7 +1,6 @@
 package com.xiaoaiframework.spring.mongo.parser;
 
 import com.xiaoaiframework.spring.mongo.annotation.Condition;
-import com.xiaoaiframework.spring.mongo.annotation.ICriteria;
 import com.xiaoaiframework.spring.mongo.constant.ActionType;
 import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
@@ -18,7 +17,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -94,9 +92,11 @@ public class CriteriaParser implements OperationParser {
                 }
             }
 
+            if(AnnotationUtils.getValue(annotation,"action") == null){
+                return criteria;
+            }
             ActionType action = (ActionType) AnnotationUtils.getValue(annotation,"action");
-            //
-            if(annotation.getClass().getAnnotation(ICriteria.class) == null){ return criteria; }
+            if(action == null){ return criteria; }
 
             for (CriteriaParsing parsing : parsings) {
 
