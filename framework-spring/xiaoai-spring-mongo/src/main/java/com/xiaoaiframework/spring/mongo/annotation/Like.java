@@ -10,6 +10,7 @@ import static com.xiaoaiframework.spring.mongo.constant.ActionType.AND;
  * 模糊查询
  */
 @Documented
+@ICriteria
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.PARAMETER, ElementType.FIELD })
 public @interface Like {

@@ -1,6 +1,7 @@
 package com.xiaoaiframework.spring.mongo.parser;
 
 import com.xiaoaiframework.spring.mongo.annotation.Condition;
+import com.xiaoaiframework.spring.mongo.annotation.ICriteria;
 import com.xiaoaiframework.spring.mongo.constant.ActionType;
 import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
@@ -94,8 +95,8 @@ public class CriteriaParser implements OperationParser {
             }
 
             ActionType action = (ActionType) AnnotationUtils.getValue(annotation,"action");
-            //TODO 解决因为遇到其他非条件注解没有action的时候报错
-            if(action == null){ return criteria; }
+            //
+            if( AnnotationUtils.getAnnotation(annotation,ICriteria.class) != null){ return criteria; }
 
             for (CriteriaParsing parsing : parsings) {
 
