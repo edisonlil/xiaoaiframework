@@ -31,4 +31,6 @@ public @interface NotIn {
      * @return
      */
     ActionType action() default AND;
+
+    String operation() default "$nin";
 }

@@ -5,17 +5,12 @@ import com.xiaoaiframework.spring.mongo.constant.ActionType;
 import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
 import com.xiaoaiframework.spring.mongo.context.QueryContext;
-import com.xiaoaiframework.spring.mongo.parser.criteria.CriteriaParsing;
 import com.xiaoaiframework.spring.mongo.wrapper.CriteriaWrapper;
 import com.xiaoaiframework.util.base.AnnotationUtil;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
-import org.checkerframework.checker.units.qual.C;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
@@ -24,10 +19,6 @@ import java.util.*;
 
 @Component
 public class CriteriaParser implements OperationParser {
-
-
-    List<CriteriaParsing> parsings;
-
 
     @Override
     public void parsing(MongoContext context) {
@@ -46,14 +37,13 @@ public class CriteriaParser implements OperationParser {
             }
         }
 
-        Criteria raw = criteria.build();
-        if(raw.getCriteriaObject().size() == 0){
+        if(criteria.getCriteriaObject().size() == 0){
            return;
         }
         if(context instanceof QueryContext){
-            ((QueryContext)context).getQuery().addCriteria(raw);
+            ((QueryContext)context).getQuery().addCriteria(criteria);
         }else if(context instanceof AggregateContext){
-            ((AggregateContext)context).addOperation(new MatchOperation(raw));
+            ((AggregateContext)context).addOperation(new MatchOperation(criteria));
         }
 
 
@@ -68,7 +58,7 @@ public class CriteriaParser implements OperationParser {
      * @param val 值
      * @return
      */
-    public CriteriaWrapper criteriaParsing(CriteriaWrapper criteria, Annotation[] annotations, String key, Object val) {
+    private CriteriaWrapper criteriaParsing(CriteriaWrapper criteria, Annotation[] annotations, String key, Object val) {
 
 
         if(AnnotationUtil.match(annotations,Deprecated.class)){
@@ -92,27 +82,46 @@ public class CriteriaParser implements OperationParser {
                 }
             }
 
-            if(AnnotationUtils.getValue(annotation,"action") == null){
+            if(AnnotationUtils.getValue(annotation,"operation") == null){
                 return criteria;
             }
-
-            for (CriteriaParsing parsing : parsings) {
-                parsing.parsing(criteria, annotation, key,val);
-                continue;
-            }
-
+            parsing(criteria, annotation, key,val);
         }
 
         return criteria;
     }
 
-    @Autowired
-    public void setParsers(ObjectFactory<List<CriteriaParsing>> factory) {
-        this.parsings = factory.getObject();
+
+    private void parsing(CriteriaWrapper criteria, Annotation annotation, String key, Object val) {
+
+        Map<String,Object> attributes = AnnotationUtils.getAnnotationAttributes(annotation);
+
+        Boolean ignoreNull = (Boolean) attributes.get("ignoreNull");
+        if(ignoreNull && val == null){
+            return;
+        }
+        key = (attributes.get("name") != null && !"".equals(attributes.get("name"))) ? attributes.get("name").toString():key;
+        operand(criteria,attributes,key,val);
     }
 
 
+    private void operand(CriteriaWrapper criteriaWrapper, Map<String,Object> attributes, String key, Object val){
 
+        ActionType action = (ActionType)attributes.get("action");
+        String operation = attributes.get("operation").toString();
+
+        switch (action){
+
+            case AND:
+                criteriaWrapper.and(key,operation,val);
+                break;
+            case OR:
+                criteriaWrapper.or(key,operation,val);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + action);
+        }
+    }
 
 
 }

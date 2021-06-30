@@ -34,6 +34,6 @@ public @interface Eq{
     ActionType action() default AND;
 
 
-
+    String operation() default "$eq";
 
 }

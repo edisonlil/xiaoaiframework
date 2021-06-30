@@ -31,4 +31,6 @@ public @interface Gt {
      * @return
      */
     ActionType action() default AND;
+
+    String operation() default "$gt";
 }

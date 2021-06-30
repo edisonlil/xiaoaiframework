@@ -31,4 +31,7 @@ public @interface Gte {
      * @return
      */
     ActionType action() default AND;
+
+
+    String operation() default "$gte";
 }

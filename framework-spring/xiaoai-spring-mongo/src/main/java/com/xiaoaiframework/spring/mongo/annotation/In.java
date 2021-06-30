@@ -30,4 +30,7 @@ public @interface In {
      * @return
      */
     ActionType action() default AND;
+
+    String operation() default "$in";
+
 }

@@ -31,4 +31,6 @@ public @interface Lt {
      * @return
      */
     ActionType action() default AND;
+
+    String operation() default "$lt";
 }

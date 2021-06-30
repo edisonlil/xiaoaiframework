@@ -1,47 +1,93 @@
 package com.xiaoaiframework.spring.mongo.wrapper;
 
-import org.springframework.data.mongodb.core.query.Criteria;
+import org.bson.Document;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
 
-public class CriteriaWrapper {
+public class CriteriaWrapper implements CriteriaDefinition {
 
-    Map<String,Criteria> andCriteriaMap = new HashMap<>();
-    Map<String,Criteria> orCriteriaMap = new HashMap<>();
+    /**
+     * Custom "not-null" object as we have to be able to work with {@literal null} values as well.
+     */
+    private static final Object NOT_SET = new Object();
 
-    public Criteria getAndCriteria(String key){
-        if(!andCriteriaMap.containsKey(key)){
-            andCriteriaMap.put(key,Criteria.where(key));
-        }
-        return andCriteriaMap.get(key);
+
+    Document document = new Document();
+
+
+    public Document getDocument() {
+        return document;
     }
 
-    public Criteria getOrCriteria(String key){
-        if(!orCriteriaMap.containsKey(key)){
-            orCriteriaMap.put(key,Criteria.where(key));
-        }
-        return orCriteriaMap.get(key);
+
+    public Document getAnd(){
+        return document;
     }
 
-    public Criteria build(){
 
-        Criteria criteria = new Criteria();
-        andCriteriaMap.forEach((k,v)->{
-            if(v.getCriteriaObject().size() == 0){
-                return;
+    public Document getOr(){
+
+        if(!document.containsKey("$or")){
+            document.put("$or",new ArrayList<Document>());
+        }
+        List<Document> list = (List<Document>) document.get("$or");
+        if(list.isEmpty()){
+            list.add(new Document());
+        }
+        Document orDocument = list.get(0);
+        return orDocument;
+    }
+
+
+    /**
+     * [{ "_id" : "1", "sort" : { "$gt" : 1, "$lt" : 2}}]
+     * @return
+     */
+    public CriteriaWrapper or(String key,String operation, Object val) {
+        Document document = getOr();
+        setVal(document,key,operation,val);
+        return this;
+
+    }
+
+
+    /**
+     * [{ "_id" : "1", "sort" : { "$gt" : 1, "$lt" : 2}}]
+     * @return
+     */
+    public CriteriaWrapper and(String key,String operation, Object val) {
+        setVal(document,key,operation,val);
+        return this;
+    }
+
+
+    private void setVal(Document document,String key,String operation,Object val){
+
+        if(!operation.equals("$eq")){
+
+            if(!document.containsKey(key)){
+                Document operationDocument = new Document();
+                document.put(key,operationDocument);
             }
-            criteria.andOperator(v);
-        });
+            Document operationDocument = (Document) document.get(key);
+            operationDocument.put(operation,val);
+            return;
+        }else if(operation.equals("$regex")){
+            val = Pattern.compile("^.*" + val + ".*$", Pattern.CASE_INSENSITIVE);
+        }
+        document.put(key,val);
+    }
 
-        orCriteriaMap.forEach((k,v)->{
-            if(v.getCriteriaObject().size() == 0){
-                return;
-            }
-            criteria.orOperator(v);
-        });
+    @Override
+    public Document getCriteriaObject() {
+        return document;
+    }
 
-
-        return criteria;
+    @Override
+    public String getKey() {
+        return null;
     }
 }

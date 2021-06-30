@@ -31,4 +31,6 @@ public @interface Lte {
      * @return
      */
     ActionType action() default AND;
+
+    String operation() default "$lte";
 }

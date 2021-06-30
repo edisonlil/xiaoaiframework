@@ -30,4 +30,6 @@ public @interface Like {
      * @return
      */
     ActionType action() default AND;
+
+    String operation() default "$regex";
 }

@@ -41,7 +41,7 @@ public class UpdateParser implements OperationParser {
     }
 
 
-    public Update convertUpdate(Object object){
+    public static Update convertUpdate(Object object){
         return convertUpdate(object,null);
     }
 
@@ -50,7 +50,7 @@ public class UpdateParser implements OperationParser {
      * @param object
      * @return
      */
-    public Update convertUpdate(Object object, String... exclude){
+    public static Update convertUpdate(Object object, String... exclude){
 
         java.util.Set<String> excludeSet = null;
         if(exclude != null && exclude.length > 0){
