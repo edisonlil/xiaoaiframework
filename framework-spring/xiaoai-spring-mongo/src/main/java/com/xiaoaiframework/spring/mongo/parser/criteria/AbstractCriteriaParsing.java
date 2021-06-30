@@ -1,6 +1,8 @@
 package com.xiaoaiframework.spring.mongo.parser.criteria;
 
 import com.xiaoaiframework.spring.mongo.constant.ActionType;
+import com.xiaoaiframework.spring.mongo.wrapper.CriteriaWrapper;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 
@@ -11,20 +13,32 @@ public abstract class AbstractCriteriaParsing implements CriteriaParsing {
 
     
     @Override
-    public Criteria parsing(Criteria criteria, Annotation annotation,String key,Object val) {
+    public void parsing(CriteriaWrapper criteria, Annotation annotation, String key, Object val) {
 
         if(!match(annotation)){
-            return criteria;
+            return;
         }
 
         Map<String,Object> attributes = AnnotationUtils.getAnnotationAttributes(annotation);
 
         Boolean ignoreNull = (Boolean) attributes.get("ignoreNull");
         if(ignoreNull && val == null){
-            return criteria;
+            return;
         }
         key = (attributes.get("name") != null && !"".equals(attributes.get("name"))) ? attributes.get("name").toString():key;
-        return criteria.andOperator(operand(new Criteria(),annotation,key,val));
+
+        ActionType action = (ActionType)attributes.get("action");
+        switch (action){
+
+            case AND:
+                operand(criteria.getAndCriteria(key),annotation,key,val);
+                break;
+            case OR:
+                operand(criteria.getOrCriteria(key),annotation,key,val);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + action);
+        }
     }
 
 

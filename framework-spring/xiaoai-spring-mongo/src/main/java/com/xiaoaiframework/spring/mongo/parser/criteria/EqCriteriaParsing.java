@@ -19,7 +19,7 @@ public class EqCriteriaParsing extends AbstractCriteriaParsing {
 
     @Override
     public Criteria operand(Criteria criteria,Annotation annotation,String key, Object val) {
-        return criteria.and(key).is(val);
+        return criteria.is(val);
     }
 
 }

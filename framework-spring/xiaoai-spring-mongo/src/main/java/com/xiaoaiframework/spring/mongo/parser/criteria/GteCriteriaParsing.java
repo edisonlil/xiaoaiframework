@@ -19,7 +19,7 @@ public class GteCriteriaParsing extends AbstractCriteriaParsing {
 
     @Override
     public Criteria operand(Criteria criteria,Annotation annotation,String key, Object val) {
-        return criteria.and(key).gte(val);
+        return criteria.gte(val);
     }
 
 }

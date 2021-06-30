@@ -19,7 +19,7 @@ public class InCriteriaParsing extends AbstractCriteriaParsing {
 
     @Override
     public Criteria operand(Criteria criteria,Annotation annotation,String key, Object val) {
-        return criteria.and(key).in(val);
+        return criteria.in(val);
     }
 
 }

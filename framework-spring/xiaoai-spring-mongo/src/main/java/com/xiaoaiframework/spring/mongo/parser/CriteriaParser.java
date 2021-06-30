@@ -6,9 +6,11 @@ import com.xiaoaiframework.spring.mongo.context.AggregateContext;
 import com.xiaoaiframework.spring.mongo.context.MongoContext;
 import com.xiaoaiframework.spring.mongo.context.QueryContext;
 import com.xiaoaiframework.spring.mongo.parser.criteria.CriteriaParsing;
+import com.xiaoaiframework.spring.mongo.wrapper.CriteriaWrapper;
 import com.xiaoaiframework.util.base.AnnotationUtil;
 import com.xiaoaiframework.util.base.ObjectUtil;
 import com.xiaoaiframework.util.base.ReflectUtil;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -75,8 +77,6 @@ public class CriteriaParser implements OperationParser {
 
         for (Annotation annotation : annotations) {
             //If it is not the basic type
-
-
             if (annotation instanceof Condition && ObjectUtil.isNotNull(val) && ObjectUtil.isNotPrimitive(val)) {
 
                 Field[] fields = ReflectUtil.getDeclaredFields(val);
@@ -95,22 +95,9 @@ public class CriteriaParser implements OperationParser {
             if(AnnotationUtils.getValue(annotation,"action") == null){
                 return criteria;
             }
-            ActionType action = (ActionType) AnnotationUtils.getValue(annotation,"action");
-            if(action == null){ return criteria; }
 
             for (CriteriaParsing parsing : parsings) {
-
-                switch (action){
-
-                    case OR:
-                        criteria.or = parsing.parsing(criteria.or, annotation, key,val);
-                        break;
-                    case AND:
-                        criteria.and = parsing.parsing(criteria.and, annotation, key,val);
-                        break;
-
-                }
-
+                parsing.parsing(criteria, annotation, key,val);
                 continue;
             }
 
@@ -126,40 +113,6 @@ public class CriteriaParser implements OperationParser {
 
 
 
-   static class CriteriaWrapper{
-
-        Criteria criteria = new Criteria();
-
-        Criteria and = new Criteria();
-        Criteria or = new Criteria();
-
-
-       public void setCriteria(Criteria criteria) {
-           this.criteria = criteria;
-       }
-
-       public Criteria and() {
-           return and;
-       }
-
-       public Criteria or() {
-           return or;
-       }
-
-       public Criteria build(){
-
-
-           if(and.getCriteriaObject().size() >= 1){
-               criteria.andOperator(and);
-           }
-
-           if(or.getCriteriaObject().size() >= 1){
-               criteria.orOperator(or);
-           }
-
-           return criteria;
-       }
-   }
 
 
 }

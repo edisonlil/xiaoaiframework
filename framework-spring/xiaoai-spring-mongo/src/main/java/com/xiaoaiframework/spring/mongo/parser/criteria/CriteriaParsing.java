@@ -1,5 +1,6 @@
 package com.xiaoaiframework.spring.mongo.parser.criteria;
 
+import com.xiaoaiframework.spring.mongo.wrapper.CriteriaWrapper;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.lang.annotation.Annotation;
@@ -12,7 +13,7 @@ import java.lang.annotation.Annotation;
 public interface CriteriaParsing {
 
 
-    Criteria parsing(Criteria criteria, Annotation annotation, String key,Object val);
+    void parsing(CriteriaWrapper criteria, Annotation annotation, String key, Object val);
 
     boolean match(Annotation annotation);
 

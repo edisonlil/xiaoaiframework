@@ -19,7 +19,7 @@ public class LteCriteriaParsing extends AbstractCriteriaParsing {
 
     @Override
     public Criteria operand(Criteria criteria,Annotation annotation,String key, Object val) {
-        return criteria.and(key).lte(val);
+        return criteria.lte(val);
     }
 
 }
