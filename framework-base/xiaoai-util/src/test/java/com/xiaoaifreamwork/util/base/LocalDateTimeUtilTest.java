@@ -49,7 +49,7 @@ public class LocalDateTimeUtilTest {
      */
     @Test
     public void nowBeginOfDay(){
-        System.out.println(LocalDateTimeUtil.nowBeginOfDay(LocalDateTime.now()));
+        System.out.println(LocalDateTimeUtil.nowBeginOfDay());
     }
 
     /**
@@ -57,7 +57,7 @@ public class LocalDateTimeUtilTest {
      */
     @Test
     public void nowEndOfDay(){
-        System.out.println(LocalDateTimeUtil.nowEndOfDay(LocalDateTime.now()));
+        System.out.println(LocalDateTimeUtil.nowEndOfDay());
     }
 
     /**

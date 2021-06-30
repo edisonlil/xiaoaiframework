@@ -60,10 +60,10 @@ public final class LocalDateTimeUtil {
 
     /**
      * 获取今天开始的时间
-     * @param localDateTime
+     * @param
      * @return
      */
-    public static LocalDateTime nowBeginOfDay(LocalDateTime localDateTime){
+    public static LocalDateTime nowBeginOfDay(){
         return LocalDateTime.of(LocalDateTime.now().toLocalDate(), LocalTime.MIN);
     }
 
