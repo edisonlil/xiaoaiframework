@@ -66,7 +66,12 @@ public class CriteriaWrapper implements CriteriaDefinition {
 
     private void setVal(Document document,String key,String operation,Object val){
 
-        if(!operation.equals("$eq")){
+        if(operation.equals("$eq")){
+            document.put(key,val);
+        }else if(operation.equals("$regex")){
+            val = Pattern.compile("^.*" + val + ".*$", Pattern.CASE_INSENSITIVE);
+            document.put(key,val);
+        }else{
 
             if(!document.containsKey(key)){
                 Document operationDocument = new Document();
@@ -75,10 +80,7 @@ public class CriteriaWrapper implements CriteriaDefinition {
             Document operationDocument = (Document) document.get(key);
             operationDocument.put(operation,val);
             return;
-        }else if(operation.equals("$regex")){
-            val = Pattern.compile("^.*" + val + ".*$", Pattern.CASE_INSENSITIVE);
         }
-        document.put(key,val);
     }
 
     @Override
