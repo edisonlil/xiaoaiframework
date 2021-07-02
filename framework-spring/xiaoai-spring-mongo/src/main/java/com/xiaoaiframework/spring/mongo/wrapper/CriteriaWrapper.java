@@ -34,10 +34,8 @@ public class CriteriaWrapper implements CriteriaDefinition {
             document.put("$or",new ArrayList<Document>());
         }
         List<Document> list = (List<Document>) document.get("$or");
-        if(list.isEmpty()){
-            list.add(new Document());
-        }
-        Document orDocument = list.get(0);
+        Document orDocument = new Document();
+        list.add(orDocument);
         return orDocument;
     }
 
