@@ -128,9 +128,58 @@ public class ReflectUtil {
 
         return null;
     }
-    
+
+    /**
+     * 获取指定的字段的get/set方法
+     * @param c 类型
+     * @param field 字段
+     * @param type type == 1 ? "get" : "set"
+     * @return
+     */
+    public static Method getFieldMethod(Class c,Field field,Integer type){
+
+        String prefix = type == 1 ? "get" : "set";
+
+        Method[] methods = c.getDeclaredMethods();
+        for (Method method : methods) {
+            String methodName = method.getName();
+            String fieldName = StrUtil.upperFirst(field.getName());
+            if(methodName.equals(prefix+fieldName)){
+                return method;
+            }else if(type == 1 && methodName.equals("is"+fieldName) && method.getReturnType() == Boolean.class){
+                return method;
+            }
+        }
+        return null;
+    }
 
     public static Method[] getDeclaredMethods(Class c){
         return c.getDeclaredMethods();
+    }
+
+
+    public static Object invoke(Object o,Method method){
+
+        try {
+           return method.invoke(o,null);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static Object invoke(Object o,Method method,Object... args){
+
+        try {
+            return method.invoke(o,args);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 @Component
@@ -69,15 +70,15 @@ public class CriteriaParser implements OperationParser {
             //If it is not the basic type
             if (annotation instanceof Condition && ObjectUtil.isNotNull(val) && ObjectUtil.isNotPrimitive(val)) {
 
+
+
                 Field[] fields = ReflectUtil.getDeclaredFields(val);
                 for (Field field : fields) {
                     field.setAccessible(true);
                     if (field.getAnnotations() != null) {
-                        try {
-                           criteriaParsing(criteria, field.getAnnotations(), field.getName(),field.get(val));
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
+                       Object fieldValue =  ReflectUtil.invoke(val,
+                               ReflectUtil.getFieldMethod(val.getClass(),field,1));
+                       criteriaParsing(criteria, field.getAnnotations(), field.getName(),fieldValue);
                     }
                 }
             }
