@@ -4,13 +4,13 @@
 
 ### 项目环境
 
-JDK  Version
+**JDK  Version**
 
 ```text
 java version "11.0.5"
 ```
 
-Gradle Version
+**Gradle Version**
 
 ```text
 Gradle 6.1
