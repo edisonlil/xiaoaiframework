@@ -1,6 +1,22 @@
-# xiaoaiframework
+# Xiaoai Framework
 
-基于`Spring Boot`封装的基础框架，包含各种各样的组件
+基于`Spring Boot`封装的基础框架，作为所有项目的基础支撑，封装了大量常用的基础组件，根据需求进行引入。
+
+### 项目环境
+
+JDK  Version
+
+```text
+java version "11.0.5"
+```
+
+Gradle Version
+
+```text
+Gradle 6.1
+```
+
+### 框架概述
 
 ```text
 
