@@ -20,7 +20,7 @@ Gradle 6.1
 
 ```text
 
-xiaoaiframework
+xiaoaiframework 
   |- framework-api //定义抽象接口规范模块，具体实现参考`framework-impl`模块
   |---- xiaoai-upload-api //文件上传通用组件
   |- framework-base //基础通用模块 （作为该架构体系最基础支撑，其他模块将依赖该模块的子模块，该模块的子模块不依赖其他模块）
