@@ -1,5 +1,5 @@
 dependencies {
-    compile "com.alibaba.cloud:spring-cloud-alibaba-seata"
-    compile "io.seata:seata-spring-boot-starter"
+    compile "com.alibaba.cloud:spring-cloud-alibaba-seata:2.2.0.RELEASE"
+    compile "io.seata:seata-spring-boot-starter:1.4.2"
     compile "io.seata:seata-all:${seataVersion}"
 }
