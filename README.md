@@ -17,9 +17,10 @@ Gradle 6.1
 ```
 
  **组件依赖版本信息参考 
- ```text
- gradle.properties
+ 
 ```text
+gradle.properties
+```
 ### 框架概述
 
 ```text
