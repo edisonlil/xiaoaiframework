@@ -1,0 +1,6 @@
+dependencies {
+    compile 'org.apache.dubbo:dubbo-spring-boot-starter:2.7.4.1'
+    compile 'org.apache.curator:curator-framework:4.0.1'
+    compile 'org.apache.curator:curator-recipes:2.8.0'
+    compile 'org.apache.zookeeper:zookeeper:3.4.13'
+}
