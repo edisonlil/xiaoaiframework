@@ -126,7 +126,7 @@ public class WebAutoConfiguration {
 
     @Bean
     public Converter<String, LocalTime> localTimeConverter() {
-        return new Converter<>() {
+        return new Converter<String, LocalTime>() {
             @Override
             public LocalTime convert(String source) {
                 return LocalTime.parse(source, DateTimeFormatter.ofPattern("HH:mm:ss"));
@@ -137,7 +137,7 @@ public class WebAutoConfiguration {
 
     @Bean
     public Converter<String, LocalDate> localDateConverter() {
-        return new Converter<>() {
+        return new Converter<String, LocalDate>() {
             @Override
             public LocalDate convert(String source) {
                 return LocalDate.parse(source, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -147,7 +147,7 @@ public class WebAutoConfiguration {
 
     @Bean
     public Converter<String, LocalDateTime> localDateTimeConverter() {
-        return new Converter<>() {
+        return new Converter<String, LocalDateTime>() {
             @Override
             public LocalDateTime convert(String source) {
                 return LocalDateTime.parse(source, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));

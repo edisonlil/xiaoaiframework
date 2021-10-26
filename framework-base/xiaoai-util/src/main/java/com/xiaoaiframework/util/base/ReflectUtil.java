@@ -161,7 +161,7 @@ public class ReflectUtil {
     public static Object invoke(Object o,Method method){
 
         try {
-           return method.invoke(o,null);
+           return method.invoke(o);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {

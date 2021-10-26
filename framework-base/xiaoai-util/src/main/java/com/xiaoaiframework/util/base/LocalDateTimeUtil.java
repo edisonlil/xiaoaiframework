@@ -1,9 +1,14 @@
 package com.xiaoaiframework.util.base;
 
+import com.xiaoaiframework.util.math.MathUtil;
+
 import java.sql.Time;
 import java.time.*;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.zone.ZoneRules;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * JDK1.8 本地时间工具类
@@ -189,18 +194,17 @@ public final class LocalDateTimeUtil {
      * @return
      */
     public static Long betweenMillis(LocalDateTime begin,LocalDateTime end){
-        return Duration.between(begin,end).toMillis();
+        return ChronoUnit.MILLIS.between(begin,end);
     }
 
     /**
      * 计算两个时间相差秒数
      * @param begin
      * @param end
-     * @since 1.9+
      * @return
      */
     public static Long betweenSeconds(LocalDateTime begin,LocalDateTime end){
-        return Duration.between(begin,end).toSeconds();
+        return ChronoUnit.SECONDS.between(begin,end);
     }
 
     /**
@@ -211,7 +215,7 @@ public final class LocalDateTimeUtil {
      * @return
      */
     public static Long betweenMinutes(LocalDateTime begin,LocalDateTime end){
-        return Duration.between(begin,end).toMinutes();
+        return ChronoUnit.MILLIS.between(begin,end);
     }
 
     /**
@@ -222,7 +226,7 @@ public final class LocalDateTimeUtil {
      * @return
      */
     public static Long betweenHours(LocalDateTime begin,LocalDateTime end){
-        return Duration.between(begin,end).toHours();
+        return ChronoUnit.HOURS.between(begin,end);
     }
 
     /**
@@ -233,7 +237,7 @@ public final class LocalDateTimeUtil {
      * @return
      */
     public static Long betweenDays(LocalDateTime begin,LocalDateTime end){
-        return Duration.between(begin,end).toDays();
+        return ChronoUnit.DAYS.between(begin,end);
     }
 
 
@@ -250,7 +254,7 @@ public final class LocalDateTimeUtil {
      * @return
      */
     public static Long getResidueSeconds(){
-        return betweenSeconds(LocalDateTime.now(),LocalDateTime.MAX);
+        return betweenSeconds(LocalDateTime.now(),nowEndOfDay());
     }
 
     /**
@@ -258,7 +262,7 @@ public final class LocalDateTimeUtil {
      * @return
      */
     public static Long getResidueMinutes(){
-        return betweenMinutes(LocalDateTime.now(),LocalDateTime.MAX);
+        return betweenMinutes(LocalDateTime.now(),nowEndOfDay());
     }
 
     /**
@@ -266,7 +270,7 @@ public final class LocalDateTimeUtil {
      * @return
      */
     public static Long getResidueHours(){
-        return betweenHours(LocalDateTime.now(),LocalDateTime.MAX);
+        return betweenHours(LocalDateTime.now(),nowEndOfDay());
     }
 
 
@@ -315,7 +319,7 @@ public final class LocalDateTimeUtil {
         Instant instant = date.toInstant();
         //A time-zone ID, such as {@code Europe/Paris}.(时区)
         ZoneId zoneId = ZoneId.systemDefault();
-        return LocalDateTime.ofInstant(instant,zoneId);
+        return localDateTimeOfInstant(instant,zoneId);
     }
 
     /**
@@ -328,8 +332,9 @@ public final class LocalDateTimeUtil {
         Instant instant = date.toInstant();
         //A time-zone ID, such as {@code Europe/Paris}.(时区)
         ZoneId zoneId = ZoneId.systemDefault();
-        return LocalDate.ofInstant(instant,zoneId);
+        return localDateOfInstant(instant,zoneId);
     }
+
 
     /**
      * LocalDateTime转换为Date
@@ -340,6 +345,79 @@ public final class LocalDateTimeUtil {
         //Combines this date-time with a time-zone to create a  ZonedDateTime.
         ZonedDateTime zdt = localDateTime.atZone(zoneId);
         return Date.from(zdt.toInstant());
+    }
+
+
+    /**
+     *
+     * @param instant
+     * @param zone
+     * @return
+     */
+    public static LocalDate localDateOfInstant(Instant instant, ZoneId zone) {
+        Objects.requireNonNull(instant, "instant");
+        Objects.requireNonNull(zone, "zone");
+        ZoneRules rules = zone.getRules();
+        ZoneOffset offset = rules.getOffset(instant);
+        long localSecond = instant.getEpochSecond() + (long)offset.getTotalSeconds();
+        long localEpochDay = MathUtil.floorDiv(localSecond, 86400);
+        return ofEpochDay(localEpochDay);
+    }
+
+
+    public static LocalDateTime localDateTimeOfInstant(Instant instant, ZoneId zone) {
+        Objects.requireNonNull(instant, "instant");
+        Objects.requireNonNull(zone, "zone");
+        ZoneRules rules = zone.getRules();
+        ZoneOffset offset = rules.getOffset(instant);
+        return ofEpochSecond(instant.getEpochSecond(), instant.getNano(), offset);
+    }
+
+
+    public static LocalDateTime ofEpochSecond(long epochSecond, int nanoOfSecond, ZoneOffset offset) {
+        Objects.requireNonNull(offset, "offset");
+        ChronoField.NANO_OF_SECOND.checkValidValue((long)nanoOfSecond);
+        long localSecond = epochSecond + (long)offset.getTotalSeconds();
+        long localEpochDay = Math.floorDiv(localSecond, 86400);
+        int secsOfDay = Math.floorMod(localSecond, 86400);
+        LocalDate date = LocalDate.ofEpochDay(localEpochDay);
+        LocalTime time = LocalTime.ofNanoOfDay((long)secsOfDay * 1000000000L + (long)nanoOfSecond);
+        return LocalDateTime.of(date, time);
+    }
+
+
+    /**
+     *
+     * @param epochDay
+     * @return
+     */
+    public static LocalDate ofEpochDay(long epochDay) {
+        ChronoField.EPOCH_DAY.checkValidValue(epochDay);
+        long zeroDay = epochDay + 719528L;
+        zeroDay -= 60L;
+        long adjust = 0L;
+        long yearEst;
+        if (zeroDay < 0L) {
+            yearEst = (zeroDay + 1L) / 146097L - 1L;
+            adjust = yearEst * 400L;
+            zeroDay += -yearEst * 146097L;
+        }
+
+        yearEst = (400L * zeroDay + 591L) / 146097L;
+        long doyEst = zeroDay - (365L * yearEst + yearEst / 4L - yearEst / 100L + yearEst / 400L);
+        if (doyEst < 0L) {
+            --yearEst;
+            doyEst = zeroDay - (365L * yearEst + yearEst / 4L - yearEst / 100L + yearEst / 400L);
+        }
+
+        yearEst += adjust;
+        int marchDoy0 = (int)doyEst;
+        int marchMonth0 = (marchDoy0 * 5 + 2) / 153;
+        int month = (marchMonth0 + 2) % 12 + 1;
+        int dom = marchDoy0 - (marchMonth0 * 306 + 5) / 10 + 1;
+        yearEst += (long)(marchMonth0 / 10);
+        int year = ChronoField.YEAR.checkValidIntValue(yearEst);
+        return LocalDate.of(year, month, dom);
     }
 
 }

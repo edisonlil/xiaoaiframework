@@ -3,7 +3,9 @@ package com.xiaoaifreamwork.util.base;
 import com.xiaoaiframework.util.base.LocalDateTimeUtil;
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 /**
@@ -147,9 +149,11 @@ public class LocalDateTimeUtilTest {
     public void betweenMillis(){
 
         LocalDateTime localDateTime =  LocalDateTime.parse("2020-11-11T16:17:00");
+        LocalDateTime now = LocalDateTime.now();
 
-        System.out.println(LocalDateTimeUtil.betweenMillis(localDateTime,LocalDateTime.now()));
-    }
+        System.out.println(LocalDateTimeUtil.betweenMillis(localDateTime,now));
+
+}
 
     /**
      * 计算两个时间相差秒数

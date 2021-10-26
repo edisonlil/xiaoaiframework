@@ -16,4 +16,18 @@ public class MathUtil {
     public static double pow(double count,double n){
         return Math.pow(count, n);
     }
+
+
+    public static long floorDiv(long x, int y) {
+        return floorDiv(x, (long)y);
+    }
+
+    public static long floorDiv(long x, long y) {
+        long r = x / y;
+        if ((x ^ y) < 0L && r * y != x) {
+            --r;
+        }
+
+        return r;
+    }
 }

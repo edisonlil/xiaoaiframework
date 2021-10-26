@@ -126,7 +126,7 @@ public class ResultBean<T> {
      * @return 当前对象
      */
     public static ResultBean authFeiled() {
-        return new ResultBean(BaseCode.authFeiled).setMessage(BaseCode.authFeiled.getCodeExplain()).setSuccess(false);
+        return new ResultBean(BaseCode.authFelled).setMessage(BaseCode.authFelled.getCodeExplain()).setSuccess(false);
     }
 
     /**
@@ -135,7 +135,7 @@ public class ResultBean<T> {
      * @return 当前对象
      */
     public static ResultBean notPermited() {
-        return new ResultBean(BaseCode.notPermited).setMessage(BaseCode.notPermited.getCodeExplain()).setSuccess(false);
+        return new ResultBean(BaseCode.notPermitted).setMessage(BaseCode.notPermitted.getCodeExplain()).setSuccess(false);
     }
 
 

@@ -105,7 +105,7 @@ public class PageResultBean<T> extends ResultBean<Collection<T>> {
      * @return 当前对象
      */
     public static PageResultBean authFeiled() {
-        return new PageResultBean().setCode(BaseCode.authFeiled).setMessage(BaseCode.authFeiled.getCodeExplain()).setSuccess(false);
+        return new PageResultBean().setCode(BaseCode.authFelled).setMessage(BaseCode.authFelled.getCodeExplain()).setSuccess(false);
     }
 
     /**
@@ -114,7 +114,7 @@ public class PageResultBean<T> extends ResultBean<Collection<T>> {
      * @return 当前对象
      */
     public static PageResultBean notPermited() {
-        return new PageResultBean().setCode(BaseCode.notPermited).setMessage(BaseCode.notPermited.getCodeExplain()).setSuccess(false);
+        return new PageResultBean().setCode(BaseCode.notPermitted).setMessage(BaseCode.notPermitted.getCodeExplain()).setSuccess(false);
     }
 
 

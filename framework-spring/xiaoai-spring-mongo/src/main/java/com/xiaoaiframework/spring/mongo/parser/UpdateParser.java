@@ -42,7 +42,7 @@ public class UpdateParser implements OperationParser {
 
 
     public static Update convertUpdate(Object object){
-        return convertUpdate(object,null);
+        return convertUpdate(object,new String[0]);
     }
 
     /**
